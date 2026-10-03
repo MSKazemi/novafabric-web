@@ -26,6 +26,7 @@ const DOCS_DIR = process.env.NOVAFABRIC_DOCS
 const EXCLUDE = [/^releases\//, /^whitepaper\//];
 
 const GITHUB_BLOB = "https://github.com/MSKazemi/novafabric/blob/main";
+const GITHUB_TREE = "https://github.com/MSKazemi/novafabric/tree/main";
 
 export interface DocPage {
   /** Path relative to docs/, e.g. "ops/monitoring.md". */
@@ -41,43 +42,75 @@ function toSlug(file: string): string {
 }
 
 /**
- * Rewrites the relative `.md` links the repository uses into URLs that work on
- * the web.
+ * Resolves a relative link against a file's directory, `..` and all.
  *
- * Markdown links like `concepts.md` are correct in a git checkout and dead on a
- * site whose routes are `/docs/concepts/`. Links that escape `docs/` — the
- * README, CONTRIBUTING, the schemas directory — have no site route at all, so
- * they go to GitHub rather than nowhere.
+ * Returns the cleaned path plus how many segments escaped the top of the tree,
+ * because escaping `docs/` is what decides whether a path is repo-root-relative
+ * or docs-relative — and those need different GitHub URLs.
  */
-function rewriteLinks(html: string, file: string): string {
+function resolveRelative(dir: string, target: string): { path: string; escapes: number } {
+  const resolved: string[] = [];
+  let escapes = 0;
+  for (const segment of (dir ? `${dir}/${target}` : target).split("/")) {
+    if (segment === "." || segment === "") continue;
+    if (segment === "..") {
+      if (resolved.length) resolved.pop();
+      else escapes += 1;
+      continue;
+    }
+    resolved.push(segment);
+  }
+  return { path: resolved.join("/"), escapes };
+}
+
+/**
+ * Rewrites the relative links the repository uses into URLs that work on the web.
+ *
+ * A markdown link like `concepts.md` is correct in a git checkout and dead on a
+ * site whose routes are `/docs/concepts/`. The rule is decided by whether the
+ * target is a page this site actually builds, not by its file extension:
+ *
+ *   - resolves to a published doc slug  ->  /docs/<slug>/
+ *   - anything else                     ->  the source on GitHub
+ *
+ * That second branch is the one that matters. It covers links to files that are
+ * not markdown (`../CITATION.cff`, `../schemas/*.json`, `assets/*.svg`), links to
+ * directories (`releases/`, `../deploy/hpc/`), and links to markdown that EXCLUDE
+ * keeps out of the build (`releases/v0.10.0.md`). Every one of those used to reach
+ * the reader as a 404: the non-markdown ones were passed through untouched and
+ * resolved against `/docs/<slug>/`, and the excluded ones were handed a `/docs/`
+ * URL for a page that is never generated. Search Console reported the result as
+ * "Not found (404)" against novafabric.ai.
+ */
+function rewriteLinks(html: string, file: string, published: ReadonlySet<string>): string {
   const dir = file.includes("/") ? file.slice(0, file.lastIndexOf("/")) : "";
 
   return html.replace(/href="([^"]+)"/g, (whole, href: string) => {
+    // Absolute URLs, site-root paths and pure anchors are already correct.
     if (/^(?:[a-z]+:|\/|#)/i.test(href)) return whole;
 
     const [target, anchor = ""] = href.split("#");
-    if (!target.endsWith(".md")) return whole;
+    if (!target) return whole;
 
-    // Resolve the link relative to the current file's directory.
-    const segments = (dir ? `${dir}/${target}` : target).split("/");
-    const resolved: string[] = [];
-    let escapes = 0;
-    for (const segment of segments) {
-      if (segment === "." || segment === "") continue;
-      if (segment === "..") {
-        if (resolved.length) resolved.pop();
-        else escapes += 1;
-        continue;
-      }
-      resolved.push(segment);
-    }
-
+    const { path, escapes } = resolveRelative(dir, target);
     const suffix = anchor ? `#${anchor}` : "";
-    if (escapes > 0) {
-      // Outside docs/ — no site route exists; send the reader to the source.
-      return `href="${GITHUB_BLOB}/${resolved.join("/")}${suffix}"`;
+
+    // A link to a directory that resolves away to nothing — `.` from a file at the
+    // top of docs/, say — points at the tree's own root.
+    if (!path) return escapes > 0 ? `href="${GITHUB_TREE}${suffix}"` : `href="/docs/${suffix}"`;
+
+    // A markdown file inside docs/ that this site actually builds.
+    if (escapes === 0 && target.endsWith(".md")) {
+      const slug = toSlug(path);
+      if (slug === "" || slug === "index") return `href="/docs/${suffix}"`;
+      if (published.has(slug)) return `href="/docs/${slug}/${suffix}"`;
     }
-    return `href="/docs/${toSlug(resolved.join("/"))}/${suffix}"`;
+
+    // Everything else has no route on this site. Send the reader to the source
+    // rather than to a 404 — `tree` for a directory, `blob` for a file.
+    const base = target.endsWith("/") ? GITHUB_TREE : GITHUB_BLOB;
+    const prefix = escapes > 0 ? "" : "docs/";
+    return `href="${base}/${prefix}${path}${suffix}"`;
   });
 }
 
@@ -117,10 +150,16 @@ export async function docPages(): Promise<DocPage[]> {
     throw new Error(`No documentation markdown found under ${DOCS_DIR}.`);
   }
 
+  // The slug set has to exist before any page is rendered: rewriteLinks decides
+  // between a /docs/ URL and a GitHub URL by asking whether the target is a page
+  // this build actually produces, and it cannot ask that mid-render.
+  const published = new Set(files.map(toSlug));
+
   const pages = await Promise.all(
     files.map(async (file) => {
       const raw = readFileSync(join(DOCS_DIR, file), "utf8");
-      return { file, slug: toSlug(file), html: rewriteLinks(await renderMarkdown(raw), file), raw };
+      const html = rewriteLinks(await renderMarkdown(raw), file, published);
+      return { file, slug: toSlug(file), html, raw };
     }),
   );
 

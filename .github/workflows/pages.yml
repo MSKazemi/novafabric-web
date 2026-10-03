@@ -1,0 +1,98 @@
+name: Build and deploy novafabric.ai (GitHub Pages)
+
+# Manual until the novafabric.ai DNS cutover; add a `push: branches: [main]` trigger after it.
+on:
+  workflow_dispatch:
+    inputs:
+      deploy:
+        description: "Publish to GitHub Pages (false = build and upload the artifact only)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build both sites and merge
+    # The private mirror of this tree must never try to publish.
+    if: github.repository == 'MSKazemi/novafabric-web'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout the Next.js site (core)
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Checkout the Astro site and docs source
+        uses: actions/checkout@v7
+        with:
+          repository: MSKazemi/novafabric
+          ref: main
+          path: source
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            source/web/package-lock.json
+
+      - name: Build the Next.js site (runs the internal-link gate)
+        run: |
+          npm ci
+          npm run build
+
+      - name: Build the Astro site
+        working-directory: source/web
+        run: |
+          npm ci
+          npm run build
+
+      - name: Merge (Next.js pages are never overwritten)
+        run: node scripts/merge-sites.mjs out source/web/dist site
+
+      - name: Verify the merged artifact
+        run: |
+          for p in site/index.html site/research/index.html site/docs/index.html \
+                   site/concepts/index.html site/_next site/_astro site/robots.txt site/sitemap.xml; do
+            test -e "$p" || { echo "::error::missing $p"; exit 1; }
+          done
+          old=$(cd out && find . -name index.html | wc -l)
+          merged=$(cd site && find . -name index.html | wc -l)
+          test "$merged" -ge "$old"
+          for f in $(cd out && find . -name index.html); do
+            test -f "site/$f" || { echo "::error::lost page $f"; exit 1; }
+          done
+          echo "next_pages=$old merged_pages=$merged source_sha=$(git -C source rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: site
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    if: inputs.deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v5

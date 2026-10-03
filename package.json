@@ -7,6 +7,8 @@
     "sync-docs": "node scripts/sync-docs.mjs",
     "prebuild": "npm run sync-docs",
     "build": "next build",
+    "postbuild": "node scripts/check-links.mjs",
+    "check-links": "node scripts/check-links.mjs",
     "start": "next start",
     "lint": "next lint"
   },
