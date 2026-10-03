@@ -6,15 +6,9 @@ import { usePathname } from "next/navigation";
 import ThemeToggle from "@/components/ThemeToggle";
 
 const LINKS: { label: string; href: string }[] = [
-  { label: "lab", href: "/" },
-  { label: "novafabric", href: "/novafabric" },
-  { label: "demo", href: "/demo" },
+  { label: "product", href: "/novafabric" },
   { label: "docs", href: "/docs" },
-  { label: "research", href: "/research" },
-  { label: "primitives", href: "/primitives" },
-  { label: "architecture", href: "/architecture" },
-  { label: "changelog", href: "/changelog" },
-  { label: "capsules", href: "/capsules" },
+  { label: "demo", href: "/demo" },
   { label: "blog", href: "/blog" },
 ];
 

@@ -11,7 +11,7 @@ import CountUp from "@/components/ui/CountUp";
  */
 
 const METRICS: { value: string; label: string }[] = [
-  { value: "425K", label: "lines of code" },
+  { value: "4", label: "replay modes" },
   { value: "220+", label: "decision records" },
   { value: "750+", label: "test suites" },
   { value: "81", label: "subpackages" },
