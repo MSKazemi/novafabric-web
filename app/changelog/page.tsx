@@ -6,6 +6,7 @@ import { PageHero, SectionHeader } from "@/components/ui";
 import ChangelogTimeline from "@/components/changelog/ChangelogTimeline";
 import { MILESTONES, ROADMAP } from "@/lib/data/changelog";
 import type { RoadmapEntry } from "@/lib/types";
+import { VERSION_TAG } from "@/lib/version";
 
 export const metadata: Metadata = {
   title: "Changelog — NovaFabric Lab",
@@ -13,7 +14,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "https://novafabric.ai/changelog/" },
   openGraph: {
     title: "Changelog — NovaFabric Lab",
-    description: "Every version of novafabric from v0.1 to v0.96 — milestones, shipped features, and the road to v1.0.",
+    description: `Every version of novafabric from v0.1 to ${VERSION_TAG} — milestones, shipped features, and the road to v1.0.`,
     url: "https://novafabric.ai/changelog/",
     images: [{ url: "https://novafabric.ai/og.png", width: 1200, height: 630 }],
   },
@@ -77,7 +78,7 @@ export default function ChangelogPage() {
         title="Changelog"
         subtitle="Every version of novafabric, from first commit to current."
         status="experimental"
-        tag="v0.96"
+        tag={VERSION_TAG}
       />
 
       <main className="page-max-w py-16">

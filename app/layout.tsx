@@ -8,6 +8,7 @@ import ScrollProgress from "@/components/scroll/ScrollProgress";
 import KonamiHandler from "@/components/easter/KonamiHandler";
 import JsonLd from "@/components/JsonLd";
 import Analytics from "@/components/Analytics";
+import { VERSION } from "@/lib/version";
 
 const displayFont = Instrument_Serif({
   variable: "--font-display",
@@ -42,7 +43,7 @@ export const metadata: Metadata = {
   // The keyword list is unchanged: those are the terms people search when they
   // have this problem, and capturing that demand is fine. Claiming to be a
   // monitoring product is not.
-  title: "NovaFabric Lab — replay and prove what an AI agent run actually did",
+  title: "NovaFabric Lab — replay and prove what an AI agent did",
   description:
     "NovaFabric captures any AI-agent or HPC run as a portable, secret-redacted, signed evidence capsule you own, then replays, diffs, and proves it — self-hosted, no accounts, no telemetry. Built for reproducibility and audit evidence rather than live dashboards; it is not a real-time monitoring and alerting tool.",
   keywords: [
@@ -90,16 +91,16 @@ export const metadata: Metadata = {
   manifest: "/manifest.webmanifest",
   alternates: { canonical: "https://novafabric.ai/" },
   openGraph: {
-    title: "NovaFabric Lab — replay and prove what an AI agent run actually did",
+    title: "NovaFabric Lab — replay and prove what an AI agent did",
     description:
       "Capture any AI-agent or HPC run as a portable signed evidence capsule you own, then replay, diff and prove it. Self-hosted, laptop to cluster. For reproducibility and audit, not live dashboards.",
     type: "website",
     url: "https://novafabric.ai/",
-    images: [{ url: "https://novafabric.ai/og.png", width: 1200, height: 630, alt: "NovaFabric Lab — replay and prove what an AI agent run actually did" }],
+    images: [{ url: "https://novafabric.ai/og.png", width: 1200, height: 630, alt: "NovaFabric Lab — replay and prove what an AI agent did" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "NovaFabric Lab — replay and prove what an AI agent run actually did",
+    title: "NovaFabric Lab — replay and prove what an AI agent did",
     description:
       "Capture any AI-agent or HPC run as a portable signed evidence capsule you own, then replay, diff and prove it. Self-hosted, laptop to cluster. For reproducibility and audit, not live dashboards.",
     images: ["https://novafabric.ai/og.png"],
@@ -196,7 +197,7 @@ const softwareApplicationSchema = {
   url: "https://novafabric.ai/novafabric/",
   downloadUrl: "https://pypi.org/project/novafabric/",
   codeRepository: "https://github.com/MSKazemi/novafabric",
-  softwareVersion: "0.102.1",
+  softwareVersion: VERSION,
   citation: {
     "@type": "ScholarlyArticle",
     headline: "NovaFabric: Tamper-Evident, Replayable Evidence for Autonomous AI Agent Runs",

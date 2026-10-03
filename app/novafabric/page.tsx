@@ -11,7 +11,7 @@ import JsonLd from "@/components/JsonLd";
 export const metadata: Metadata = {
   title: "novafabric — capture, replay & audit AI agents (CLI)",
   description:
-    "novafabric captures AI-agent runs as portable, secret-redacted, tamper-evident capsules — every model call and tool invocation. Replay executions deterministically, validate, diff, trace lineage, and audit. Local-first evidence for agentic applications.",
+    "Capture AI-agent runs as portable, secret-redacted, tamper-evident capsules, then replay, diff and audit them deterministically. Open-source CLI.",
   alternates: { canonical: "https://novafabric.ai/novafabric/" },
   openGraph: {
     title: "novafabric — capture, replay & audit AI agents (CLI)",

@@ -1,5 +1,7 @@
 "use client";
 
+import { VERSION_TAG } from "@/lib/version";
+
 const LINKS = {
   lab: [
     { label: "novafabric", href: "/novafabric" },
@@ -129,7 +131,7 @@ export default function Footer() {
           </span>
           <div style={{ display: "flex", gap: "20px" }}>
             {[
-              { label: "v0.102.1", href: "/changelog" },
+              { label: VERSION_TAG, href: "/changelog" },
               { label: "experimental", href: "/novafabric" },
             ].map((b) => (
               <a

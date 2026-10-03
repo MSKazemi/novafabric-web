@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { VERSION_TAG } from "@/lib/version";
 
 const HeroCanvas = dynamic(() => import("@/components/hero/HeroCanvas"), { ssr: false });
 
@@ -87,7 +88,7 @@ export default function CinematicHero() {
             <span
               className="font-code text-[11px] text-amber border border-amber/20 bg-amber-glow px-3 py-1 rounded inline-flex items-center gap-2 mb-6 hero-reveal hero-reveal-1"
             >
-              ◆ novafabric v0.96 · experimental
+              ◆ novafabric {VERSION_TAG} · experimental
             </span>
 
             {/* Headline */}

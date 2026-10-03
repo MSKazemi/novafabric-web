@@ -6,6 +6,7 @@ import { PageHero, SectionHeader } from "@/components/ui";
 import ArchitectureDiagram from "@/components/architecture/ArchitectureDiagram";
 import ArchitectureExplorer from "@/components/architecture/ArchitectureExplorer";
 import EvidenceSpine from "@/components/architecture/EvidenceSpine";
+import { VERSION_TAG } from "@/lib/version";
 
 export const metadata: Metadata = {
   title: "Architecture — NovaFabric Lab",
@@ -30,7 +31,7 @@ export default function ArchitecturePage() {
         section="architecture"
         title="Architecture"
         subtitle="The black-box recorder for AI agents. One verb chain — capture, seal, replay, diff, audit — self-contained on a single machine, and the same format scales out to clusters."
-        tag="v0.96"
+        tag={VERSION_TAG}
       />
 
       <main className="page-max-w py-16">

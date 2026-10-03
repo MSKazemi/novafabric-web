@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import { PageHero, SectionHeader } from "@/components/ui";
 import PrimitiveExplorer from "@/components/primitives/PrimitiveExplorer";
 import { PRIMITIVES } from "@/lib/data/primitives";
+import { VERSION_TAG } from "@/lib/version";
 
 export const metadata: Metadata = {
   title: "Primitives — NovaFabric Lab",
@@ -37,7 +38,7 @@ export default function PrimitivesPage() {
         section="primitives"
         title="Primitives"
         subtitle="Five composable building blocks to capture, replay, and audit AI-agent activity."
-        tag="v0.96"
+        tag={VERSION_TAG}
       />
       <main className="page-max-w py-16">
         <SectionHeader
