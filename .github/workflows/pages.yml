@@ -34,7 +34,7 @@ jobs:
         with:
           repository: MSKazemi/novafabric
           ref: main
-          path: source
+          path: .source
           persist-credentials: false
           fetch-depth: 1
 
@@ -45,7 +45,7 @@ jobs:
           cache: npm
           cache-dependency-path: |
             package-lock.json
-            source/web/package-lock.json
+            .source/web/package-lock.json
 
       - name: Build the Next.js site (runs the internal-link gate)
         run: |
@@ -53,13 +53,13 @@ jobs:
           npm run build
 
       - name: Build the Astro site
-        working-directory: source/web
+        working-directory: .source/web
         run: |
           npm ci
           npm run build
 
       - name: Merge (Next.js pages are never overwritten)
-        run: node scripts/merge-sites.mjs out source/web/dist site
+        run: node scripts/merge-sites.mjs out .source/web/dist site
 
       - name: Verify the merged artifact
         run: |
@@ -73,7 +73,7 @@ jobs:
           for f in $(cd out && find . -name index.html); do
             test -f "site/$f" || { echo "::error::lost page $f"; exit 1; }
           done
-          echo "next_pages=$old merged_pages=$merged source_sha=$(git -C source rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"
+          echo "next_pages=$old merged_pages=$merged source_sha=$(git -C .source rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v5
