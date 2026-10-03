@@ -1,27 +1,65 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import ThemeToggle from "@/components/ThemeToggle";
+import { MORE_GROUPS, PRIMARY_LINKS, type SiteLink } from "@/lib/site-nav";
 
-const LINKS: { label: string; href: string }[] = [
-  { label: "product", href: "/novafabric" },
-  { label: "docs", href: "/docs" },
-  { label: "demo", href: "/demo" },
-  { label: "blog", href: "/blog" },
-];
+const LINK_FONT = {
+  fontFamily: "var(--font-code), monospace",
+  letterSpacing: "0.04em",
+} as const;
+
+/** Next routes use next/link; Astro-served pages need a real page load. */
+function NavItem({
+  link,
+  style,
+  onClick,
+}: {
+  link: SiteLink;
+  style: React.CSSProperties;
+  onClick?: () => void;
+}) {
+  return link.astro ? (
+    <a href={link.href} style={style} onClick={onClick}>
+      {link.label}
+    </a>
+  ) : (
+    <Link href={link.href} style={style} onClick={onClick}>
+      {link.label}
+    </Link>
+  );
+}
 
 export default function Nav() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false);
+  const moreRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Close the "more" panel on navigation, outside click and Escape.
+  useEffect(() => setMoreOpen(false), [pathname]);
+  useEffect(() => {
+    if (!moreOpen) return;
+    const onDown = (e: MouseEvent) => {
+      if (moreRef.current && !moreRef.current.contains(e.target as Node)) setMoreOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setMoreOpen(false);
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [moreOpen]);
 
   function isActive(href: string) {
     if (href === "/") return pathname === "/";
@@ -78,7 +116,7 @@ export default function Nav() {
           style={{ display: "flex", alignItems: "center", gap: "28px" }}
           className="desktop-nav"
         >
-          {LINKS.map((l) => {
+          {PRIMARY_LINKS.map((l) => {
             const active = isActive(l.href);
             return (
               <Link
@@ -104,6 +142,75 @@ export default function Nav() {
               </Link>
             );
           })}
+
+          <div ref={moreRef} style={{ position: "relative" }}>
+            <button
+              type="button"
+              aria-expanded={moreOpen}
+              aria-controls="nav-more-panel"
+              onClick={() => setMoreOpen((o) => !o)}
+              style={{
+                ...LINK_FONT,
+                fontSize: "12px",
+                color: moreOpen ? "var(--color-ink)" : "var(--color-muted)",
+                background: "none",
+                border: "none",
+                padding: 0,
+                cursor: "pointer",
+              }}
+            >
+              more <span aria-hidden="true">▾</span>
+            </button>
+            {moreOpen && (
+              <div
+                id="nav-more-panel"
+                style={{
+                  position: "absolute",
+                  top: "calc(100% + 18px)",
+                  right: 0,
+                  minWidth: "360px",
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: "28px",
+                  padding: "20px 24px",
+                  backgroundColor: "var(--color-surface)",
+                  border: "1px solid var(--color-edge-2)",
+                  borderRadius: "6px",
+                  boxShadow: "var(--shadow-lg)",
+                }}
+              >
+                {MORE_GROUPS.map((g) => (
+                  <div key={g.title} style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                    <div
+                      style={{
+                        ...LINK_FONT,
+                        fontSize: "10px",
+                        color: "var(--color-faint)",
+                        letterSpacing: "0.1em",
+                        textTransform: "uppercase",
+                        marginBottom: "4px",
+                      }}
+                    >
+                      {g.title}
+                    </div>
+                    {g.links.map((l) => (
+                      <NavItem
+                        key={l.href}
+                        link={l}
+                        onClick={() => setMoreOpen(false)}
+                        style={{
+                          ...LINK_FONT,
+                          fontSize: "12px",
+                          color: isActive(l.href) ? "var(--color-ink)" : "var(--color-muted)",
+                          textDecoration: "none",
+                        }}
+                      />
+                    ))}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
 
           <ThemeToggle />
 
@@ -192,8 +299,10 @@ export default function Nav() {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            justifyContent: "center",
-            gap: "32px",
+            justifyContent: "flex-start",
+            gap: "22px",
+            overflowY: "auto",
+            padding: "84px 0 40px",
           }}
         >
           <button
@@ -214,7 +323,7 @@ export default function Nav() {
             ×
           </button>
 
-          {LINKS.map((l) => {
+          {PRIMARY_LINKS.map((l) => {
             const active = isActive(l.href);
             return (
               <Link
@@ -234,6 +343,22 @@ export default function Nav() {
               </Link>
             );
           })}
+
+          {MORE_GROUPS.map((g) => (
+            <div key={g.title} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "14px" }}>
+              <div style={{ ...LINK_FONT, fontSize: "10px", color: "var(--color-faint)", letterSpacing: "0.1em", textTransform: "uppercase" }}>
+                {g.title}
+              </div>
+              {g.links.map((l) => (
+                <NavItem
+                  key={l.href}
+                  link={l}
+                  onClick={() => setMenuOpen(false)}
+                  style={{ ...LINK_FONT, fontSize: "16px", color: isActive(l.href) ? "var(--color-ink)" : "var(--color-muted)", textDecoration: "none" }}
+                />
+              ))}
+            </div>
+          ))}
 
           <a
             href="https://github.com/MSKazemi/novafabric"

@@ -63,6 +63,9 @@ jobs:
       - name: Merge (Next.js pages are never overwritten)
         run: node scripts/merge-sites.mjs out .source/web/dist site
 
+      - name: Check every internal link on the merged site
+        run: node scripts/check-links.mjs site
+
       - name: Verify the merged artifact
         run: |
           for p in site/index.html site/research/index.html site/docs/index.html \

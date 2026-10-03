@@ -1,6 +1,7 @@
 "use client";
 
 import { VERSION_TAG } from "@/lib/version";
+import { MORE_GROUPS } from "@/lib/site-nav";
 
 const LINKS = {
   lab: [
@@ -47,7 +48,7 @@ export default function Footer() {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "2fr 1fr 1fr 1fr",
+            gridTemplateColumns: "2fr 1fr 1fr 1fr 1fr",
             gap: "48px",
             marginBottom: "64px",
           }}
@@ -109,6 +110,7 @@ export default function Footer() {
 
           {/* Lab + primitives + project links */}
           <FooterLinkGroup title="lab" links={LINKS.lab} />
+          <FooterLinkGroup title="learn" links={MORE_GROUPS.find((g) => g.title === "learn")?.links ?? []} />
           <FooterLinkGroup title="primitives" links={LINKS.primitives} />
           <FooterLinkGroup title="project" links={LINKS.project} />
         </div>

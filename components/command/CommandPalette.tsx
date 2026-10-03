@@ -11,15 +11,13 @@ import {
   CommandList,
 } from "cmdk";
 import * as Dialog from "@radix-ui/react-dialog";
+import { MORE_GROUPS, PRIMARY_LINKS, type SiteLink } from "@/lib/site-nav";
 
-const PAGES = [
+const PAGES: SiteLink[] = [
   { label: "lab", href: "/" },
   { label: "novafabric", href: "/novafabric" },
-  { label: "research", href: "/research" },
-  { label: "primitives", href: "/primitives" },
-  { label: "architecture", href: "/architecture" },
-  { label: "changelog", href: "/changelog" },
-  { label: "capsules", href: "/capsules" },
+  ...PRIMARY_LINKS.filter((l) => l.href !== "/novafabric"),
+  ...MORE_GROUPS.flatMap((g) => g.links),
 ];
 
 const PRIMITIVES = [
@@ -52,9 +50,11 @@ export function CommandPalette() {
     };
   }, [handleOpen]);
 
-  function navigate(href: string) {
+  function navigate(href: string, astro?: boolean) {
     setOpen(false);
-    router.push(href);
+    // Astro-served pages are not Next routes: a real page load, not client routing.
+    if (astro) window.location.assign(href);
+    else router.push(href);
   }
 
   function copyInstall() {
@@ -141,7 +141,7 @@ export function CommandPalette() {
                 <CommandItem
                   key={page.href}
                   value={page.label}
-                  onSelect={() => navigate(page.href)}
+                  onSelect={() => navigate(page.href, page.astro)}
                   style={{
                     fontFamily: "var(--font-code), monospace",
                     fontSize: "13px",

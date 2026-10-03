@@ -17,7 +17,23 @@ import { readdirSync, readFileSync, existsSync, statSync } from "node:fs";
 import { join, resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const OUT = resolve(dirname(fileURLToPath(import.meta.url)), "..", "out");
+const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+
+// `node scripts/check-links.mjs [dir]`. With no argument it checks the Next.js export
+// (out/), which does not contain the Astro-served pages; with a directory (the merged
+// site in CI) every link must resolve for real.
+const ARG = process.argv[2];
+const OUT = ARG ? resolve(ARG) : join(ROOT, "out");
+
+/**
+ * Paths served by the separate Astro build (see lib/site-nav.ts, `astro: true`). They
+ * are absent from out/ by design, so the Next-only check accepts them; the merged-site
+ * check (ARG given) does not, and fails if one is really missing.
+ */
+const ASTRO_PAGES = ARG
+  ? []
+  : [...readFileSync(join(ROOT, "lib", "site-nav.ts"), "utf8").matchAll(/href:\s*"([^"]+)"[^}]*astro:\s*true/g)].map((m) => m[1]);
+const isAstroPage = (url) => ASTRO_PAGES.some((p) => url === p || url === p.replace(/\/$/, ""));
 
 /** Non-page assets that legitimately have no .html file behind them. */
 const ASSET = /\.(?:png|jpe?g|gif|svg|webp|ico|css|js|json|xml|txt|pdf|woff2?|ttf|zip|yaml|yml|toml|cff)$/i;
@@ -58,7 +74,7 @@ for (const page of pages) {
     // themselves the bug this check was written for, so they are flagged too.
     if (/^(?:[a-z]+:|\/\/|#)/i.test(href)) continue;
     if (!href.startsWith("/")) { broken.push({ from, href, why: "relative href in exported HTML" }); continue; }
-    if (!exists(href)) broken.push({ from, href, why: "no such page or asset in out/" });
+    if (!exists(href) && !isAstroPage(href)) broken.push({ from, href, why: "no such page or asset in out/" });
   }
 }
 
