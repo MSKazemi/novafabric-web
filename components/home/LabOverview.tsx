@@ -37,6 +37,24 @@ const LAB_PAGES = [
     desc: "Community capsule gallery.",
     icon: "⬡",
   },
+  {
+    label: "docs",
+    href: "/docs/",
+    desc: "Getting started, concepts, CLI and API reference.",
+    icon: "▤",
+  },
+  {
+    label: "demo",
+    href: "/demo/",
+    desc: "A walkthrough of capture, replay and diff.",
+    icon: "▶",
+  },
+  {
+    label: "compare",
+    href: "/docs/comparison/",
+    desc: "How NovaFabric compares with Langfuse, LangSmith and OpenTelemetry.",
+    icon: "≈",
+  },
 ];
 
 export default function LabOverview() {
@@ -46,7 +64,7 @@ export default function LabOverview() {
         <p className="font-code text-[11px] text-faint tracking-widest uppercase mb-2">
           Enter the lab
         </p>
-        <h2 className="font-display text-4xl text-ink mb-12">Six ways in.</h2>
+        <h2 className="font-display text-4xl text-ink mb-12">Nine ways in.</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {LAB_PAGES.map((page) => (
             <Link key={page.href} href={page.href}>
