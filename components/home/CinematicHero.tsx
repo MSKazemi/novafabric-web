@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { VERSION_TAG } from "@/lib/version";
+import CopyButton from "@/components/CopyButton";
 
 const HeroCanvas = dynamic(() => import("@/components/hero/HeroCanvas"), { ssr: false });
 
@@ -81,7 +82,7 @@ export default function CinematicHero() {
         className="page-max-w"
         style={{ position: "relative", zIndex: 10 }}
       >
-        <div className="py-20 relative z-10 flex flex-col lg:flex-row gap-16 items-center">
+        <div className="py-12 lg:py-14 relative z-10 flex flex-col lg:flex-row gap-16 items-center">
           {/* Left column — text */}
           <div className="flex-1 min-w-0">
             {/* Badge */}
@@ -91,31 +92,60 @@ export default function CinematicHero() {
               ◆ novafabric {VERSION_TAG} · experimental
             </span>
 
-            {/* Headline */}
+            {/* Headline: plain words a developer would search for; the
+                time-machine line stays as the sub-headline. */}
             <h1
-              className="font-display text-5xl md:text-7xl text-ink leading-[1.0] mb-6 hero-rise"
+              className="font-display text-5xl md:text-6xl text-ink leading-[1.02] mb-3 hero-rise"
             >
-              The <em>time machine</em>
-              <br />
-              for AI systems.
+              Replay and audit <em>AI agent</em> runs.
             </h1>
+            <p className="font-display italic text-2xl text-muted mb-5 hero-reveal hero-reveal-2">
+              The time machine for AI systems.
+            </p>
 
             {/* Body */}
             <p
-              className="text-muted text-lg max-w-md leading-relaxed mb-8 hero-reveal hero-reveal-3"
+              className="text-muted text-base max-w-md leading-relaxed mb-5 hero-reveal hero-reveal-3"
             >
               Capture, replay, and audit AI-agent executions. Evidence
               infrastructure for reproducible AI. Local-first, cryptographically
               signed.
             </p>
 
+            {/* Install: the real commands from the README quickstart */}
+            <div
+              data-theme="dark"
+              className="font-code text-[12.5px] leading-relaxed bg-surface border border-edge-2 rounded-lg px-4 py-3 mb-6 max-w-md hero-reveal hero-reveal-4"
+            >
+              <div className="flex items-center justify-between gap-3">
+                <code>
+                  <span className="text-amber">$ </span>
+                  <span className="text-ink">pip install novafabric</span>
+                </code>
+                <CopyButton text="pip install novafabric" />
+              </div>
+              <div className="mt-2 text-muted">
+                <div><span className="text-amber">$ </span>nova capture python my_agent.py</div>
+                <div><span className="text-amber">$ </span>nova validate &lt;capsule&gt;</div>
+                <div><span className="text-amber">$ </span>nova replay &lt;capsule&gt; --mode forensic</div>
+                <div><span className="text-amber">$ </span>nova diff &lt;capsule-a&gt; &lt;capsule-b&gt;</div>
+              </div>
+              <p className="mt-2 text-faint text-[11px]">Python 3.12+ · Apache-2.0</p>
+            </div>
+
             {/* CTAs */}
-            <div className="flex flex-wrap gap-4 hero-reveal hero-reveal-4">
+            <div className="flex flex-wrap gap-3 hero-reveal hero-reveal-4">
               <Link
-                href="/novafabric"
+                href="/docs/getting-started/"
                 className="font-code text-[13px] bg-amber text-canvas px-5 py-2.5 rounded hover:bg-amber-2 transition-colors"
               >
-                explore novafabric →
+                get started →
+              </Link>
+              <Link
+                href="/novafabric"
+                className="font-code text-[13px] border border-edge-2 text-muted px-5 py-2.5 rounded hover:text-ink hover:border-faint transition-colors"
+              >
+                explore novafabric
               </Link>
               <a
                 href="https://github.com/MSKazemi/novafabric"
