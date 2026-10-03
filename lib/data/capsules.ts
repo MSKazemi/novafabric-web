@@ -8,7 +8,7 @@ export const CAPSULES: CapsuleEntry[] = [
     snippet: [
       "$ nova capture python -m pytest tests/integration/",
       "",
-      "  capsule   ─ 4f8a1c2e",
+      "  capsule   ─ e5a7c013",
       "  trace.jsonl        ✓   1,203 spans",
       "  model-calls.jsonl  ✓   6 LLM calls",
       "  dsse signature     ✓",

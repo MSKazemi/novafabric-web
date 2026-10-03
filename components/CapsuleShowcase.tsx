@@ -24,7 +24,7 @@ export default function CapsuleShowcase({ capsules = DEFAULT_CAPSULES }: Capsule
             </span>
             <div style={{ height: "1px", width: "40px", backgroundColor: "var(--color-edge-2)" }} />
             <span className="font-code" style={{ color: "var(--color-faint)", fontSize: "11px", letterSpacing: "0.08em" }}>
-              in the wild
+              examples
             </span>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "48px", alignItems: "end" }} className="showcase-header-grid">
@@ -32,14 +32,14 @@ export default function CapsuleShowcase({ capsules = DEFAULT_CAPSULES }: Capsule
               className="font-display"
               style={{ fontSize: "clamp(32px, 4vw, 52px)", fontStyle: "italic", letterSpacing: "-0.02em", color: "var(--color-ink)", lineHeight: 1.1 }}
             >
-              Real runs.
+              Example runs.
               <br />
-              <span style={{ color: "var(--color-amber)" }}>Real capsules.</span>
+              <span style={{ color: "var(--color-amber)" }}>Example capsules.</span>
             </h2>
             <div>
               <p style={{ fontSize: "15px", color: "var(--color-muted)", lineHeight: "1.75", marginBottom: "16px" }}>
-                Each entry is a real project using novafabric to capture and replay AI workflows.
-                The capsule snippet shows what a typical run produces.
+                These are example capsules, not third-party deployments. Each snippet shows what a
+                typical run of that kind produces; capture your own with nova capture.
               </p>
               <a
                 href="https://github.com/MSKazemi/novafabric/blob/main/CONTRIBUTING.md"
