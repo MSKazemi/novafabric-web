@@ -2,12 +2,11 @@
 // Merge the Next.js export (the core site) with the Astro build (extra pages).
 // Rule: the Next.js export is copied first and NEVER overwritten. Files from the
 // Astro build are added only where the path does not already exist, so no page
-// of the core site is removed or replaced. robots.txt is the one deliberate
-// exception: the Astro one is a superset (AI-crawler rules), and it gets an extra
-// Sitemap line for the Next.js sitemap.
+// of the core site is removed or replaced. That includes robots.txt, llms.txt and
+// the sitemap files: this (Next.js) site owns the domain root, so its copies win.
 //
 // usage: node scripts/merge-sites.mjs <next-out> <astro-dist> <target>
-import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, readdirSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { join, relative } from "node:path";
 
 const [nextOut, astroDist, target] = process.argv.slice(2);
@@ -46,14 +45,6 @@ function walk(dir) {
   }
 }
 walk(astroDist);
-
-// robots.txt: Astro's rules + both sitemaps.
-const astroRobots = readFileSync(join(astroDist, "robots.txt"), "utf8").trimEnd();
-const extra = "Sitemap: https://novafabric.ai/sitemap.xml";
-writeFileSync(
-  join(target, "robots.txt"),
-  astroRobots.includes(extra) ? astroRobots + "\n" : astroRobots + "\n" + extra + "\n",
-);
 
 writeFileSync(join(target, ".nojekyll"), "");
 console.log(`merged: ${added} files added from the Astro build, ${skipped} existing paths kept from the Next.js export`);
