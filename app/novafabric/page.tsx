@@ -7,6 +7,7 @@ import CopyButton from "@/components/CopyButton";
 import NovaTerminal from "@/components/NovaTerminal";
 import InteractiveCapsule from "@/components/InteractiveCapsule";
 import JsonLd from "@/components/JsonLd";
+import { INSTALL_COMMAND, REQUIRES_PYTHON } from "@/lib/version";
 
 export const metadata: Metadata = {
   title: "novafabric — capture, replay & audit AI agents (CLI)",
@@ -237,7 +238,7 @@ export default function NovafabricPage() {
                 {/* Install */}
                 <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "24px" }}>
                   {[
-                    { cmd: "pip install novafabric", label: "pip" },
+                    { cmd: INSTALL_COMMAND, label: "pip" },
                     { cmd: "uv add novafabric", label: "uv" },
                   ].map(({ cmd, label }) => (
                     <div
@@ -261,7 +262,7 @@ export default function NovafabricPage() {
                     </div>
                   ))}
                   <p className="font-code" style={{ fontSize: "10px", color: "var(--color-faint)", paddingLeft: "4px" }}>
-                    requires Python 3.12+
+                    requires Python {REQUIRES_PYTHON}
                   </p>
                 </div>
 

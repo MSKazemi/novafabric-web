@@ -8,7 +8,7 @@ import ScrollProgress from "@/components/scroll/ScrollProgress";
 import KonamiHandler from "@/components/easter/KonamiHandler";
 import JsonLd from "@/components/JsonLd";
 import Analytics from "@/components/Analytics";
-import { VERSION } from "@/lib/version";
+import { REQUIRES_PYTHON, VERSION } from "@/lib/version";
 
 const displayFont = Instrument_Serif({
   variable: "--font-display",
@@ -166,7 +166,7 @@ const softwareApplicationSchema = {
     url: "https://arxiv.org/abs/2609.12582",
     datePublished: "2026-09-11",
   },
-  runtimePlatform: "Python 3.12+",
+  runtimePlatform: `Python ${REQUIRES_PYTHON}`,
   license: "https://www.apache.org/licenses/LICENSE-2.0",
   isAccessibleForFree: true,
   offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },

@@ -12,6 +12,7 @@ import {
 } from "cmdk";
 import * as Dialog from "@radix-ui/react-dialog";
 import { MORE_GROUPS, PRIMARY_LINKS, type SiteLink } from "@/lib/site-nav";
+import { INSTALL_COMMAND } from "@/lib/version";
 
 const PAGES: SiteLink[] = [
   { label: "lab", href: "/" },
@@ -58,7 +59,7 @@ export function CommandPalette() {
   }
 
   function copyInstall() {
-    navigator.clipboard.writeText("pip install novafabric").then(() => {
+    navigator.clipboard.writeText(INSTALL_COMMAND).then(() => {
       setOpen(false);
       setToast(true);
       setTimeout(() => setToast(false), 2000);

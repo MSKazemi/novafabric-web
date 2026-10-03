@@ -6,6 +6,7 @@ import BreadcrumbJsonLd from "@/components/BreadcrumbJsonLd";
 import JsonLd from "@/components/JsonLd";
 import { PageHero, SectionHeader, TerminalFrame } from "@/components/ui";
 import CapsuleValidator from "@/components/demo/CapsuleValidator";
+import { INSTALL_COMMAND } from "@/lib/version";
 
 const DESCRIPTION =
   "A guided tour of everything NovaFabric does: capture any command, inspect and validate the capsule against its real schema in your browser, replay it, diff two runs, trace lineage, and export signed evidence.";
@@ -180,7 +181,7 @@ export default function DemoPage() {
           <p style={{ fontSize: "14px", color: "var(--color-muted)", lineHeight: 1.7, margin: 0 }}>
             <strong style={{ color: "var(--color-ink)" }}>Prefer your own terminal?</strong>{" "}
             <code style={{ fontFamily: "var(--font-code)", fontSize: "0.9em" }}>
-              pip install novafabric
+              {INSTALL_COMMAND}
             </code>{" "}
             then{" "}
             <code style={{ fontFamily: "var(--font-code)", fontSize: "0.9em" }}>
@@ -419,7 +420,7 @@ export default function DemoPage() {
           </h2>
           <TerminalFrame>
             <div style={{ padding: "16px 18px", whiteSpace: "pre-wrap" }}>
-              <span style={{ color: "var(--color-jade)" }}>$</span> pip install novafabric{"\n"}
+              <span style={{ color: "var(--color-jade)" }}>$</span> {INSTALL_COMMAND}{"\n"}
               <span style={{ color: "var(--color-jade)" }}>$</span> nova capture python my_agent.py{"\n"}
               <span style={{ color: "var(--color-jade)" }}>$</span> nova validate &lt;run-id&gt;{"\n"}
               <span style={{ color: "var(--color-jade)" }}>$</span> nova replay &lt;run-id&gt; --mode forensic{"\n"}

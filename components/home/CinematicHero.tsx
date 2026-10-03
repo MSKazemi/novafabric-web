@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { VERSION_TAG } from "@/lib/version";
+import { INSTALL_COMMAND, REQUIRES_PYTHON, VERSION_TAG } from "@/lib/version";
 import CopyButton from "@/components/CopyButton";
 
 const HeroCanvas = dynamic(() => import("@/components/hero/HeroCanvas"), { ssr: false });
@@ -120,9 +120,9 @@ export default function CinematicHero() {
               <div className="flex items-center justify-between gap-3">
                 <code>
                   <span className="text-amber">$ </span>
-                  <span className="text-ink">pip install novafabric</span>
+                  <span className="text-ink">{INSTALL_COMMAND}</span>
                 </code>
-                <CopyButton text="pip install novafabric" />
+                <CopyButton text={INSTALL_COMMAND} />
               </div>
               <div className="mt-2 text-muted">
                 <div><span className="text-amber">$ </span>nova capture python my_agent.py</div>
@@ -130,7 +130,7 @@ export default function CinematicHero() {
                 <div><span className="text-amber">$ </span>nova replay &lt;capsule&gt; --mode forensic</div>
                 <div><span className="text-amber">$ </span>nova diff &lt;capsule-a&gt; &lt;capsule-b&gt;</div>
               </div>
-              <p className="mt-2 text-faint text-[11px]">Python 3.12+ · Apache-2.0</p>
+              <p className="mt-2 text-faint text-[11px]">Python {REQUIRES_PYTHON} · Apache-2.0</p>
             </div>
 
             {/* CTAs */}
