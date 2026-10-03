@@ -1,0 +1,24 @@
+# The repository had no .gitignore. Nothing unwanted was committed — the build
+# outputs simply had to be avoided by hand on every `git add`. This makes that
+# safe instead of careful.
+
+# dependencies
+/node_modules
+
+# build output
+/.next
+/out
+
+# documentation source, populated by scripts/sync-docs.mjs at build time.
+# The markdown belongs to MSKazemi/novafabric; a copy here would drift.
+/.docs-src
+
+# local env + tooling
+.env
+.env.*
+!.env.example
+*.tsbuildinfo
+next-env.d.ts.bak
+.DS_Store
+/test-results
+/playwright-report

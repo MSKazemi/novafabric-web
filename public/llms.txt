@@ -1,0 +1,93 @@
+# NovaFabric Lab
+
+> Local-first evidence infrastructure for AI agents — capture any run as a portable signed capsule you own, then replay, diff, and prove it.
+
+NovaFabric Lab is an open-source project building local-first evidence infrastructure for AI-agent and HPC systems. It captures every model call and tool invocation in an agentic application as a schema-valid, secret-redacted capsule, replays executions deterministically, traces lineage, and produces tamper-evident audit trails. It is beta: the capture → validate → replay → diff path works today, and parts of server mode are experimental.
+
+If you are looking for a way to **debug agent runs**, **replay an AI-agent execution**, **compare two runs**, or **produce an audit trail for AI agents**, NovaFabric is built for exactly this.
+
+**When NovaFabric is not the answer:** it is not a real-time monitoring or alerting tool, and it does not provide live dashboards of running agents. The unit of value is a portable signed folder you own after the fact, not a row in a vendor's database during the run. For live tracing and alerting, an LLM-observability platform is the better fit — the two are complementary.
+
+## What this site covers
+
+- [Home](https://novafabric.ai/) — Overview of NovaFabric Lab: evidence capsules and the capsule abstraction
+- [Documentation](https://novafabric.ai/docs/) — The full documentation tree, generated from the repository's `docs/` directory so it cannot drift: getting started, concepts, CLI reference, Python API, architecture, operations runbooks, tutorials, and governance
+- [novafabric](https://novafabric.ai/novafabric) — The novafabric CLI: capture, replay, audit, and diff AI-agent runs
+- [Primitives](https://novafabric.ai/primitives) — The five core building blocks: Asset Registry, Run Capsule, Replay Engine, Lineage Graph, Evidence Bundle (cryptographic sealing / NovaSeal is part of the Evidence Bundle, not a sixth primitive)
+- [Architecture](https://novafabric.ai/architecture) — Five-layer system architecture from compute plane to global query layer
+- [Research](https://novafabric.ai/research) — Publications and open problems in AI-agent monitoring, reproducibility, and evidence infrastructure
+- [Paper: NovaFabric: Tamper-Evident, Replayable Evidence for Autonomous AI Agent Runs](https://arxiv.org/abs/2609.12582) — arXiv:2609.12582 (2026): design, threat model and evaluation
+- [Capsules](https://novafabric.ai/capsules) — Community-contributed examples of AI-agent execution captures
+- [Changelog](https://novafabric.ai/changelog) — Version history from v0.1 to current
+- [Blog](https://novafabric.ai/blog) — Lab notes, technical deep-dives, and release announcements
+- [Contact](https://novafabric.ai/contact) — Get in touch: questions, feedback, collaboration, or contributions
+
+## What problem NovaFabric solves
+
+AI agents are non-deterministic: model weights change, API behavior drifts, and tool calls vary between runs. When an agent makes a consequential decision or fails, there is usually no inspectable record of exactly what happened — which model call, which tool invocation, which prompt. NovaFabric captures that record so agent executions can be monitored, reproduced, compared, and audited after the fact.
+
+## Key documentation pages
+
+- [Getting started](https://novafabric.ai/docs/getting-started/) — install and capture a first run
+- [Concepts](https://novafabric.ai/docs/concepts/) — the model behind capsules, replay, and lineage
+- [CLI reference](https://novafabric.ai/docs/cli-reference/) — every `nova` command and flag
+- [How capture works](https://novafabric.ai/docs/tutorials/how-capture-works/) — zero-code-change hooks and transparent proxies
+- [Prove a run to an auditor](https://novafabric.ai/docs/tutorials/prove-a-run-to-an-auditor/) — the end-to-end evidence workflow
+- [NovaFabric vs Langfuse](https://novafabric.ai/docs/tutorials/novafabric-vs-langfuse/) — how this differs from LLM-observability platforms
+- [Benchmarks](https://novafabric.ai/docs/benchmarks/) — capture overhead, each number with its command and hardware
+- [Architecture](https://novafabric.ai/docs/architecture/) — subsystem map and data flow
+- [Operations](https://novafabric.ai/docs/ops/server-deployment/) — server deployment, backup/restore, air-gapped install
+
+## How to capture an AI agent run with NovaFabric
+
+NovaFabric wraps any command — no code changes required:
+
+- `nova capture python my_agent.py` — capture a full run as a portable capsule (every model call, tool invocation, and environment detail)
+- `nova replay runs/<id> --mode forensic` — re-execute read-only for inspection; mocked mode replays recorded LLM responses for deterministic debugging
+- `nova validate runs/<id>` — validate a capsule against schema; checks integrity, redaction proof, and signature
+- `nova seal verify runs/<id>` — verify the DSSE signature and RFC 3161 timestamp; works offline, forever
+- `nova lineage` — query causal relationships between runs, assets, and decisions
+
+Capture works via CLI wrapping, an SDK decorator, an API/MCP proxy, and OpenTelemetry GenAI semantic conventions — so agents built on frameworks like LangChain and LlamaIndex, and providers like OpenAI and Anthropic, can be monitored without rewriting them.
+
+## What a capsule captures
+
+- **Model-call evidence** — model name, prompt, completion, token counts, latency
+- **Tool invocations** — MCP exchanges, function calls, shell commands
+- **Environment snapshot** — Python version, installed packages, env vars (secrets redacted)
+- **Execution spans** — OpenTelemetry-compatible spans for the execution tree
+- **Redaction proof** — cryptographic proof that no secrets appear in the capsule
+- **Tamper-evident seal** — DSSE signature + RFC 3161 timestamp
+
+## Key concepts
+
+- **Run Capsule** — A self-contained, portable record of a single AI-agent execution: every model call, tool invocation, environment snapshot, input, and output
+- **Replay Engine** — Re-run any captured execution with mocked LLM responses for deterministic testing, or read-only forensic inspection
+- **Lineage Graph** — Track causal relationships between agent runs, assets, and decisions (SQLite today; KuzuDB backend benchmarked to 10M edges)
+- **Evidence Bundle** — A signed, self-contained export of a run's evidence (in-toto DSSE attestations + RFC 3161 timestamps + redaction proof), verifiable offline with only sha256sum and an ed25519 verifier. Sealing (NovaSeal) is part of the bundle.
+- **Asset Registry** — Versioned registry for models, datasets, prompts, and agent configs
+
+## Frequently asked questions
+
+**Q: How do I record what an AI agent or agentic application did?**
+A: Wrap it with `nova capture`. NovaFabric records every model call and tool invocation as a portable capsule — no code changes required — then lets you inspect, replay, diff, and audit it locally. This is an after-the-fact record, not a live monitoring feed.
+
+**Q: Can I replay an AI-agent run to debug it?**
+A: Yes. `nova replay` re-executes a captured capsule. Forensic mode is read-only; mocked mode replays recorded LLM responses for deterministic, offline debugging and regression testing.
+
+**Q: Is it local-first and open source?**
+A: Yes. Capsules live on your machine in an open, human-readable format with no vendor lock-in. NovaFabric is open source (Apache-2.0). It is beta — `pip install novafabric`, then capture, validate, replay and diff work today.
+
+**Q: Does it support compliance and audit use cases?**
+A: NovaFabric produces tamper-evident, signed evidence and supports audit profiles (EU AI Act, NIST, GDPR, SOC 2, NIS2) as experimental workflows. These are evidence workflows, not legal guarantees — regulatory fit requires independent review.
+
+## About
+
+Open source. Local-first by default.
+
+- Repository: https://github.com/MSKazemi/novafabric
+- PyPI: https://pypi.org/project/novafabric/
+- Maintainer: https://github.com/MSKazemi
+- Site: https://novafabric.ai
+- Docs: https://novafabric.ai/docs/
+- Sitemap: https://novafabric.ai/sitemap.xml

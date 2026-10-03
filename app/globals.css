@@ -1,0 +1,509 @@
+@import "tailwindcss";
+
+/* ───────────────────────────────────────────────────────────────────────────
+   THEME TOKENS — light is the DEFAULT, dark is opt-in via [data-theme="dark"].
+
+   `@theme` (NOT `@theme inline`) registers each token as a real CSS custom
+   property AND generates the utilities (bg-canvas, text-ink…) that reference it
+   via var(). Because the utilities resolve the var at runtime, overriding a
+   token under `:root[data-theme="dark"]` re-themes the whole site with no
+   per-component edits. The values here are the LIGHT (default) palette.
+
+   Every interactive/brand accent routes through --color-accent so the entire
+   identity can be re-tuned in ONE place.
+   ─────────────────────────────────────────────────────────────────────────── */
+@theme {
+  /* surfaces — warm near-white paper stack */
+  --color-canvas: #fbfbf9;
+  --color-surface: #ffffff;
+  --color-surface-2: #f5f5f1;
+  --color-surface-3: #ecece6;
+  --color-edge: #e6e6df;
+  --color-edge-2: #d6d6cc;
+
+  /* text */
+  --color-ink: #16161c;
+  --color-muted: #5a5a68;
+  --color-faint: #9a9aa6;
+
+  /* brand accent — indigo, contrast-safe on light (AA on canvas).
+     THIS is the single source of the brand identity. */
+  --color-accent: #4f46e5;
+  --color-accent-2: #6366f1;
+  --color-accent-glow: rgba(79, 70, 229, 0.08);
+  --color-on-accent: #ffffff;
+
+  /* the legacy `amber` utilities (text-amber, bg-amber, …) now follow the
+     brand accent so the whole site stays one identity. */
+  --color-amber: var(--color-accent);
+  --color-amber-2: var(--color-accent-2);
+  --color-amber-dim: color-mix(in srgb, var(--color-accent) 14%, white);
+  --color-amber-glow: var(--color-accent-glow);
+
+  /* true warm amber — kept for a few warm signals (e.g. the Capture pillar)
+     so multi-color taxonomies stay legible against the cool brand accent. */
+  --color-amber-true: #b45309;
+
+  /* secondary signal */
+  --color-jade: #0f9d58;
+  --color-jade-glow: rgba(15, 157, 88, 0.07);
+
+  /* compositing helpers (used by chrome that can't reference a bg utility) */
+  --color-nav-bg: rgba(251, 251, 249, 0.82);
+  --color-overlay: rgba(20, 20, 30, 0.04);
+  --color-hairline: rgba(20, 20, 30, 0.08);
+
+  /* semantic status / domain hues — tuned for contrast on LIGHT.
+     Used by StatusChip, ArchitectureExplorer, Packages, etc. Overridden for
+     dark below. Translucent fills are derived at call sites via color-mix. */
+  --hue-blue: #1d64d8;
+  --hue-violet: #6d3ad6;
+  --hue-orange: #c2620c;
+  --hue-red: #d1362f;
+  --hue-slate: #5a5a68;
+  --hue-gold: #a67c05;
+
+  /* elevation — real shadows matter on light backgrounds */
+  --shadow-sm: 0 1px 2px rgba(20, 20, 30, 0.04), 0 1px 3px rgba(20, 20, 30, 0.06);
+  --shadow-md: 0 2px 8px rgba(20, 20, 30, 0.05), 0 8px 24px rgba(20, 20, 30, 0.07);
+  --shadow-lg: 0 4px 16px rgba(20, 20, 30, 0.07), 0 24px 56px rgba(20, 20, 30, 0.10);
+  --shadow-accent: 0 6px 24px rgba(79, 70, 229, 0.18);
+}
+
+/* ── DARK PALETTE — the original terminal aesthetic, now opt-in ──
+   Matches ANY element with [data-theme="dark"] (not just :root) so a subtree
+   can be a local "dark stage" — e.g. a terminal or interactive widget rendered
+   dark-on-light as a deliberate device. Custom props inherit to descendants. */
+[data-theme="dark"] {
+  --color-canvas: #07070a;
+  --color-surface: #0e0e12;
+  --color-surface-2: #141418;
+  --color-surface-3: #18181f;
+  --color-edge: #1c1c28;
+  --color-edge-2: #282840;
+
+  --color-ink: #ebebf0;
+  --color-muted: #8a8ab0;
+  --color-faint: #46466a;
+
+  /* brand accent — lighter indigo for contrast on the dark canvas */
+  --color-accent: #818cf8;
+  --color-accent-2: #a5b4fc;
+  --color-accent-glow: rgba(129, 140, 248, 0.10);
+  --color-on-accent: #0b0b16;
+
+  --color-amber: var(--color-accent);
+  --color-amber-2: var(--color-accent-2);
+  --color-amber-dim: color-mix(in srgb, var(--color-accent) 22%, black);
+  --color-amber-glow: var(--color-accent-glow);
+  --color-amber-true: #e8960c;
+
+  --color-jade: #3fc86e;
+  --color-jade-glow: rgba(63, 200, 110, 0.06);
+
+  --hue-blue: #4a9eff;
+  --hue-violet: #a87fff;
+  --hue-orange: #ff8c42;
+  --hue-red: #ff6b6b;
+  --hue-slate: #8a8ab0;
+  --hue-gold: #e0b341;
+
+  --color-nav-bg: rgba(7, 7, 10, 0.9);
+  --color-overlay: rgba(255, 255, 255, 0.03);
+  --color-hairline: rgba(255, 255, 255, 0.08);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.45), 0 8px 24px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.5), 0 24px 56px rgba(0, 0, 0, 0.45);
+  --shadow-accent: 0 6px 24px rgba(129, 140, 248, 0.22);
+}
+
+/* Keep the global reset inside @layer base so Tailwind's spacing utilities
+   (py-16, mt-20, mb-8, pt-28, …) in @layer utilities can override it.
+   An UNLAYERED `* { margin:0; padding:0 }` beats every layered utility in
+   CSS cascade order, which silently zeroed all padding/margin site-wide. */
+@layer base {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+:root {
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+/* Local dark stages get a solid dark canvas + light ink of their own. */
+[data-theme="dark"] {
+  background-color: var(--color-canvas);
+  color: var(--color-ink);
+}
+
+/* scroll-behavior removed — Lenis handles smooth scroll */
+html {
+  height: auto;
+}
+
+html body {
+  height: auto;
+}
+
+body {
+  background-color: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-body), sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+::selection {
+  background-color: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-canvas);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-edge-2);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-faint);
+}
+
+@layer utilities {
+  .font-display {
+    font-family: var(--font-display), serif;
+  }
+  .font-code {
+    font-family: var(--font-code), monospace;
+  }
+  .font-body {
+    font-family: var(--font-body), sans-serif;
+  }
+}
+
+/* ── keyframes ── */
+
+@keyframes slideInFromRight {
+  from { opacity: 0; transform: translateX(24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInFromLeft {
+  from { opacity: 0; transform: translateX(-24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.3; }
+  50%       { opacity: 0.7; }
+}
+
+@keyframes blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes lineIn {
+  from { opacity: 0; transform: translateX(-6px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scanline {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+@keyframes gradientDrift {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(2%, -2%) scale(1.05); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+
+.cursor-blink {
+  display: inline-block;
+  width: 8px;
+  height: 14px;
+  background-color: var(--color-accent);
+  animation: blink 1s step-end infinite;
+  vertical-align: middle;
+  margin-left: 2px;
+}
+
+.animate-fade-up {
+  animation: fadeUp 0.6s ease both;
+}
+
+/* Hero intro reveal — CSS-driven (NOT JS/GSAP) so the LCP headline paints on the
+   first frame of the static HTML instead of waiting for the JS bundle to download
+   and hydrate. Gating the hero behind an inline opacity:0 + GSAP reveal pushed
+   mobile LCP to ~6.7s (FCP was 1.2s, TBT only 30ms). These run immediately at
+   paint; the global prefers-reduced-motion rule collapses them to a static
+   visible state, so content is never stuck invisible. */
+.hero-reveal { animation: fadeUp 0.7s ease-out both; }
+.hero-reveal-1 { animation-delay: 0.04s; }
+.hero-reveal-2 { animation-delay: 0.12s; }
+.hero-reveal-3 { animation-delay: 0.22s; }
+.hero-reveal-4 { animation-delay: 0.32s; }
+
+/* The hero H1 is the largest text — it must stay a valid LCP candidate, so it
+   NEVER animates opacity (Chrome excludes opacity:0 elements from LCP). It gets a
+   transform-only rise instead: painted at full opacity from the first frame. */
+@keyframes heroRise { from { transform: translateY(16px); } to { transform: translateY(0); } }
+.hero-rise { animation: heroRise 0.7s ease-out both; animation-delay: 0.06s; }
+
+.dot-grid {
+  background-image: radial-gradient(
+    circle,
+    var(--color-hairline) 1px,
+    transparent 1px
+  );
+  background-size: 28px 28px;
+}
+
+/* Faint engineering grid — reads as blueprint/CAD on light, terminal on dark */
+.blueprint-grid {
+  background-image:
+    linear-gradient(var(--color-hairline) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-hairline) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.noise-overlay {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  opacity: 0.5;
+}
+:root[data-theme="dark"] .noise-overlay {
+  mix-blend-mode: screen;
+  opacity: 1;
+}
+
+.section-rule {
+  border: none;
+  border-top: 1px solid var(--color-edge);
+}
+
+.amber-rule {
+  border: none;
+  border-top: 1px solid var(--color-accent);
+  opacity: 0.3;
+}
+
+/* ── utility classes ── */
+
+.page-max-w {
+  max-width: 1200px;
+  margin: 0 auto;
+  /* horizontal only — vertical spacing comes from py-* utilities.
+     Using the `padding` shorthand here would zero padding-block and
+     override any py-* class on the same element. */
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+.section-number {
+  font-family: var(--font-code), monospace;
+  font-size: 11px;
+  color: var(--color-accent);
+  letter-spacing: 0.1em;
+}
+
+/* elevation utilities */
+.shadow-card { box-shadow: var(--shadow-sm); }
+.shadow-card-md { box-shadow: var(--shadow-md); }
+.shadow-card-lg { box-shadow: var(--shadow-lg); }
+
+.glow-amber {
+  box-shadow: 0 0 24px var(--color-amber-glow);
+}
+
+.glow-jade {
+  box-shadow: 0 0 24px var(--color-jade-glow);
+}
+
+.scroll-reveal {
+  opacity: 0;
+}
+
+.scroll-reveal.visible {
+  animation: fadeUp 0.6s ease both;
+}
+
+.shimmer-text {
+  background: linear-gradient(
+    90deg,
+    var(--color-ink) 0%,
+    var(--color-accent) 50%,
+    var(--color-ink) 100%
+  );
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 3s linear infinite;
+}
+
+.pulse-glow-amber {
+  animation: pulseGlow 2s ease-in-out infinite;
+  color: var(--color-accent);
+}
+
+/* Accent gradient text for hero emphasis */
+.accent-gradient-text {
+  background: linear-gradient(120deg, var(--color-accent) 0%, var(--color-accent-2) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ── Documentation prose (/docs/**) ──
+   Styles the HTML rendered from the repository's markdown. The markdown is not
+   authored against this design system, so everything it can emit — headings,
+   tables, callouts, code, task lists — needs a defined look here. The Astro
+   build this was ported from referenced a `docs-prose` class it never defined,
+   so those pages rendered as unstyled HTML; these rules are the fix. */
+
+.docs-prose {
+  max-width: 46rem;
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+.docs-prose > * + * { margin-top: 1.15em; }
+
+.docs-prose h1,
+.docs-prose h2,
+.docs-prose h3,
+.docs-prose h4 {
+  color: var(--color-ink);
+  font-family: var(--font-display), Georgia, serif;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  scroll-margin-top: 6rem; /* in-page #anchors clear the sticky nav */
+}
+
+.docs-prose h1 { font-size: 2.5rem; margin-top: 0; }
+.docs-prose h2 {
+  font-size: 1.875rem;
+  margin-top: 2.5em;
+  padding-top: 0.6em;
+  border-top: 1px solid var(--color-edge);
+}
+.docs-prose h3 { font-size: 1.375rem; margin-top: 2em; }
+.docs-prose h4 { font-size: 1.125rem; margin-top: 1.75em; font-family: var(--font-body), sans-serif; font-weight: 600; }
+
+.docs-prose strong { color: var(--color-ink); font-weight: 600; }
+
+.docs-prose a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+.docs-prose a:hover { color: var(--color-accent-2); }
+
+.docs-prose ul,
+.docs-prose ol { padding-left: 1.5em; }
+.docs-prose ul { list-style: disc; }
+.docs-prose ol { list-style: decimal; }
+.docs-prose li + li { margin-top: 0.4em; }
+.docs-prose li::marker { color: var(--color-faint); }
+/* GFM task lists render a checkbox; the disc marker beside it reads as noise. */
+.docs-prose li:has(> input[type="checkbox"]) { list-style: none; margin-left: -1.2em; }
+.docs-prose input[type="checkbox"] { margin-right: 0.5em; accent-color: var(--color-accent); }
+
+.docs-prose blockquote {
+  border-left: 3px solid var(--color-accent);
+  padding: 0.1em 0 0.1em 1.1em;
+  color: var(--color-muted);
+  font-style: italic;
+}
+
+/* Inline code only — Shiki-highlighted blocks bring their own surface. */
+.docs-prose :not(pre) > code {
+  font-family: var(--font-code), ui-monospace, monospace;
+  font-size: 0.875em;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-edge);
+  border-radius: 0.25rem;
+  padding: 0.1em 0.35em;
+  color: var(--color-ink);
+}
+
+.docs-prose pre {
+  background: #0d1117; /* Shiki github-dark canvas — a fixed dark stage in both themes */
+  border: 1px solid var(--color-edge-2);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  overflow-x: auto;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+}
+.docs-prose pre code { font-family: var(--font-code), ui-monospace, monospace; }
+
+/* Wide tables scroll inside their own box rather than widening the page. */
+.docs-prose table {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+}
+.docs-prose th,
+.docs-prose td {
+  border: 1px solid var(--color-edge);
+  padding: 0.5em 0.75em;
+  text-align: left;
+  vertical-align: top;
+}
+.docs-prose th { background: var(--color-surface-2); color: var(--color-ink); font-weight: 600; }
+
+.docs-prose hr { border: 0; border-top: 1px solid var(--color-edge); margin: 2.5em 0; }
+
+.docs-prose img { max-width: 100%; height: auto; border-radius: 0.375rem; }
+
+/* ── Accessibility: reduced motion ── */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

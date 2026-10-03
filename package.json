@@ -1,0 +1,42 @@
+{
+  "name": "novafabric-web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "sync-docs": "node scripts/sync-docs.mjs",
+    "prebuild": "npm run sync-docs",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@gsap/react": "^2.1.2",
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.6.1",
+    "@types/d3": "^7.4.3",
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1",
+    "cmdk": "^1.1.1",
+    "d3": "^7.9.0",
+    "framer-motion": "^12.40.0",
+    "gsap": "^3.15.0",
+    "lenis": "^1.3.23",
+    "marked": "^16.4.1",
+    "next": "^16.3.0-canary.30",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "shiki": "^4.1.0",
+    "three": "^0.184.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.6",
+    "@types/node": "^22.15.17",
+    "@types/react": "^19.1.4",
+    "@types/react-dom": "^19.1.2",
+    "eslint": "^9.25.1",
+    "eslint-config-next": "^15.3.2",
+    "tailwindcss": "^4.1.6",
+    "typescript": "^5.8.3"
+  }
+}
