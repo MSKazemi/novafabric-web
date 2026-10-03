@@ -244,8 +244,28 @@ export function faqEntries(page: DocPage): FaqEntry[] | undefined {
   return entries.length >= 3 ? entries : undefined;
 }
 
+/**
+ * Search-facing title/description for the few pages where the text-derived ones
+ * are weak. Keep these to what the page itself says; everything else is derived
+ * from the document (first heading, first prose paragraph).
+ */
+const SEO_OVERRIDES: Record<string, { title?: string; description?: string }> = {
+  comparison: {
+    title: "NovaFabric vs Langfuse and LangSmith",
+    description:
+      "An honest comparison of NovaFabric with Langfuse, LangSmith, MLflow, Weights & Biases and OpenTelemetry, including where NovaFabric is the wrong choice.",
+  },
+  "cli-reference": {
+    title: "NovaFabric CLI reference",
+    description:
+      "Command reference for the nova CLI: capture, validate, replay, diff, lineage, trust and compliance. nova and novafabric are the same binary.",
+  },
+};
+
 /** First `# heading`, falling back to a humanised slug. */
 export function titleFor(page: DocPage): string {
+  const override = SEO_OVERRIDES[page.slug]?.title;
+  if (override) return override;
   const heading = page.raw.match(/^#\s+(.+?)\s*$/m);
   if (heading) return heading[1].replace(/`/g, "");
   const last = page.slug.split("/").pop() ?? page.slug;
@@ -259,7 +279,10 @@ export function titleFor(page: DocPage): string {
  * description built from a badge row is worse than no description at all.
  */
 export function descriptionFor(page: DocPage): string {
+  const override = SEO_OVERRIDES[page.slug]?.description;
+  if (override) return override;
   const body = page.raw
+    .replace(/<!--[\s\S]*?-->/g, "") // generated-file banners and other HTML comments
     .replace(/^#\s+.+$/m, "")
     .replace(/```[\s\S]*?```/g, "")
     .replace(/^\s*[>|].*$/gm, "")
@@ -273,6 +296,7 @@ export function descriptionFor(page: DocPage): string {
   if (!paragraph) return `${titleFor(page)} — NovaFabric documentation.`;
 
   const flat = paragraph
+    .replace(/^\s*(?:[-*+]|\d+[.)])\s+/, "") // leading list marker
     .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
     .replace(/[*_`]/g, "")
     .replace(/\s+/g, " ")
