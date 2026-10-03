@@ -1,7 +1,9 @@
 name: Build and deploy novafabric.ai (GitHub Pages)
 
-# Manual until the novafabric.ai DNS cutover; add a `push: branches: [main]` trigger after it.
+# Pushes to main publish novafabric.ai. A manual run publishes only when `deploy` is ticked.
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
     inputs:
       deploy:
@@ -83,7 +85,7 @@ jobs:
   deploy:
     name: Deploy to GitHub Pages
     needs: build
-    if: inputs.deploy
+    if: github.event_name == 'push' || inputs.deploy
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
