@@ -46,41 +46,6 @@ export const metadata: Metadata = {
   title: "NovaFabric Lab — replay and prove what an AI agent did",
   description:
     "NovaFabric captures any AI-agent or HPC run as a portable, secret-redacted, signed evidence capsule you own, then replays, diffs, and proves it — self-hosted, no accounts, no telemetry. Built for reproducibility and audit evidence rather than live dashboards; it is not a real-time monitoring and alerting tool.",
-  keywords: [
-    // primary — the problem people search for
-    "AI agent monitoring",
-    "AI agent observability",
-    "agentic application monitoring",
-    "agentic workflow observability",
-    "AI agent debugging",
-    "LLM execution tracing",
-    "AI agent audit trail",
-    "AI agent reproducibility",
-    "monitoring agentic applications",
-    "capture AI agent runs",
-    "replay AI agent execution",
-    // integrations — search by stack
-    "LangChain observability",
-    "LlamaIndex monitoring",
-    "MCP observability",
-    "Model Context Protocol monitoring",
-    "OpenAI agent monitoring",
-    "Anthropic agent tracing",
-    "OpenTelemetry GenAI",
-    // compliance / enterprise
-    "AI agent compliance",
-    "LLM audit trail",
-    "EU AI Act compliance",
-    "AI governance",
-    "tamper-evident AI execution",
-    // category
-    "evidence infrastructure",
-    "run capsule",
-    "AI agent lineage",
-    "local-first AI agent capture",
-    "AI execution forensics",
-    "novafabric",
-  ],
   icons: {
     icon: [
       { url: "/favicon.svg", type: "image/svg+xml" },
@@ -100,9 +65,6 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "NovaFabric Lab — replay and prove what an AI agent did",
-    description:
-      "Capture any AI-agent or HPC run as a portable signed evidence capsule you own, then replay, diff and prove it. Self-hosted, laptop to cluster. For reproducibility and audit, not live dashboards.",
     images: ["https://novafabric.ai/og.png"],
   },
   verification: { google: "google2a87e4dc9c54dc74" },

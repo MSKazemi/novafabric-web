@@ -31,8 +31,6 @@ const softwareSchema = {
   url: "https://novafabric.ai/novafabric/",
   description:
     "novafabric captures AI-agent runs as portable, secret-redacted, tamper-evident capsules. Monitor, replay, validate, diff, and audit executions.",
-  keywords:
-    "AI agent monitoring, AI agent observability, agentic application monitoring, LLM execution tracing, AI agent debugging, run capsule, AI agent audit trail, replay AI agent execution, AI agent lineage, AI agent reproducibility",
   author: { "@type": "Person", name: "Mohsen Seyedkazemi Ardebili" },
   // License must match the visible claim on the site (footer: Apache-2.0).
   license: "https://www.apache.org/licenses/LICENSE-2.0",

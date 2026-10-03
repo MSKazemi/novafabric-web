@@ -71,7 +71,6 @@ export default async function BlogPostPage({
       name: "NovaFabric Lab",
       logo: { "@type": "ImageObject", url: "https://novafabric.ai/favicon.svg" },
     },
-    keywords: post!.tags.join(", "),
   };
 
   return (

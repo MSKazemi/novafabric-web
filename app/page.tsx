@@ -12,6 +12,7 @@ import Footer from "@/components/Footer";
 import { RESEARCH_AREAS } from "@/lib/data/research";
 import { CAPSULES } from "@/lib/data/capsules";
 import AnimatedSection from "@/components/ui/AnimatedSection";
+import PaperCitation from "@/components/home/PaperCitation";
 
 export const metadata: Metadata = {
   // This overrides the layout title, so it is the one search engines show for
@@ -34,6 +35,7 @@ export default function Home() {
           <CapabilitySystem />
         </AnimatedSection>
         <LabOverview />
+        <PaperCitation />
         <AnimatedSection variant="fadeUp">
           <ResearchActivity activities={RESEARCH_AREAS} showAll={false} />
         </AnimatedSection>

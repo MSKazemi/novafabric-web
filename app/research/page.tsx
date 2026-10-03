@@ -28,15 +28,6 @@ const researchSchema = {
   url: "https://novafabric.ai/research",
   description:
     "Open problems in AI-agent reproducibility, evidence infrastructure, and audit. Active investigations into run capsules, lineage graphs, and tamper-evident execution records.",
-  keywords: [
-    "AI agent monitoring",
-    "AI agent observability",
-    "AI agent reproducibility",
-    "evidence infrastructure",
-    "run capsule",
-    "agent lineage",
-    "AI audit",
-  ],
   founder: { "@type": "Person", name: "Mohsen Seyedkazemi Ardebili" },
 };
 
@@ -87,6 +78,11 @@ export default function ResearchPage() {
             The design, threat model and evaluation of NovaFabric: eight research questions at
             measured scope, including replay, tamper rejection, redaction, lineage queries over
             100M edges, and a 314-machine, ten-region ingest run.
+          </p>
+          <p className="text-muted text-sm mt-3">
+            Cite: <a href="https://doi.org/10.48550/arXiv.2609.12582" className="underline underline-offset-4">doi:10.48550/arXiv.2609.12582</a>
+            {" "}· Software archive:{" "}
+            <a href="https://doi.org/10.5281/zenodo.22997388" className="underline underline-offset-4">doi:10.5281/zenodo.22997388</a>
           </p>
         </article>
 

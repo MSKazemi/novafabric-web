@@ -10,7 +10,7 @@ const LAB_PAGES = [
   {
     label: "research",
     href: "/research",
-    desc: "Open problems and upcoming publications.",
+    desc: "Open problems and the NovaFabric paper (arXiv:2609.12582).",
     icon: "⬡",
   },
   {
