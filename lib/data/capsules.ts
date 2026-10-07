@@ -4,7 +4,7 @@ export const CAPSULES: CapsuleEntry[] = [
   {
     project: "novafabric eval suite",
     useCase:
-      "Capturing the novafabric test pipeline itself — every pytest run produces a signed capsule with model calls, tool exchanges, and a redaction proof.",
+      "Capturing the novafabric test pipeline itself — every pytest run produces a capsule with model calls, tool exchanges, and a redaction proof, sealed when NovaSeal is configured.",
     snippet: [
       "$ nova capture python -m pytest tests/integration/",
       "",

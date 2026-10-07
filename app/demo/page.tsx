@@ -87,7 +87,7 @@ export default function DemoPage() {
     step: [
       { "@type": "HowToStep", name: "Capture any command", text: "Wrap the command with nova capture. No application code changes." },
       { "@type": "HowToStep", name: "Validate the capsule", text: "Check the capsule against the published JSON Schema." },
-      { "@type": "HowToStep", name: "Replay it", text: "Re-execute or inspect the run in one of four modes." },
+      { "@type": "HowToStep", name: "Replay it", text: "Inspect the run, or re-run it against its recorded model responses (tools still run live)." },
       { "@type": "HowToStep", name: "Diff two runs", text: "Compare capsules structurally to find what changed." },
       { "@type": "HowToStep", name: "Export signed evidence", text: "Produce a bundle verifiable offline with sha256sum and an ed25519 verifier." },
     ],

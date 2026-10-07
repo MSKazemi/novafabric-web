@@ -108,7 +108,7 @@ const C: Record<string, Comp> = {
   /* ── Core data ── */
   capsule: {
     icon: "📦", domain: "data", title: "Run Capsule", sub: "the unit of evidence", ver: "v0.2 schema",
-    tag: "The portable, schema-valid, secret-redacted record of one execution. Everything downstream reads from it.",
+    tag: "The portable, schema-valid, secret-scanned record of one execution. Everything downstream reads from it.",
     connects: ["capture", "replay", "diff", "lineage", "eval", "trust", "kg", "compliance"],
     summary: "A directory holding capsule.yaml (manifest), model-calls.jsonl & tool-calls.jsonl (OTel GenAI), events.jsonl, env.lock, lineage.jsonl, optional .seal/ (DSSE signature), and outputs/. It is the universal connector between every subsystem.",
     subs: [["capsule.yaml", "status, timestamps, counts, tags"], ["model-calls.jsonl", "one record per LLM call"], ["tool-calls.jsonl", "one record per tool call"], ["env.lock", "Python, OS, packages"], ["lineage.jsonl", "consumed/produced_by/replayed_from edges"], [".seal/", "DSSE envelope + RFC 3161 timestamp"], ["outputs/", "stdout, stderr, artifacts"]],
@@ -131,9 +131,9 @@ const C: Record<string, Comp> = {
   /* ── Analyze ── */
   replay: {
     icon: "🔄", domain: "analyze", title: "Replay Engine", sub: "4 modes", ver: "v0.3",
-    tag: "Re-runs a captured capsule in forensic, semantic, exact, or mocked mode — with a per-tool safety ladder.",
+    tag: "Replays or inspects a captured capsule in five modes — forensic, mocked, semantic, exact, and experimental intervention.",
     connects: ["capsule", "policy", "diff"],
-    summary: "ReplayEngine loads the capsule, checks environment compatibility, evaluates per-tool policy, and runs one of four modes. Only 'mocked' re-executes the subprocess (serving LLM calls from cache); the others are non-executing analyses.",
+    summary: "ReplayEngine loads the capsule, checks environment compatibility, evaluates per-tool policy, and runs one of five modes. 'mocked' re-executes the subprocess, serving recorded LLM responses from the capsule while tool calls run live; 'intervention' (experimental) re-runs a counterfactual; the others are non-executing analyses.",
     subs: [["ReplayEngine", "orchestrator"], ["ReplayFlags", "safety ladder: readonly → mutating → external"], ["PolicyEvaluator", "per-tool OPA decisions"], ["MockModelDispatcher", "serves LLM calls from cache"], ["EnvironmentResolver", "env compatibility check"]],
     cli: ["nova replay <capsule> --mode forensic", "nova replay <capsule> --mode mocked"],
     io: { in: "Run Capsule", out: "ReplayResult" },

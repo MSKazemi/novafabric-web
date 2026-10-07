@@ -2,11 +2,11 @@
 
 > **Open-source, self-hosted replay and evidence infrastructure for AI agents and agentic systems.** Capture an execution as a portable Run Capsule you own, then replay, compare, trace, and verify it.
 
-NovaFabric captures AI-agent executions as schema-valid, secret-redacted Run Capsules for replay, structural diff, lineage, provenance, debugging, and audit. The same capture layer can also wrap general commands, model runs, notebook cells, and HPC workloads. NovaFabric is beta: the capture → validate → replay → diff path works today, while some server and scale-out surfaces remain experimental.
+NovaFabric captures AI-agent executions as schema-valid, secret-scanned Run Capsules for replay, structural diff, lineage, provenance, debugging, and audit. The same capture layer can also wrap general commands, model runs, notebook cells, and HPC workloads. NovaFabric is beta: the capture → validate → replay → diff path works today, while some server and scale-out surfaces remain experimental.
 
 If you are looking for a way to **debug agent runs**, **replay an AI-agent execution**, **compare two runs**, or **produce an audit trail for AI agents**, NovaFabric is built for exactly this.
 
-**When NovaFabric is not the answer:** it is not a real-time monitoring or alerting tool, and it does not provide live dashboards of running agents. The unit of value is a portable signed folder you own after the fact, not a row in a vendor's database during the run. For live tracing and alerting, an LLM-observability platform is the better fit — the two are complementary.
+**When NovaFabric is not the answer:** it is not a real-time monitoring or alerting tool, and it does not provide live dashboards of running agents. The unit of value is a portable Run Capsule you own after the fact (sealable with your own key), not a row in a vendor's database during the run. For live tracing and alerting, an LLM-observability platform is the better fit — the two are complementary.
 
 ## What this site covers
 
@@ -64,7 +64,7 @@ Capture works via CLI wrapping, an SDK decorator, an API/MCP proxy, and OpenTele
 - **Run Capsule** — A self-contained, portable record of a single AI-agent execution: every model call, tool invocation, environment snapshot, input, and output
 - **Replay Engine** — Re-run any captured execution with mocked LLM responses for deterministic testing, or read-only forensic inspection
 - **Lineage Graph** — Track causal relationships between agent runs, assets, and decisions (SQLite today; KuzuDB backend benchmarked to 10M edges)
-- **Evidence Bundle** — A signed, self-contained export of a run's evidence (in-toto DSSE attestations + RFC 3161 timestamps + redaction proof), verifiable offline with only sha256sum and an ed25519 verifier. Sealing (NovaSeal) is part of the bundle.
+- **Evidence Bundle** — A signed, self-contained export of a run's evidence (in-toto DSSE attestations + optional RFC 3161 timestamps + redaction proof), verifiable offline with only sha256sum and an ed25519 verifier. Sealing (NovaSeal) is part of the bundle.
 - **Asset Registry** — Versioned registry for models, datasets, prompts, and agent configs
 
 ## Frequently asked questions
@@ -79,7 +79,7 @@ A: Yes. `nova replay` re-executes a captured capsule. Forensic mode is read-only
 A: Yes. Capsules live on your machine in an open, human-readable format with no vendor lock-in. NovaFabric is open source (Apache-2.0). It is beta — `pip install novafabric`, then capture, validate, replay and diff work today.
 
 **Q: Does it support compliance and audit use cases?**
-A: NovaFabric produces tamper-evident, signed evidence and supports audit profiles (EU AI Act, NIST, GDPR, SOC 2, NIS2) as experimental workflows. These are evidence workflows, not legal guarantees — regulatory fit requires independent review.
+A: NovaFabric produces tamper-evident evidence (sealed capsules, signed Evidence Bundles) and supports audit profiles (EU AI Act, NIST, GDPR, SOC 2, NIS2) as experimental workflows. These are evidence workflows, not legal guarantees — regulatory fit requires independent review.
 
 ## About
 

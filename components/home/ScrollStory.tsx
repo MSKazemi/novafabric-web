@@ -25,19 +25,19 @@ const CHAPTERS = [
   {
     number: "03",
     headline: "The capsule holds everything.",
-    subtext: "Signed. Timestamped. Replayable. Forever.",
+    subtext: "Portable. Replayable. Sealable with your own key.",
     items: [
       "trace.jsonl  ✓  1,203 spans",
       "model-calls.jsonl  ✓  6 LLM calls",
-      "dsse signature  ✓  ed25519",
+      "dsse seal  ✓  (sealing on)",
     ],
     accent: "var(--color-jade)",
   },
   {
     number: "04",
     headline: "Replay. Validate. Audit.",
-    subtext: "Reproduce any run. Verify any claim. Evidence, not trust.",
-    code: "$ nova replay --capsule 4f8a1c2e --mode forensic",
+    subtext: "Reopen a past run. Verify the sealed record. Evidence, not trust.",
+    code: "$ nova replay 4f8a1c2e --mode forensic",
     accent: "var(--color-amber)",
   },
 ] as const;

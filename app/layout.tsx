@@ -43,7 +43,7 @@ export const metadata: Metadata = {
   // The keyword list is unchanged: those are the terms people search when they
   // have this problem, and capturing that demand is fine. Claiming to be a
   // monitoring product is not.
-  title: "NovaFabric — replay and prove what an AI agent did",
+  title: "NovaFabric — replay and evidence infrastructure for AI agents",
   description:
     "Open-source, self-hosted replay and evidence infrastructure for AI agents. Capture executions as portable Run Capsules you can replay, compare, trace, and verify — no account or telemetry required.",
   icons: {
@@ -56,12 +56,12 @@ export const metadata: Metadata = {
   manifest: "/manifest.webmanifest",
   alternates: { canonical: "https://novafabric.ai/" },
   openGraph: {
-    title: "NovaFabric — replay and prove what an AI agent did",
+    title: "NovaFabric — replay and evidence infrastructure for AI agents",
     description:
       "Capture AI-agent runs as portable Run Capsules you own, then replay, compare, trace and verify them. Open-source, self-hosted, and local-first.",
     type: "website",
     url: "https://novafabric.ai/",
-    images: [{ url: "https://novafabric.ai/og.png", width: 1200, height: 630, alt: "NovaFabric — replay and prove what an AI agent did" }],
+    images: [{ url: "https://novafabric.ai/og.png", width: 1200, height: 630, alt: "NovaFabric — replay and evidence infrastructure for AI agents" }],
   },
   twitter: {
     card: "summary_large_image",
@@ -155,7 +155,7 @@ const softwareApplicationSchema = {
   // that file predates the current release, and its "evidence fabric" wording
   // feeds the very name-collision this schema is trying to resolve.
   description:
-    "NovaFabric captures, replays and audits any AI-agent or HPC run as a portable, signed evidence capsule you own. Self-hosted and open source, from laptop to cluster. Core pipeline: Capture — Seal — Replay — Diff — Audit.",
+    "NovaFabric captures AI-agent runs as portable Run Capsules you own — replay, compare and audit them, and seal them with your own key. Self-hosted and open source, from laptop to cluster. Developer journey: Capture → Replay → Diff. Trust journey: Capture → Seal → Verify → Audit.",
   url: "https://novafabric.ai/novafabric/",
   downloadUrl: "https://pypi.org/project/novafabric/",
   codeRepository: "https://github.com/MSKazemi/novafabric",
@@ -186,7 +186,7 @@ const websiteSchema = {
   name: "NovaFabric",
   url: "https://novafabric.ai",
   description:
-    "Local-first capture, replay, lineage, and audit for AI-agent and agentic application executions.",
+    "Open-source, self-hosted replay and evidence infrastructure for AI agents and agentic systems. Evidence you can replay.",
   publisher: { "@id": ORG_ID },
   about: { "@id": SOFTWARE_ID },
 };

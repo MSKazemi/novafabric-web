@@ -10,12 +10,12 @@ import JsonLd from "@/components/JsonLd";
 import { INSTALL_COMMAND, REQUIRES_PYTHON } from "@/lib/version";
 
 export const metadata: Metadata = {
-  title: "novafabric — capture, replay & audit AI agents (CLI)",
+  title: "NovaFabric CLI — capture, replay & audit AI agent runs",
   description:
-    "Capture AI-agent runs as portable, secret-redacted, tamper-evident capsules, then replay, diff and audit them deterministically. Open-source CLI.",
+    "Capture AI-agent runs as portable, secret-scanned Run Capsules you can seal, then replay, diff and audit them. Open-source CLI.",
   alternates: { canonical: "https://novafabric.ai/novafabric/" },
   openGraph: {
-    title: "novafabric — capture, replay & audit AI agents (CLI)",
+    title: "NovaFabric CLI — capture, replay & audit AI agent runs",
     description:
       "Capture, replay, and audit AI-agent and agentic application executions. Local-first evidence by default.",
     url: "https://novafabric.ai/novafabric/",
@@ -31,7 +31,7 @@ const softwareSchema = {
   operatingSystem: "Linux, macOS, Windows",
   url: "https://novafabric.ai/novafabric/",
   description:
-    "novafabric captures AI-agent runs as portable, secret-redacted, tamper-evident capsules. Monitor, replay, validate, diff, and audit executions.",
+    "NovaFabric captures AI-agent runs as portable, secret-scanned Run Capsules you can seal. Replay, validate, diff, and audit executions.",
   author: { "@type": "Person", name: "Mohsen Seyedkazemi Ardebili" },
   // License must match the visible claim on the site (footer: Apache-2.0).
   license: "https://www.apache.org/licenses/LICENSE-2.0",
@@ -231,8 +231,8 @@ export default function NovafabricPage() {
                   <span style={{ color: "var(--color-amber)" }}>Replay it</span> anywhere.
                 </h1>
                 <p style={{ fontSize: "16px", color: "var(--color-muted)", lineHeight: "1.75", marginBottom: "32px" }}>
-                  Wrap any command. novafabric captures the environment, every model call, every tool exchange —
-                  without touching your code. One command. A portable, secret-redacted, signed capsule.
+                  Wrap any command. NovaFabric captures the environment and the model calls and tool exchanges it
+                  can see — without touching your code. One command. A portable, secret-scanned Run Capsule you can seal.
                 </p>
 
                 {/* Install */}

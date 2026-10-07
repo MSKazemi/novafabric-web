@@ -11,19 +11,19 @@ export const MILESTONES: Milestone[] = [
     version: "v0.2–v0.4",
     label: "Run capsules · replay/diff · evidence export",
     status: "shipped",
-    detail: "Portable capsule format; four replay modes; DSSE + RFC 3161 sealing; evidence export.",
+    detail: "Portable capsule format; forensic + mocked replay; structural diff; lineage graph; secret scanning; evidence export.",
   },
   {
     version: "v0.5–v0.8",
     label: "Proxy capture · legal holds · policy/approval flows",
     status: "shipped",
-    detail: "API and MCP proxies; legal hold commands; OPA/Rego policy gates; maker-checker approval.",
+    detail: "API and MCP proxies; DSSE-signed Evidence Bundles (v0.5); legal hold commands; OPA/Rego policy gates; maker-checker approval.",
   },
   {
     version: "v0.9–v0.12",
     label: "Eval suites · server/dashboard · UX improvements",
     status: "shipped",
-    detail: "8 benchmark adapters; 13-tab dashboard; OIDC + RBAC; offline tokens.",
+    detail: "Eval-suite interface with six suites (GAIA, SWE-bench Verified, AgentBench, MMLU, TruthfulQA, smoke); RFC 3161 timestamps (v0.9) and NovaSeal (v0.10); semantic + exact replay modes (v0.11); 13-tab dashboard; OIDC + RBAC; offline tokens.",
   },
   {
     version: "v0.13–v0.17",
