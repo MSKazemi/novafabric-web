@@ -43,9 +43,9 @@ export const metadata: Metadata = {
   // The keyword list is unchanged: those are the terms people search when they
   // have this problem, and capturing that demand is fine. Claiming to be a
   // monitoring product is not.
-  title: "NovaFabric Lab — replay and prove what an AI agent did",
+  title: "NovaFabric — replay and prove what an AI agent did",
   description:
-    "NovaFabric captures any AI-agent or HPC run as a portable, secret-redacted, signed evidence capsule you own, then replays, diffs, and proves it — self-hosted, no accounts, no telemetry. Built for reproducibility and audit evidence rather than live dashboards; it is not a real-time monitoring and alerting tool.",
+    "Open-source, self-hosted replay and evidence infrastructure for AI agents. Capture executions as portable Run Capsules you can replay, compare, trace, and verify — no account or telemetry required.",
   icons: {
     icon: [
       { url: "/favicon.svg", type: "image/svg+xml" },
@@ -56,12 +56,12 @@ export const metadata: Metadata = {
   manifest: "/manifest.webmanifest",
   alternates: { canonical: "https://novafabric.ai/" },
   openGraph: {
-    title: "NovaFabric Lab — replay and prove what an AI agent did",
+    title: "NovaFabric — replay and prove what an AI agent did",
     description:
-      "Capture any AI-agent or HPC run as a portable signed evidence capsule you own, then replay, diff and prove it. Self-hosted, laptop to cluster. For reproducibility and audit, not live dashboards.",
+      "Capture AI-agent runs as portable Run Capsules you own, then replay, compare, trace and verify them. Open-source, self-hosted, and local-first.",
     type: "website",
     url: "https://novafabric.ai/",
-    images: [{ url: "https://novafabric.ai/og.png", width: 1200, height: 630, alt: "NovaFabric Lab — replay and prove what an AI agent did" }],
+    images: [{ url: "https://novafabric.ai/og.png", width: 1200, height: 630, alt: "NovaFabric — replay and prove what an AI agent did" }],
   },
   twitter: {
     card: "summary_large_image",
@@ -94,8 +94,8 @@ const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
   "@id": ORG_ID,
-  name: "NovaFabric Lab",
-  alternateName: ["NovaFabric", "NovaFabric Lab"],
+  name: "NovaFabric",
+  alternateName: ["NovaFabric"],
   // The product's own served docs lead with this line. It is the most
   // distinctive phrase the project owns and, unlike "evidence fabric", it
   // collides with nothing else in search.
@@ -103,7 +103,7 @@ const organizationSchema = {
   url: "https://novafabric.ai",
   logo: "https://novafabric.ai/favicon.svg",
   description:
-    "Open-source research lab building local-first evidence infrastructure for AI agents and agentic applications: capture, replay, lineage, and audit of past executions.",
+    "Open-source, self-hosted replay and evidence infrastructure for AI agents and agentic systems: capture past executions as portable Run Capsules for replay, diff, lineage, provenance, and audit.",
   // Disambiguation: "fabric" is a crowded namespace (data-platform and
   // networking products share the word). Search Console shows novafabric.ai
   // surfacing for other people's products — "open fabric ai", "neuralfabric",
@@ -183,7 +183,7 @@ const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
   "@id": "https://novafabric.ai/#website",
-  name: "NovaFabric Lab",
+  name: "NovaFabric",
   url: "https://novafabric.ai",
   description:
     "Local-first capture, replay, lineage, and audit for AI-agent and agentic application executions.",

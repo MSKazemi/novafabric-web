@@ -23,7 +23,7 @@ export const PRIMARY_LINKS: SiteLink[] = [
 
 export const MORE_GROUPS: { title: string; links: SiteLink[] }[] = [
   {
-    title: "lab",
+    title: "project",
     links: [
       { label: "research", href: "/research" },
       { label: "primitives", href: "/primitives" },

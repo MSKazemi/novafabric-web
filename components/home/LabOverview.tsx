@@ -62,9 +62,9 @@ export default function LabOverview() {
     <section className="py-24 border-t border-edge">
       <div className="page-max-w">
         <p className="font-code text-[11px] text-faint tracking-widest uppercase mb-2">
-          Enter the lab
+          Explore NovaFabric
         </p>
-        <h2 className="font-display text-4xl text-ink mb-12">Nine ways in.</h2>
+        <h2 className="font-display text-4xl text-ink mb-12">Start with what you need.</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {LAB_PAGES.map((page) => (
             <Link key={page.href} href={page.href}>

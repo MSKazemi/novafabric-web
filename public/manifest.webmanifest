@@ -1,14 +1,26 @@
 {
-  "name": "NovaFabric Lab",
+  "name": "NovaFabric",
   "short_name": "NovaFabric",
-  "description": "Local-first monitoring, observability, and evidence infrastructure for AI agents.",
+  "description": "Open-source, self-hosted replay and evidence infrastructure for AI agents.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#07070a",
   "theme_color": "#07070a",
   "icons": [
-    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" },
-    { "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
   ]
 }

@@ -67,7 +67,7 @@ export default function ResearchActivity({ activities = RESEARCH_AREAS, showAll 
               className="font-display"
               style={{ fontSize: "clamp(30px, 4vw, 52px)", fontStyle: "italic", letterSpacing: "-0.02em", color: "var(--color-ink)", lineHeight: 1.1 }}
             >
-              What the lab
+              What NovaFabric
               <br />
               <span style={{ color: "var(--color-amber)" }}>is building.</span>
             </h2>

@@ -107,9 +107,8 @@ export default function CinematicHero() {
             <p
               className="text-muted text-base max-w-md leading-relaxed mb-5 hero-reveal hero-reveal-3"
             >
-              Capture, replay, and audit AI-agent executions. Evidence
-              infrastructure for reproducible AI. Local-first, cryptographically
-              signed.
+              Capture AI-agent executions as portable Run Capsules you can
+              replay, compare, trace, and verify. Self-hosted and local-first.
             </p>
 
             {/* Install: the real commands from the README quickstart */}

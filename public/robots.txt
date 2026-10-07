@@ -62,5 +62,4 @@ Allow: /
 # User-agent: CCBot
 # Disallow: /
 
-Sitemap: https://novafabric.ai/sitemap-index.xml
 Sitemap: https://novafabric.ai/sitemap.xml

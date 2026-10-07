@@ -8,20 +8,20 @@ import { getPosts } from "@/lib/blog";
 import type { PostCategory } from "@/lib/types";
 
 export const metadata: Metadata = {
-  title: "Blog — NovaFabric Lab",
+  title: "Blog — NovaFabric",
   description:
-    "Lab notes, technical deep-dives, and release announcements from NovaFabric.",
+    "Technical notes, deep-dives, and release announcements from NovaFabric.",
   alternates: { canonical: "https://novafabric.ai/blog/" },
   openGraph: {
-    title: "Blog — NovaFabric Lab",
-    description: "Lab notes, technical deep-dives, and release announcements from NovaFabric.",
+    title: "Blog — NovaFabric",
+    description: "Technical notes, deep-dives, and release announcements from NovaFabric.",
     url: "https://novafabric.ai/blog/",
     images: [{ url: "https://novafabric.ai/og.png", width: 1200, height: 630 }],
   },
 };
 
 const CATEGORY_LABELS: Record<PostCategory, string> = {
-  "lab-update": "Lab update",
+  "lab-update": "Project update",
   technical: "Technical",
   release: "Release",
 };
@@ -52,7 +52,7 @@ export default async function BlogPage() {
       <PageHero
         section="blog"
         title="Blog"
-        subtitle="Lab notes, technical deep-dives, and release announcements."
+        subtitle="Technical notes, deep-dives, and release announcements."
         status="experimental"
       />
 

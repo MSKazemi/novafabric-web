@@ -15,7 +15,7 @@ import { MORE_GROUPS, PRIMARY_LINKS, type SiteLink } from "@/lib/site-nav";
 import { INSTALL_COMMAND } from "@/lib/version";
 
 const PAGES: SiteLink[] = [
-  { label: "lab", href: "/" },
+  { label: "home", href: "/" },
   { label: "novafabric", href: "/novafabric" },
   ...PRIMARY_LINKS.filter((l) => l.href !== "/novafabric"),
   ...MORE_GROUPS.flatMap((g) => g.links),

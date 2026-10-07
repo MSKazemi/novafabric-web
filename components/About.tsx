@@ -7,17 +7,17 @@ const PRINCIPLES = [
   {
     icon: "◈",
     title: "Portable by design",
-    body: "Capsules are self-contained directories. No proprietary formats, no vendor lock-in. A capsule you create today will be readable in a decade.",
+    body: "Run Capsules are portable directories designed to remain inspectable without a hosted service as the system of record.",
   },
   {
     icon: "◉",
     title: "Non-invasive capture",
-    body: "Patch SDK call sites and HTTP transports at runtime. No code changes, no decorators required. Works with any Python AI framework.",
+    body: "Supported SDK and transport hooks can capture agent executions without requiring application code changes.",
   },
   {
     icon: "⬡",
     title: "Evidence-grade integrity",
-    body: "NovaSeal uses DSSE + RFC 3161 timestamps. Verification is always offline and deterministic. Meets financial and clinical compliance requirements.",
+    body: "Sealed evidence uses cryptographic signatures and trusted timestamps so integrity can be checked later. NovaFabric provides evidence, not compliance certification.",
   },
   {
     icon: "⟶",
@@ -59,8 +59,8 @@ export default function About() {
               lineHeight: 1.1,
             }}
           >
-            One lab.<br />
-            The full stack of agentic AI.
+            Keep the run.<br />
+            Keep the evidence.
           </h2>
         </div>
 
@@ -72,18 +72,17 @@ export default function About() {
           {/* Mission */}
           <div>
             <p style={{ fontSize: "17px", color: "var(--color-muted)", lineHeight: "1.8", marginBottom: "24px" }}>
-              The next decade of computing will be defined by AI agents operating
-              at the scale of HPC clusters — running Claude and frontier models on
-              thousands of nodes, coordinating across scientific workflows, and making
-              consequential decisions autonomously.
+              AI agents call models, tools, files, and APIs across environments that
+              keep changing. When an important run fails or is questioned later, the
+              output alone is not enough to explain what happened.
             </p>
             <p style={{ fontSize: "17px", color: "var(--color-muted)", lineHeight: "1.8", marginBottom: "24px" }}>
-              We&apos;re building the infrastructure layer for that world: tools for
-              capturing executions, monitoring fleets, governing behavior, and making
-              every agent run reproducible, auditable, and trustworthy.
+              NovaFabric captures those executions as portable Run Capsules so teams
+              can replay, compare, trace, and verify past behavior without making a
+              hosted dashboard the only record of what happened.
             </p>
             <p style={{ fontSize: "17px", color: "var(--color-muted)", lineHeight: "1.8" }}>
-              Open research. Apache-2.0. One engineer. No VC. No data collection.
+              Open source. Apache-2.0. Self-hosted. No account required. No telemetry.
             </p>
 
             <div style={{ marginTop: "36px" }}>

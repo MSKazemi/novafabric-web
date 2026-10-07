@@ -8,12 +8,12 @@ import SubmitCapsuleCTA from "@/components/capsules/SubmitCapsuleCTA";
 import { CAPSULES } from "@/lib/data/capsules";
 
 export const metadata: Metadata = {
-  title: "Capsules — NovaFabric Lab",
+  title: "Capsules — NovaFabric",
   description:
-    "Real-world novafabric capsules: community examples of AI-agent execution capture, monitoring, and replay across agentic workflows.",
+    "Real-world novafabric capsules: community examples of AI-agent execution capture, replay, and comparison across agentic workflows.",
   alternates: { canonical: "https://novafabric.ai/capsules/" },
   openGraph: {
-    title: "Capsules — NovaFabric Lab",
+    title: "Capsules — NovaFabric",
     description:
       "Real-world novafabric capsules: community examples of AI-agent execution capture.",
     url: "https://novafabric.ai/capsules/",

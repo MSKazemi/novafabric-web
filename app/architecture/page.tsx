@@ -9,12 +9,12 @@ import EvidenceSpine from "@/components/architecture/EvidenceSpine";
 import { VERSION_TAG } from "@/lib/version";
 
 export const metadata: Metadata = {
-  title: "Architecture — NovaFabric Lab",
+  title: "Architecture — NovaFabric",
   description:
     "The black-box recorder for AI agents: one verb chain — capture, seal, replay, diff, audit — across six subsystem domains. Self-contained on a single machine; the same capsule format scales out to clusters.",
   alternates: { canonical: "https://novafabric.ai/architecture/" },
   openGraph: {
-    title: "Architecture — NovaFabric Lab",
+    title: "Architecture — NovaFabric",
     description:
       "Capture → seal → replay → diff → audit. Self-contained on one machine, distributed-ready to clusters — the same format at every scale.",
     url: "https://novafabric.ai/architecture/",

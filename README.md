@@ -1,8 +1,8 @@
 # novafabric.ai
 
-Source code of the website for **NovaFabric Lab** — an open-source research project
-building local-first evidence infrastructure for AI-agent systems: capture, replay,
-lineage, and audit for AI-agent executions.
+Source code of the website for **NovaFabric** — open-source, self-hosted replay and
+evidence infrastructure for AI agents and agentic systems. NovaFabric captures agent
+executions as portable Run Capsules for replay, diff, lineage, provenance, and audit.
 
 - Website: [novafabric.ai](https://novafabric.ai)
 - NovaFabric software and documentation: [MSKazemi/novafabric](https://github.com/MSKazemi/novafabric)

@@ -137,7 +137,7 @@ export async function docPages(): Promise<DocPage[]> {
     );
   }
 
-  const files = walk(DOCS_DIR)
+  const candidates = walk(DOCS_DIR)
     .filter((file) => !EXCLUDE.some((pattern) => pattern.test(file)))
     .filter((file) => {
       const slug = toSlug(file);
@@ -145,6 +145,23 @@ export async function docPages(): Promise<DocPage[]> {
       // slug would collide with it.
       return slug !== "" && slug !== "index";
     });
+
+  // `x.md` and `x/README.md` both map to the slug `x`. Two pages on one URL emit a
+  // duplicate sitemap entry and one document silently disappears, so pick one
+  // deterministically (the folder README, which is the parent of x/*) and say so.
+  const bySlug = new Map<string, string[]>();
+  for (const file of candidates) {
+    const slug = toSlug(file);
+    bySlug.set(slug, [...(bySlug.get(slug) ?? []), file]);
+  }
+  const files: string[] = [];
+  for (const [slug, group] of bySlug) {
+    const winner = group.find((file) => /(^|\/)README\.md$/.test(file)) ?? group[0];
+    files.push(winner);
+    for (const lost of group.filter((file) => file !== winner)) {
+      console.warn(`docs: ${lost} shares the URL /docs/${slug}/ with ${winner}; ${lost} is not published.`);
+    }
+  }
 
   if (files.length === 0) {
     throw new Error(`No documentation markdown found under ${DOCS_DIR}.`);
@@ -255,12 +272,41 @@ const SEO_OVERRIDES: Record<string, { title?: string; description?: string }> = 
     description:
       "An honest comparison of NovaFabric with Langfuse, LangSmith, MLflow, Weights & Biases and OpenTelemetry, including where NovaFabric is the wrong choice.",
   },
+  // Titles below lead with the phrase a person searches for rather than the project's
+  // internal vocabulary ("Replay modes" / "Run Capsule anatomy" match nothing anyone
+  // types). Descriptions stay derived from the page itself.
+  "tutorials/prove-a-run-to-an-auditor": {
+    title: "Prove what an AI agent did, months later, offline",
+  },
+  "architecture/replay-modes": {
+    title: "Replay modes for AI agent runs",
+  },
+  "architecture/run-capsule": {
+    title: "What is a run capsule? Anatomy of an AI agent run record",
+  },
+  "tutorials/how-capture-works": {
+    title: "How NovaFabric captures an AI agent run",
+  },
   "cli-reference": {
     title: "NovaFabric CLI reference",
     description:
       "Command reference for the nova CLI: capture, validate, replay, diff, lineage, trust and compliance. nova and novafabric are the same binary.",
   },
 };
+
+/**
+ * `<title>` for a docs page: the document title plus the longest brand suffix that
+ * still fits in 60 characters, else the bare title. Search engines cut longer titles
+ * and rewrite them on their own, usually dropping the part that carries the meaning.
+ * Never truncates the title itself.
+ */
+export function seoTitleFor(page: DocPage, maxLength = 60): string {
+  const title = titleFor(page);
+  const fits = [`${title} — NovaFabric docs`, `${title} — NovaFabric`].find(
+    (candidate) => candidate.length <= maxLength,
+  );
+  return fits ?? title;
+}
 
 /** First `# heading`, falling back to a humanised slug. */
 export function titleFor(page: DocPage): string {
@@ -288,17 +334,28 @@ export function descriptionFor(page: DocPage): string {
     .replace(/^\s*[>|].*$/gm, "")
     .replace(/^\s*\[!\[.*$/gm, "");
 
-  const paragraph = body
+  // Not every opening block is prose: "**Status:** Works today …" banners and
+  // "[Section](README.md) › Page" breadcrumbs sit above the first real paragraph
+  // on a dozen pages and made their meta descriptions useless ("Architecture, as
+  // built › Pipeline"). Skip them, and prefer a block long enough to be a snippet.
+  const isBanner = (block: string) =>
+    /^\**(status|audience|last updated|version|owner)\b[^\n]{0,40}:/i.test(block) ||
+    /^\[[^\]]+\]\([^)]*\)\s*›/.test(block);
+  const blocks = body
     .split(/\n\s*\n/)
     .map((block) => block.trim())
-    .find((block) => block.length > 40 && !block.startsWith("#") && !block.startsWith("|"));
+    .filter((block) => block.length > 40 && !block.startsWith("#") && !block.startsWith("|") && !isBanner(block));
+  const paragraph = blocks.find((block) => block.length >= 90) ?? blocks[0];
 
   if (!paragraph) return `${titleFor(page)} — NovaFabric documentation.`;
 
   const flat = paragraph
     .replace(/^\s*(?:[-*+]|\d+[.)])\s+/, "") // leading list marker
     .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
-    .replace(/[*_`]/g, "")
+    // Strip emphasis markers but keep identifiers: a blanket `_` removal turned
+    // `replay_cmd` into "replaycmd" in meta descriptions.
+    .replace(/[*`]/g, "")
+    .replace(/(^|[\s(])_+|_+(?=[\s).,;:]|$)/g, "$1")
     .replace(/\s+/g, " ")
     .trim();
 

@@ -21,7 +21,7 @@ export async function generateMetadata({
   const post = await getPost(slug);
   if (!post) return {};
   return {
-    title: `${post.title} — NovaFabric Lab`,
+    title: `${post.title} — NovaFabric`,
     description: post.excerpt,
     alternates: { canonical: `https://novafabric.ai/blog/${post.slug}/` },
     openGraph: {
@@ -34,7 +34,7 @@ export async function generateMetadata({
 }
 
 const CATEGORY_LABELS: Record<PostCategory, string> = {
-  "lab-update": "Lab update",
+  "lab-update": "Project update",
   technical: "Technical",
   release: "Release",
 };
@@ -68,7 +68,7 @@ export default async function BlogPostPage({
     author: { "@type": "Person", name: "Mohsen Seyedkazemi Ardebili" },
     publisher: {
       "@type": "Organization",
-      name: "NovaFabric Lab",
+      name: "NovaFabric",
       logo: { "@type": "ImageObject", url: "https://novafabric.ai/favicon.svg" },
     },
   };

@@ -4,7 +4,7 @@ import { VERSION_TAG } from "@/lib/version";
 import { MORE_GROUPS } from "@/lib/site-nav";
 
 const LINKS = {
-  lab: [
+  product: [
     { label: "novafabric", href: "/novafabric" },
     { label: "research", href: "/research" },
     { label: "primitives", href: "/primitives" },
@@ -69,8 +69,8 @@ export default function Footer() {
               <span style={{ color: "var(--color-amber)", opacity: 0.5 }}>.</span>
             </div>
             <p style={{ fontSize: "14px", color: "var(--color-muted)", lineHeight: "1.7", maxWidth: "280px", marginBottom: "24px" }}>
-              Evidence infrastructure for AI-agent systems.
-              Local-first capture, replay, lineage, and audit. Apache-2.0.
+              Replay and evidence infrastructure for AI agents.
+              Self-hosted capture, replay, diff, lineage, and audit. Apache-2.0.
             </p>
             <div style={{ display: "flex", gap: "12px" }}>
               <a
@@ -109,7 +109,7 @@ export default function Footer() {
           </div>
 
           {/* Lab + primitives + project links */}
-          <FooterLinkGroup title="lab" links={LINKS.lab} />
+          <FooterLinkGroup title="product" links={LINKS.product} />
           <FooterLinkGroup title="learn" links={MORE_GROUPS.find((g) => g.title === "learn")?.links ?? []} />
           <FooterLinkGroup title="primitives" links={LINKS.primitives} />
           <FooterLinkGroup title="project" links={LINKS.project} />
@@ -129,7 +129,7 @@ export default function Footer() {
           }}
         >
           <span className="font-code" style={{ fontSize: "11px", color: "var(--color-faint)" }}>
-            © {year} NovaFabric Lab · Apache-2.0
+            © {year} NovaFabric · Apache-2.0
           </span>
           <div style={{ display: "flex", gap: "20px" }}>
             {[

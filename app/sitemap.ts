@@ -30,18 +30,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     };
   });
 
+  // Static pages carry no lastModified: stamping them with the build time would give
+  // a dozen identical, meaningless timestamps (see the note above on docs).
   return [
-    { url: `${BASE}/`,               lastModified: new Date(), changeFrequency: "weekly",  priority: 1.0 },
-    { url: `${BASE}/novafabric/`,    lastModified: new Date(), changeFrequency: "monthly", priority: 0.9 },
-    { url: `${BASE}/research/`,      lastModified: new Date(), changeFrequency: "weekly",  priority: 0.8 },
-    { url: `${BASE}/primitives/`,    lastModified: new Date(), changeFrequency: "monthly", priority: 0.8 },
-    { url: `${BASE}/architecture/`,  lastModified: new Date(), changeFrequency: "monthly", priority: 0.7 },
-    { url: `${BASE}/changelog/`,     lastModified: new Date(), changeFrequency: "weekly",  priority: 0.7 },
-    { url: `${BASE}/capsules/`,      lastModified: new Date(), changeFrequency: "weekly",  priority: 0.6 },
-    { url: `${BASE}/blog/`,          lastModified: new Date(), changeFrequency: "weekly",  priority: 0.7 },
-    { url: `${BASE}/contact/`,       lastModified: new Date(), changeFrequency: "yearly",  priority: 0.5 },
-    { url: `${BASE}/demo/`,          lastModified: new Date(), changeFrequency: "monthly", priority: 0.9 },
-    { url: `${BASE}/docs/`,          lastModified: new Date(), changeFrequency: "weekly",  priority: 0.9 },
+    { url: `${BASE}/`,               changeFrequency: "weekly",  priority: 1.0 },
+    { url: `${BASE}/novafabric/`,    changeFrequency: "monthly", priority: 0.9 },
+    { url: `${BASE}/research/`,      changeFrequency: "weekly",  priority: 0.8 },
+    { url: `${BASE}/primitives/`,    changeFrequency: "monthly", priority: 0.8 },
+    { url: `${BASE}/architecture/`,  changeFrequency: "monthly", priority: 0.7 },
+    { url: `${BASE}/changelog/`,     changeFrequency: "weekly",  priority: 0.7 },
+    { url: `${BASE}/capsules/`,      changeFrequency: "weekly",  priority: 0.6 },
+    { url: `${BASE}/blog/`,          changeFrequency: "weekly",  priority: 0.7 },
+    { url: `${BASE}/contact/`,       changeFrequency: "yearly",  priority: 0.5 },
+    { url: `${BASE}/demo/`,          changeFrequency: "monthly", priority: 0.9 },
+    { url: `${BASE}/docs/`,          changeFrequency: "weekly",  priority: 0.9 },
     ...docs,
     ...blogPosts,
   ];

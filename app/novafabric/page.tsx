@@ -526,7 +526,7 @@ export default function NovafabricPage() {
           </div>
         </section>
 
-        {/* Back to lab */}
+        {/* Back to home */}
         <section style={{ backgroundColor: "var(--color-surface)", padding: "48px 0", borderTop: "1px solid var(--color-edge)" }}>
           <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 24px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "16px" }}>
             <div>
@@ -539,7 +539,7 @@ export default function NovafabricPage() {
               href="/"
               style={{ fontFamily: "var(--font-code), monospace", fontSize: "12px", color: "var(--color-faint)", textDecoration: "none", border: "1px solid var(--color-edge)", padding: "8px 16px", borderRadius: "4px" }}
             >
-              ← back to lab
+              ← back to home
             </Link>
           </div>
         </section>

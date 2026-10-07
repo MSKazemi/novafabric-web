@@ -10,6 +10,7 @@ import {
   faqEntries,
   lastUpdatedFor,
   titleFor,
+  seoTitleFor,
   descriptionFor,
   type DocPage,
 } from "@/lib/docs";
@@ -40,16 +41,15 @@ export async function generateMetadata({
   const page = await findPage((await params).slug);
   if (!page) return {};
 
-  const title = titleFor(page);
   const description = descriptionFor(page);
   const url = `https://novafabric.ai/docs/${page.slug}/`;
 
   return {
-    title: `${title} — NovaFabric docs`,
+    title: seoTitleFor(page),
     description,
     alternates: { canonical: url },
     openGraph: {
-      title: `${title} — NovaFabric docs`,
+      title: seoTitleFor(page),
       description,
       url,
       type: "article",

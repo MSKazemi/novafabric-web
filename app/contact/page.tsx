@@ -7,14 +7,14 @@ import ContactForm from "@/components/contact/ContactForm";
 import JsonLd from "@/components/JsonLd";
 
 export const metadata: Metadata = {
-  title: "Contact — NovaFabric Lab",
+  title: "Contact — NovaFabric",
   description:
-    "Get in touch with NovaFabric Lab — questions, feedback, collaboration, or contributions to the open-source AI-agent monitoring and evidence project.",
+    "Get in touch with NovaFabric — questions, feedback, collaboration, or contributions to the open-source replay and evidence project for AI agents.",
   alternates: { canonical: "https://novafabric.ai/contact/" },
   openGraph: {
-    title: "Contact — NovaFabric Lab",
+    title: "Contact — NovaFabric",
     description:
-      "Questions, feedback, or collaboration on NovaFabric — local-first monitoring and evidence infrastructure for AI agents.",
+      "Questions, feedback, or collaboration on NovaFabric — self-hosted replay and evidence infrastructure for AI agents.",
     url: "https://novafabric.ai/contact/",
     images: [{ url: "https://novafabric.ai/og.png", width: 1200, height: 630 }],
   },
@@ -23,10 +23,10 @@ export const metadata: Metadata = {
 const contactSchema = {
   "@context": "https://schema.org",
   "@type": "ContactPage",
-  name: "Contact — NovaFabric Lab",
+  name: "Contact — NovaFabric",
   url: "https://novafabric.ai/contact",
   description:
-    "Contact NovaFabric Lab for questions, feedback, collaboration, or contributions.",
+    "Contact NovaFabric for questions, feedback, collaboration, or contributions.",
 };
 
 export default function ContactPage() {

@@ -8,12 +8,12 @@ import { RESEARCH_AREAS } from "@/lib/data/research";
 import JsonLd from "@/components/JsonLd";
 
 export const metadata: Metadata = {
-  title: "Research — NovaFabric Lab",
+  title: "Research — NovaFabric",
   description:
-    "Research areas and open problems from NovaFabric Lab: monitoring, observability, reproducibility, evidence infrastructure, and audit for AI agents and agentic systems.",
+    "Research areas and open problems from NovaFabric: replay, reproducibility, evidence infrastructure, provenance, and audit for AI agents and agentic systems.",
   alternates: { canonical: "https://novafabric.ai/research/" },
   openGraph: {
-    title: "Research — NovaFabric Lab",
+    title: "Research — NovaFabric",
     description:
       "Open problems in AI-agent reproducibility, evidence infrastructure, and audit. Active investigations.",
     url: "https://novafabric.ai/research/",
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 const researchSchema = {
   "@context": "https://schema.org",
   "@type": "ResearchProject",
-  name: "NovaFabric Lab Research",
+  name: "NovaFabric Research",
   url: "https://novafabric.ai/research",
   description:
     "Open problems in AI-agent reproducibility, evidence infrastructure, and audit. Active investigations into run capsules, lineage graphs, and tamper-evident execution records.",

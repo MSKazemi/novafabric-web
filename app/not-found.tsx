@@ -98,7 +98,7 @@ export default function NotFound() {
               letterSpacing: "0.02em",
             }}
           >
-            ← back to lab
+            ← back to home
           </Link>
           <a
             href="https://github.com/MSKazemi/novafabric"
