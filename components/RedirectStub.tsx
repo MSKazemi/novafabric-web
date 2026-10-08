@@ -7,8 +7,7 @@ import Link from "next/link";
  * noindex so the stub itself never competes with its target in search. The
  * visible link covers clients that ignore meta refresh.
  *
- * Stubs are deliberately absent from sitemap.xml (app/sitemap.ts) and from
- * merge-sites.mjs's sitemap folding.
+ * Stubs are deliberately absent from sitemap.xml (app/sitemap.ts).
  */
 const BASE = "https://novafabric.ai";
 

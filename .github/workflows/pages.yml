@@ -20,18 +20,21 @@ concurrency:
 
 jobs:
   build:
-    name: Build both sites and merge
+    name: Build the site
     # The private mirror of this tree must never try to publish.
     if: github.repository == 'MSKazemi/novafabric-web'
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 20
     steps:
-      - name: Checkout the Next.js site (core)
+      - name: Checkout the site
         uses: actions/checkout@v7
         with:
           persist-credentials: false
 
-      - name: Checkout the Astro site and docs source
+      # Since issue #20 (ADR-0299) this repo is the only implementation of
+      # novafabric.ai. The product repo is checked out solely for build metadata
+      # (next.config.ts reads its pyproject.toml); no second site is built or merged.
+      - name: Checkout the product source (version metadata)
         uses: actions/checkout@v7
         with:
           repository: MSKazemi/novafabric
@@ -45,45 +48,28 @@ jobs:
         with:
           node-version: "24"
           cache: npm
-          cache-dependency-path: |
-            package-lock.json
-            .source/web/package-lock.json
+          cache-dependency-path: package-lock.json
 
-      - name: Build the Next.js site (runs the internal-link gate)
+      - name: Build (runs the internal-link gate)
         run: |
           npm ci
           npm run build
 
-      - name: Build the Astro site
-        working-directory: .source/web
+      - name: Verify the artifact
         run: |
-          npm ci
-          npm run build
-
-      - name: Merge (Next.js pages are never overwritten)
-        run: node scripts/merge-sites.mjs out .source/web/dist site
-
-      - name: Check every internal link on the merged site
-        run: node scripts/check-links.mjs site
-
-      - name: Verify the merged artifact
-        run: |
-          for p in site/index.html site/research/index.html site/docs/index.html \
-                   site/concepts/index.html site/_next site/_astro site/robots.txt site/sitemap.xml; do
+          for p in out/index.html out/novafabric/index.html out/install/index.html \
+                   out/research/index.html out/docs/index.html out/demo/index.html \
+                   out/concepts/index.html out/_next out/robots.txt out/sitemap.xml out/llms.txt; do
             test -e "$p" || { echo "::error::missing $p"; exit 1; }
           done
-          old=$(cd out && find . -name index.html | wc -l)
-          merged=$(cd site && find . -name index.html | wc -l)
-          test "$merged" -ge "$old"
-          for f in $(cd out && find . -name index.html); do
-            test -f "site/$f" || { echo "::error::lost page $f"; exit 1; }
-          done
-          echo "next_pages=$old merged_pages=$merged source_sha=$(git -C .source rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"
+          # One public website: nothing from the retired Astro build may ship.
+          test ! -e out/_astro || { echo "::error::out/_astro exists — a second site leaked in"; exit 1; }
+          echo "pages=$(cd out && find . -name index.html | wc -l) source_sha=$(git -C .source rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v5
         with:
-          path: site
+          path: out
 
   deploy:
     name: Deploy to GitHub Pages
