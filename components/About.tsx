@@ -123,9 +123,9 @@ export default function About() {
                 <span style={{ fontSize: "20px", color: "var(--color-amber)", display: "block", marginBottom: "10px" }}>
                   {p.icon}
                 </span>
-                <h4 style={{ fontSize: "13px", fontWeight: 600, color: "var(--color-ink)", marginBottom: "8px" }}>
+                <h3 style={{ fontSize: "13px", fontWeight: 600, color: "var(--color-ink)", marginBottom: "8px" }}>
                   {p.title}
-                </h4>
+                </h3>
                 <p style={{ fontSize: "13px", color: "var(--color-muted)", lineHeight: "1.65" }}>
                   {p.body}
                 </p>

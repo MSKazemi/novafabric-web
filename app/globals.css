@@ -24,7 +24,10 @@
   /* text */
   --color-ink: #16161c;
   --color-muted: #5a5a68;
-  --color-faint: #9a9aa6;
+  /* faint = tertiary text (captions, labels, metadata). Kept at WCAG AA 4.5:1 on
+     canvas, surface and surface-2; #9a9aa6 measured 2.35-2.78:1 (Lighthouse,
+     130 failing nodes on the home page, 2026-10-08). */
+  --color-faint: #6e6e7a;
 
   /* brand accent — indigo, contrast-safe on light (AA on canvas).
      THIS is the single source of the brand identity. */
@@ -84,7 +87,8 @@
 
   --color-ink: #ebebf0;
   --color-muted: #8a8ab0;
-  --color-faint: #46466a;
+  /* AA 4.5:1 on every dark surface; #46466a measured 1.97-2.25:1. */
+  --color-faint: #7e7ea6;
 
   /* brand accent — lighter indigo for contrast on the dark canvas */
   --color-accent: #818cf8;

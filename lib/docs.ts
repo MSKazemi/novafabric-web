@@ -22,8 +22,12 @@ const DOCS_DIR = process.env.NOVAFABRIC_DOCS
   ? resolve(process.env.NOVAFABRIC_DOCS)
   : resolve(process.cwd(), ".docs-src", "docs");
 
-/** Files that are not user-facing documentation and should not be published. */
-const EXCLUDE = [/^releases\//, /^whitepaper\//];
+/**
+ * Files that are not user-facing documentation and should not be published.
+ * `_template` files are scaffolding for contributors (the RFC template rendered as
+ * an indexable page titled "RFC-NNNN — <Title>" with placeholder text).
+ */
+const EXCLUDE = [/^releases\//, /^whitepaper\//, /(^|\/)_template\.md$/];
 
 const GITHUB_BLOB = "https://github.com/MSKazemi/novafabric/blob/main";
 const GITHUB_TREE = "https://github.com/MSKazemi/novafabric/tree/main";
@@ -274,18 +278,52 @@ const SEO_OVERRIDES: Record<string, { title?: string; description?: string }> = 
   },
   // Titles below lead with the phrase a person searches for rather than the project's
   // internal vocabulary ("Replay modes" / "Run Capsule anatomy" match nothing anyone
-  // types). Descriptions stay derived from the page itself.
+  // types). The descriptions restate what each page itself says, within the claim
+  // matrix: the derived ones on these pages opened with source paths
+  // ("(cli/replay.py:replay_cmd) … There are fiv…") or "This page is…".
   "tutorials/prove-a-run-to-an-auditor": {
     title: "Verify a sealed AI agent run for an auditor, offline",
+    description:
+      "Seal a recorded AI agent run and export a signed Evidence Bundle that a third party can verify on their own machine, offline, months later.",
   },
   "architecture/replay-modes": {
     title: "Replay modes for AI agent runs",
+    description:
+      "The five NovaFabric replay modes (forensic, mocked, semantic, exact and experimental intervention): what each reuses from the capsule and what runs live.",
   },
   "architecture/run-capsule": {
     title: "What is a run capsule? Anatomy of an AI agent run record",
+    description:
+      "What a NovaFabric Run Capsule holds: the files written for one run, the schema they validate against, and how to copy, archive and verify the directory.",
   },
   "tutorials/how-capture-works": {
     title: "How NovaFabric captures an AI agent run",
+    description:
+      "How nova capture records an agent's LLM calls at the HTTP layer without code changes, and what a captured call looks like in OpenTelemetry GenAI format.",
+  },
+  "getting-started": {
+    description:
+      "Install NovaFabric, capture a command into a Run Capsule without code changes, then validate, replay, diff and export it. Local-first, no account needed.",
+  },
+  concepts: {
+    description:
+      "NovaFabric concepts: Run Capsules, zero-code capture, the five replay modes, structural diff, lineage, the Asset Registry and how signed evidence is made.",
+  },
+  "tutorials/why-novafabric": {
+    description:
+      "A plain-English guide to why AI agent runs need replayable evidence, the five NovaFabric primitives, and five things you can do with the nova CLI.",
+  },
+  "tutorials/novafabric-vs-langfuse": {
+    description:
+      "Where NovaFabric and Langfuse overlap and differ: monitoring how a system performs now versus Run Capsules you can replay, compare and verify later.",
+  },
+  "ops/air-gapped-install": {
+    description:
+      "Install and run NovaFabric with no internet access: offline installation, no telemetry or phone-home, and which opt-in features need a network endpoint.",
+  },
+  "architecture/sealing-and-verification": {
+    description:
+      "How a NovaFabric capsule becomes tamper-evident: the opt-in NovaSeal seal, signed Evidence Bundles, and the checks nova verify runs offline.",
   },
   "cli-reference": {
     title: "NovaFabric CLI reference",
@@ -344,7 +382,10 @@ export function descriptionFor(page: DocPage): string {
   const blocks = body
     .split(/\n\s*\n/)
     .map((block) => block.trim())
-    .filter((block) => block.length > 40 && !block.startsWith("#") && !block.startsWith("|") && !isBanner(block));
+    .filter((block) => block.length > 40 && !block.startsWith("#") && !block.startsWith("|") && !isBanner(block))
+    // A block that opens with a command, or cites source locations ("cli/replay.py:
+    // replay_cmd"), reads as noise in a search snippet; keep it only as a last resort.
+    .sort((a, b) => Number(isCodeLed(a)) - Number(isCodeLed(b)));
   const paragraph = blocks.find((block) => block.length >= 90) ?? blocks[0];
 
   if (!paragraph) return `${titleFor(page)} — NovaFabric documentation.`;
@@ -359,5 +400,27 @@ export function descriptionFor(page: DocPage): string {
     .replace(/\s+/g, " ")
     .trim();
 
-  return flat.length > 155 ? `${flat.slice(0, 152).trimEnd()}…` : flat;
+  return clipDescription(flat);
+}
+
+const isCodeLed = (block: string) => block.startsWith("`") || /\b[\w/]+\.py:\w/.test(block);
+
+/**
+ * Fits a description into 155 characters by whole sentences. A hard cut at 152
+ * characters left ~60 descriptions ending mid-word ("There are fiv…"). Only when
+ * the first sentence alone is too long does it fall back to a word boundary.
+ */
+export function clipDescription(text: string, max = 155): string {
+  if (text.length <= max) return text;
+  // Split only where sentence punctuation is followed by whitespace, so the result
+  // is always a prefix of the text ("capsule.yaml" or "v0.104.0" never split it).
+  let out = "";
+  for (const sentence of text.split(/(?<=[.!?])\s+/)) {
+    const next = out ? `${out} ${sentence}` : sentence;
+    if (next.length > max) break;
+    out = next;
+  }
+  if (out.length >= 70) return out;
+  const cut = text.slice(0, max - 1);
+  return `${cut.slice(0, cut.lastIndexOf(" ")).replace(/[\s,;:—–-]+$/, "")}…`;
 }

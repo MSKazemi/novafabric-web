@@ -50,10 +50,10 @@ interface Comp {
 const C: Record<string, Comp> = {
   /* ── Runtime / entry ── */
   adapters: {
-    icon: "🧩", domain: "runtime", title: "Framework Adapters", sub: "8 drop-in wrappers", ver: "v0.16",
-    tag: "One function call enables capture for any major AI framework. Fail-open — capture errors never reach user code.",
+    icon: "🧩", domain: "runtime", title: "Framework Adapters", sub: "11 drop-in wrappers (experimental)", ver: "v0.16",
+    tag: "One function call enables capture for a supported AI framework. Fail-open — capture errors never reach user code.",
     connects: ["capture"],
-    summary: "Drop-in wrappers for LangGraph, AutoGen, CrewAI, DSPy, OpenAI Agents SDK, Google ADK, AWS Bedrock AgentCore, and A2A. Each patches the framework's execution entry point so model and tool calls flow into capture with zero changes to user logic.",
+    summary: "Drop-in wrappers for LangGraph, AutoGen, CrewAI, DSPy, OpenAI Agents SDK, Google ADK, AWS Bedrock AgentCore, A2A, LlamaIndex, Pydantic AI and Haystack (experimental). Each patches the framework's execution entry point so model and tool calls flow into capture with zero changes to user logic.",
     subs: [["LangGraph", "wrap(graph) — patches invoke/run"], ["AutoGen", "wrap_agent() — patches initiate_chat"], ["CrewAI", "wrap_crew() — patches kickoff"], ["DSPy", "wrap_program() — patches forward"], ["OpenAI Agents", "register() tracing processor"], ["Google ADK", "make_plugin() lifecycle hook"], ["Bedrock AgentCore", "wrap_client() agentic invoke"], ["A2A SDK", "make_interceptor() agent-to-agent"]],
     cli: ["from novafabric.adapters import langgraph", "graph = langgraph.wrap(graph)"],
     io: { in: "Native framework objects", out: "Events → CapsuleWriter" },
@@ -315,7 +315,7 @@ const C: Record<string, Comp> = {
 // Six subsystem domains — matches the NovaFabric architecture overview and the
 // homepage capability band (Capture · Evidence · Analyze · Trust · Govern · Serve).
 const PILLARS: { key: string; icon: string; title: string; sub: string; color: string; nodes: string[] }[] = [
-  { key: "capture", icon: "⚡", title: "Capture", sub: "Wrap any subprocess. Record everything.", color: DOMAINS.capture.color, nodes: ["adapters", "runners", "capture", "hooks", "secrets"] },
+  { key: "capture", icon: "⚡", title: "Capture", sub: "Wrap any command. No code changes.", color: DOMAINS.capture.color, nodes: ["adapters", "runners", "capture", "hooks", "secrets"] },
   { key: "evidence", icon: "📦", title: "Evidence model", sub: "The portable, self-contained unit of record.", color: DOMAINS.data.color, nodes: ["capsule", "envelope", "evfabric"] },
   { key: "analyze", icon: "🔬", title: "Analyze", sub: "Replay, compare, trace, evaluate.", color: DOMAINS.analyze.color, nodes: ["replay", "diff", "lineage", "eval", "kg"] },
   { key: "trust", icon: "🔐", title: "Trust", sub: "Sign, timestamp, verify evidence.", color: DOMAINS.trust.color, nodes: ["trust"] },

@@ -12,12 +12,15 @@ const LINKS = {
     { label: "changelog", href: "/changelog/" },
     { label: "capsules", href: "/capsules/" },
   ],
-  primitives: [
-    { label: "asset registry", href: "/primitives/#asset-registry" },
-    { label: "run capsule", href: "/primitives/#run-capsule" },
-    { label: "replay engine", href: "/primitives/#replay-engine" },
-    { label: "lineage graph", href: "/primitives/#lineage-graph" },
-    { label: "evidence bundle", href: "/primitives/#evidence-bundle" },
+  // The pages that answer what people search for. They used to sit 3-4 clicks
+  // deep with five or six inbound links each, while the footer spent five links
+  // on anchors of one /primitives/ page (still linked under "product").
+  startHere: [
+    { label: "what is a run capsule", href: "/docs/architecture/run-capsule/" },
+    { label: "replay modes", href: "/docs/architecture/replay-modes/" },
+    { label: "verify a run for an auditor", href: "/docs/tutorials/prove-a-run-to-an-auditor/" },
+    { label: "traces vs execution evidence", href: "/blog/traces-vs-execution-evidence/" },
+    { label: "novafabric vs langfuse", href: "/docs/tutorials/novafabric-vs-langfuse/" },
   ],
   project: [
     { label: "GitHub", href: "https://github.com/MSKazemi/novafabric" },
@@ -111,7 +114,7 @@ export default function Footer() {
           {/* Lab + primitives + project links */}
           <FooterLinkGroup title="product" links={LINKS.product} />
           <FooterLinkGroup title="learn" links={MORE_GROUPS.find((g) => g.title === "learn")?.links ?? []} />
-          <FooterLinkGroup title="primitives" links={LINKS.primitives} />
+          <FooterLinkGroup title="start here" links={LINKS.startHere} />
           <FooterLinkGroup title="project" links={LINKS.project} />
         </div>
 

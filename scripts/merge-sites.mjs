@@ -4,6 +4,7 @@
 // Astro build are added only where the path does not already exist, so no page
 // of the core site is removed or replaced. That includes robots.txt, llms.txt and
 // the sitemap files: this (Next.js) site owns the domain root, so its copies win.
+// Astro's /docs/ output is never copied at all: Next.js owns that tree.
 //
 // Sitemaps are the one exception to "add what is missing": the Astro build's own
 // sitemap-index.xml / sitemap-0.xml are NOT copied. Two competing sitemaps for one
@@ -42,6 +43,13 @@ function walk(dir) {
       continue;
     }
     if (/^sitemap-.*\.xml$/.test(rel)) continue; // folded into sitemap.xml below
+    // /docs/ belongs to the Next.js render. The Astro build renders the same markdown
+    // a second time; letting it fill paths Next deliberately skips republished
+    // excluded pages (docs/rfcs/_template went live and into the sitemap that way).
+    if (rel === "docs" || rel.startsWith("docs/")) {
+      skipped++;
+      continue;
+    }
     const dest = join(target, rel);
     if (existsSync(dest)) {
       skipped++;

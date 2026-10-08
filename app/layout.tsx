@@ -111,8 +111,9 @@ const organizationSchema = {
   disambiguatingDescription:
     "An independent open-source project for capturing, replaying and verifying AI-agent executions. Unrelated to data-analytics or network-fabric products that share the word \"fabric\".",
   founder: { "@id": AUTHOR_ID },
+  // github.com/novafabric is reserved for later and empty of NovaFabric; a sameAs
+  // pointing at it would tie this entity to unrelated repositories.
   sameAs: [
-    "https://github.com/novafabric",
     "https://github.com/MSKazemi/novafabric",
     "https://pypi.org/project/novafabric/",
   ],

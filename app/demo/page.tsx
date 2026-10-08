@@ -9,7 +9,7 @@ import CapsuleValidator from "@/components/demo/CapsuleValidator";
 import { INSTALL_COMMAND } from "@/lib/version";
 
 const DESCRIPTION =
-  "A guided tour of everything NovaFabric does: capture any command, inspect and validate the capsule against its real schema in your browser, replay it, diff two runs, trace lineage, and export signed evidence.";
+  "A guided NovaFabric tour: capture a command, validate the capsule against its real schema in your browser, replay it, diff two runs and export signed evidence.";
 
 export const metadata: Metadata = {
   title: "Demo — see everything NovaFabric does",

@@ -4,22 +4,24 @@ import CountUp from "@/components/ui/CountUp";
 /**
  * "System at a glance" — an enterprise credibility + full-capability band.
  *
- * Metrics are the real repo's scale.
- * The six domains (Capture · Evidence · Analyze · Trust · Govern · Serve) and the
- * eight framework adapters match the NovaFabric architecture overview and the
- * /architecture explorer.
+ * Metrics are the real repo's scale, counted against the product tree on
+ * 2026-10-08: five replay modes (forensic, mocked, semantic, exact, experimental
+ * intervention), 281 ADRs, 1,040 test files, 83 top-level subpackages, and the 11
+ * framework adapters the claim matrix allows ("8" is listed there as not safe).
+ * The six domains (Capture · Evidence · Analyze · Trust · Govern · Serve) match
+ * the NovaFabric architecture overview and the /architecture explorer.
  */
 
 const METRICS: { value: string; label: string }[] = [
-  { value: "4", label: "replay modes" },
-  { value: "220+", label: "decision records" },
-  { value: "750+", label: "test suites" },
-  { value: "81", label: "subpackages" },
-  { value: "8", label: "framework adapters" },
+  { value: "5", label: "replay modes" },
+  { value: "280+", label: "decision records" },
+  { value: "1,000+", label: "test files" },
+  { value: "83", label: "subpackages" },
+  { value: "11", label: "framework adapters (experimental)" },
   { value: "Apache-2.0", label: "open source" },
 ];
 
-// The 8 real agent-framework adapters that ship in src/novafabric/adapters/.
+// The 11 agent-framework adapters that ship in src/novafabric/adapters/.
 const ADAPTERS = [
   "LangGraph",
   "AutoGen",
@@ -46,7 +48,7 @@ const PILLARS: {
     key: "capture",
     icon: "⚡",
     title: "Capture",
-    tagline: "Wrap any subprocess. Record everything.",
+    tagline: "Wrap any command. No code changes.",
     hue: "var(--color-amber-true)",
     subsystems: [
       "Framework Adapters",
