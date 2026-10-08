@@ -170,7 +170,7 @@ export default function CinematicHero() {
                 <span className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]" />
                 <span className="w-2.5 h-2.5 rounded-full bg-[#febc2e]" />
                 <span className="w-2.5 h-2.5 rounded-full bg-[#28c840]" />
-                <span className="ml-2 text-faint text-[11px]">nova — bash · illustrative, sealing configured</span>
+                <span className="ml-2 text-faint text-[11px]">nova — bash · illustrative output</span>
               </div>
               {/* Terminal body */}
               <div className="p-5 space-y-1">
@@ -180,25 +180,31 @@ export default function CinematicHero() {
                 </div>
                 <div className="text-faint">‥</div>
                 <div>
-                  <span className="text-muted">  capsule   ─ </span>
-                  <span className="text-amber">4f8a1c2e</span>
-                </div>
-                <div>
-                  <span className="text-muted">  trace.jsonl        </span>
-                  <span className="text-jade">✓</span>
-                  <span className="text-muted">   1,203 spans</span>
-                </div>
-                <div>
                   <span className="text-muted">  model-calls.jsonl  </span>
                   <span className="text-jade">✓</span>
                   <span className="text-muted">   6 LLM calls</span>
                 </div>
                 <div>
-                  <span className="text-muted">  seal (your key)    </span>
+                  <span className="text-muted">  tool-calls.jsonl   </span>
                   <span className="text-jade">✓</span>
-                  <span className="text-muted">   ed25519</span>
+                  <span className="text-muted">   3 tool calls</span>
                 </div>
-                <div className="pt-2 text-jade text-[12px]">capsule sealed ◆</div>
+                <div>
+                  <span className="text-muted">  env.lock           </span>
+                  <span className="text-jade">✓</span>
+                  <span className="text-muted">   environment</span>
+                </div>
+                <div className="text-jade text-[12px]">  run capsule 01HXAY7M5JZ8… written</div>
+                <div className="pt-3">
+                  <span className="text-amber">$ </span>
+                  <span className="text-ink">nova replay 01HXAY7M5JZ8… --mode mocked</span>
+                </div>
+                <div className="text-muted">  model replies served from the capsule · tools run live</div>
+                <div className="pt-3">
+                  <span className="text-amber">$ </span>
+                  <span className="text-ink">nova diff &lt;run-a&gt; &lt;run-b&gt;</span>
+                </div>
+                <div className="text-muted">  aligned 1 · changed 1 · added 0 · removed 0</div>
               </div>
             </div>
           </div>

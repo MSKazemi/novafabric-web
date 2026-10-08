@@ -25,7 +25,7 @@ const LAYERS: ArchLayer[] = [
     color: "#4a9eff",
     techStack: ["Go daemon", "SQLite spool", "RFC 3161 timestamps"],
     metrics: "Crash-safe spool, sub-ms local latency",
-    cliCommand: "nova collector start --spool-dir /var/nova",
+    cliCommand: "novafabric-collector --config collector.yaml",
     description:
       "Each machine runs a lightweight Go daemon that aggregates spans from all local nova processes, applies RFC 3161 timestamps, and forwards to the cluster collector.",
   },
@@ -37,7 +37,7 @@ const LAYERS: ArchLayer[] = [
     color: "#a87fff",
     techStack: ["Postgres + pgBouncer", "Object store (S3/local)", "RLS isolation"],
     metrics: "p99 benchmark exists, not CI-gated",
-    cliCommand: "nova server start --postgres $DATABASE_URL",
+    cliCommand: "nova server start --backend postgres",
     description:
       "The cluster collector ingests from multiple node collectors, stores capsule metadata in Postgres with row-level security, and routes capsule objects to the configured object store.",
   },
@@ -59,7 +59,7 @@ const LAYERS: ArchLayer[] = [
     subtitle: "Fleet-wide audit and replay",
     color: "#ff8c42",
     techStack: ["NovaSeal verification", "Replay Engine", "Audit dashboard"],
-    cliCommand: "nova replay --capsule 4f8a1c2e --mode forensic",
+    cliCommand: "nova replay <run-id> --mode forensic",
     description:
       "The global query plane exposes replay, audit, and verification across all evidence. Any capsule can be inspected or replayed in forensic, mocked, semantic, or exact mode for debugging or audit input.",
   },

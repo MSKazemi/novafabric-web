@@ -28,13 +28,32 @@ The documentation pages are rendered at build time from the `docs/` directory of
 [MSKazemi/novafabric](https://github.com/MSKazemi/novafabric). `npm run build` fetches
 them automatically; set `NOVAFABRIC_DOCS` to a local `docs/` directory to use your own checkout.
 
+## Pages
+
+Every public page of novafabric.ai is a route in this repository:
+
+- `/` home · `/novafabric/` product and CLI · `/install/` · `/primitives/` (with the replay modes) · `/architecture/`
+- `/demo/` guided tour, plus in-browser demos at `/demo/capsule/`, `/demo/replay/`, `/demo/lineage/`, `/demo/registry/` and `/demo/evidence/`
+- `/spec/` JSON Schemas · `/docs/**` documentation · `/blog/` · `/research/` · `/changelog/` · `/capsules/` · `/contact/`
+
+Retired URLs (`/concepts/`, `/why/`, `/showcase/**`, `/dashboard/`) are redirect stubs: GitHub Pages cannot
+send a 301, so each stub is a `noindex` page with an immediate meta refresh and a `rel=canonical` pointing at
+the page that replaced it (`components/RedirectStub.tsx`). Stubs are kept out of `sitemap.xml`.
+
+## Demo fixtures
+
+The interactive demos under `/demo/` run in the browser on copies of the NovaFabric repository's showcase
+fixtures (`lib/data/demo/fixtures/`, from `web/src/data/fixtures/` at the release named in
+`lib/demo/fixtures.ts`) and on the packaged `run-capsule.schema.json` (`lib/data/demo/`). They are not fetched
+at runtime. Refresh them from the matching release tag when the formats change.
+
 ## Layout
 
 ```
 app/          App Router pages
 components/   UI, hero, command palette, scroll, and page-specific components
 content/      Blog posts (Markdown)
-lib/          Page data and shared types
+lib/          Page data, shared types and demo fixtures
 public/       Static assets
 scripts/      Build helpers
 ```

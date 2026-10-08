@@ -29,7 +29,7 @@ const CHAPTERS = [
     items: [
       "trace.jsonl  ✓  1,203 spans",
       "model-calls.jsonl  ✓  6 LLM calls",
-      "dsse seal  ✓  (sealing on)",
+      "env.lock  ✓  environment snapshot",
     ],
     accent: "var(--color-jade)",
   },
@@ -37,7 +37,7 @@ const CHAPTERS = [
     number: "04",
     headline: "Replay. Compare. Verify.",
     subtext: "Reopen a past run. Compare it with another. Verify a sealed record. Evidence you can replay.",
-    code: "$ nova replay 4f8a1c2e --mode forensic",
+    code: "$ nova replay <run-id> --mode forensic",
     accent: "var(--color-amber)",
   },
 ] as const;

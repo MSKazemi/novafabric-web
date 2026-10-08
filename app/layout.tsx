@@ -43,7 +43,7 @@ export const metadata: Metadata = {
   // The keyword list is unchanged: those are the terms people search when they
   // have this problem, and capturing that demand is fine. Claiming to be a
   // monitoring product is not.
-  title: "NovaFabric — replay and evidence infrastructure for AI agents",
+  title: "NovaFabric — Replay and evidence infrastructure for AI agents",
   description:
     "Open-source, self-hosted replay and evidence infrastructure for AI agents. Capture executions as portable Run Capsules you can replay, compare, trace, and verify — no account or telemetry required.",
   icons: {
@@ -56,12 +56,12 @@ export const metadata: Metadata = {
   manifest: "/manifest.webmanifest",
   alternates: { canonical: "https://novafabric.ai/" },
   openGraph: {
-    title: "NovaFabric — replay and evidence infrastructure for AI agents",
+    title: "NovaFabric — Replay and evidence infrastructure for AI agents",
     description:
       "Capture AI-agent runs as portable Run Capsules you own, then replay, compare, trace and verify them. Open-source, self-hosted, and local-first.",
     type: "website",
     url: "https://novafabric.ai/",
-    images: [{ url: "https://novafabric.ai/og.png", width: 1200, height: 630, alt: "NovaFabric — replay and evidence infrastructure for AI agents" }],
+    images: [{ url: "https://novafabric.ai/og.png", width: 1200, height: 630, alt: "NovaFabric — Replay and evidence infrastructure for AI agents. Evidence you can replay." }],
   },
   twitter: {
     card: "summary_large_image",

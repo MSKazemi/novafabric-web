@@ -1,12 +1,14 @@
 /**
  * The one list of site pages that the top nav, the footer and the command
- * palette all read. Three hand-kept copies is how the Astro pages (/concepts,
+ * palette all read. Three hand-kept copies is how the old Astro pages (/concepts,
  * /why, /install, /spec, /showcase, /dashboard) ended up unreachable from the
  * Next.js pages: add a page here and it appears everywhere.
  *
- * `astro: true` marks pages served by the separate Astro build under the same
- * domain. They are not Next routes, so they must be opened with a plain link
- * (a full page load), never next/link or router.push.
+ * Since issue #20 (PR A) every public page is a Next.js route; the retired Astro
+ * paths are redirect stubs and are deliberately not listed. `astro: true` remains
+ * for a page served by another build under the same domain: such a page is not a
+ * Next route, so it must be opened with a plain link (a full page load), never
+ * next/link or router.push. Nothing uses it today.
  */
 export interface SiteLink {
   label: string;
@@ -35,12 +37,10 @@ export const MORE_GROUPS: { title: string; links: SiteLink[] }[] = [
   {
     title: "learn",
     links: [
-      { label: "concepts", href: "/concepts/", astro: true },
-      { label: "why now", href: "/why/", astro: true },
-      { label: "install", href: "/install/", astro: true },
-      { label: "spec", href: "/spec/", astro: true },
-      { label: "showcase", href: "/showcase/", astro: true },
-      { label: "dashboard", href: "/dashboard/", astro: true },
+      { label: "install", href: "/install/" },
+      { label: "concepts", href: "/docs/concepts/" },
+      { label: "spec", href: "/spec/" },
+      { label: "interactive demos", href: "/demo/#interactive-demos" },
       { label: "compare", href: "/docs/comparison/" },
     ],
   },

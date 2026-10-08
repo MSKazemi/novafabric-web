@@ -60,7 +60,7 @@ key holder can sign a false capsule.
 
 That is a narrower claim than "proof of what the agent did", and it is the one the
 software can honestly support. If you need the longer walk-through, the tutorial
-[Prove what an AI agent did, months later, offline](/docs/tutorials/prove-a-run-to-an-auditor/)
+[Verify a sealed run for an auditor, months later, offline](/docs/tutorials/prove-a-run-to-an-auditor/)
 runs it end to end.
 
 ### Which one do you need?

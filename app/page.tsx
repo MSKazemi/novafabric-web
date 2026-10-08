@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   // This overrides the layout title, so it is the one search engines show for
   // the homepage — keep it aligned with the README's positioning, not with the
   // older "monitoring & observability" framing the README explicitly disclaims.
-  title: "NovaFabric — replay and evidence infrastructure for AI agents",
+  title: "NovaFabric — Replay and evidence infrastructure for AI agents",
   description:
     "Open-source, self-hosted replay and evidence infrastructure for AI agents. Capture runs as portable Run Capsules you can replay, compare, trace, and verify.",
   alternates: { canonical: "https://novafabric.ai/" },

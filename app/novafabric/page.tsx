@@ -47,7 +47,7 @@ const faqSchema = {
       name: "How do you capture and replay an AI agent run?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Wrap the agent with novafabric. Running `nova capture python my_agent.py` records the environment and the model calls and tool invocations it can see as a portable Run Capsule — no code changes required. Each capsule holds an OpenTelemetry-compatible execution trace you can inspect, replay, diff, and audit locally.",
+        text: "Wrap the agent with NovaFabric. Running `nova capture python my_agent.py` records the environment and the model calls and tool invocations it can see as a portable Run Capsule. Wrapping needs no code changes; model calls are captured automatically for Python workloads, and `nova api-proxy` covers other clients. Each capsule holds an OpenTelemetry-compatible execution trace you can inspect, replay, diff, and audit locally.",
       },
     },
     {
@@ -79,14 +79,14 @@ const faqSchema = {
       name: "Does novafabric work with LangChain, MCP, OpenAI, and Anthropic?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "novafabric captures runs via CLI wrapping, an SDK decorator, an API/MCP proxy, and OpenTelemetry GenAI semantic conventions — so agents built on common frameworks and model providers can be captured and replayed without rewriting them.",
+        text: "novafabric captures runs via CLI wrapping, an SDK decorator, an API/MCP proxy, and OpenTelemetry GenAI semantic conventions — so agents built on common frameworks and model providers can be captured and replayed without rewriting them. The 11 framework adapters are experimental.",
       },
     },
   ],
 };
 
 const CAPSULE_TREE = [
-  { path: ".novafabric/runs/01HXAY7M5JZ8R7K4P9DPBYK2WX/", type: "dir" },
+  { path: "~/.novafabric/capsules/01HXAY7M5JZ8R7K4P9DPBYK2WX/", type: "dir" },
   { path: "  capsule.yaml", note: "run manifest — id, status, timing", type: "file" },
   { path: "  trace.jsonl", note: "execution spans", type: "file" },
   { path: "  model-calls.jsonl", note: "LLM calls captured", type: "file" },
@@ -94,6 +94,7 @@ const CAPSULE_TREE = [
   { path: "  env.lock", note: "environment snapshot", type: "file" },
   { path: "  redaction-proof.json", note: "record of the secret scan", type: "file" },
   { path: "  replay.yaml", note: "replay policy", type: "file" },
+  { path: "  lineage.jsonl", note: "lineage edges for this run", type: "file" },
   { path: "  inputs/", type: "dir" },
   { path: "  outputs/", type: "dir" },
   { path: "    stdout.txt", type: "file" },
@@ -103,18 +104,18 @@ const CAPSULE_TREE = [
 const COMMANDS = [
   {
     cmd: "nova capture python my_agent.py",
-    desc: "Wrap any command — script, agent, training run. No code changes required.",
+    desc: "Wrap any command — script, agent, training run. No code changes; model calls are captured automatically for Python workloads (nova api-proxy for other clients).",
   },
   {
-    cmd: "nova replay runs/01HXAY7M5 --mode forensic",
+    cmd: "nova replay <run-id> --mode forensic",
     desc: "Replay a capsule. Forensic mode is read-only. Mocked mode re-runs the command against the recorded model responses; tools run live.",
   },
   {
-    cmd: "nova diff runs/01HXAY7M5 runs/01HXB2K4Q",
+    cmd: "nova diff <run-a> <run-b>",
     desc: "Compare two capsules structurally: what changed in the outputs and the environment.",
   },
   {
-    cmd: "nova verify runs/01HXAY7M5",
+    cmd: "nova verify ~/.novafabric/capsules/<run-id>/",
     desc: "Verify a sealed capsule's signature, timestamp and Merkle-log inclusion. Needs only the capsule; works offline.",
   },
 ];
@@ -231,7 +232,8 @@ export default function NovafabricPage() {
                 </h1>
                 <p style={{ fontSize: "16px", color: "var(--color-muted)", lineHeight: "1.75", marginBottom: "32px" }}>
                   Wrap any command. NovaFabric captures the environment and the model calls and tool exchanges it
-                  can see — without touching your code. One command. A portable, secret-scanned Run Capsule you can seal.
+                  can see — automatically for Python workloads, through <code className="font-code">nova api-proxy</code> for
+                  other clients. One command. A portable, secret-scanned Run Capsule you can seal.
                 </p>
 
                 {/* Install */}
@@ -302,12 +304,13 @@ export default function NovafabricPage() {
               <div>
                 <h2 className="font-display" style={{ fontSize: "clamp(28px, 3.5vw, 44px)", fontStyle: "italic", letterSpacing: "-0.02em", color: "var(--color-ink)", lineHeight: 1.1, marginBottom: "24px" }}>
                   One command.<br />
-                  <span style={{ color: "var(--color-amber)" }}>Everything</span> recorded.
+                  <span style={{ color: "var(--color-amber)" }}>The run</span>, recorded.
                 </h2>
                 <p style={{ fontSize: "15px", color: "var(--color-muted)", lineHeight: "1.75", marginBottom: "28px" }}>
                   Every captured run produces a structured directory — a NovaFabric Run Capsule, a portable
                   execution-evidence artifact you own — holding the evidence needed to inspect, compare and
-                  replay the execution. No instrumentation required.
+                  replay the execution. No instrumentation for Python workloads; other clients go through{" "}
+                  <code className="font-code">nova api-proxy</code>.
                 </p>
                 <div
                   style={{
@@ -534,6 +537,53 @@ export default function NovafabricPage() {
               >
                 read the getting-started guide →
               </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Why — absorbed the former /why/ page, which keeps a redirect stub to #why */}
+        <section id="why" style={{ backgroundColor: "var(--color-canvas)", padding: "80px 0", borderTop: "1px solid var(--color-edge)", scrollMarginTop: "80px" }}>
+          <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 24px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "48px" }}>
+              <span className="font-code" style={{ color: "var(--color-amber)", fontSize: "11px", letterSpacing: "0.1em" }}>05/</span>
+              <div style={{ height: "1px", width: "40px", backgroundColor: "var(--color-edge-2)" }} />
+              <span className="font-code" style={{ color: "var(--color-faint)", fontSize: "11px", letterSpacing: "0.08em" }}>why replayable runs</span>
+            </div>
+            <h2 className="font-display" style={{ fontSize: "clamp(28px, 3.5vw, 44px)", fontStyle: "italic", letterSpacing: "-0.02em", color: "var(--color-ink)", lineHeight: 1.1, marginBottom: "32px" }}>
+              The run happened. Then the world changed.
+            </h2>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "32px", maxWidth: "1000px" }}>
+              <div>
+                <h3 style={{ fontSize: "15px", fontWeight: 600, color: "var(--color-ink)", marginBottom: "8px" }}>What changed</h3>
+                <p style={{ fontSize: "14px", color: "var(--color-muted)", lineHeight: 1.75 }}>
+                  Debugging an LLM call used to mean reading one prompt and one response. An agent run now chains
+                  several model calls, tool invocations, MCP servers and retrieval steps, and any of them can drift
+                  between Tuesday and Wednesday. When a run fails or is questioned later, a log of what scrolled past
+                  is not enough: you need the run itself, as an artifact you can reopen, replay and compare.
+                </p>
+              </div>
+              <div>
+                <h3 style={{ fontSize: "15px", fontWeight: 600, color: "var(--color-ink)", marginBottom: "8px" }}>Who it is for</h3>
+                <p style={{ fontSize: "14px", color: "var(--color-muted)", lineHeight: 1.75 }}>
+                  Engineers building and shipping AI agents, first. Platform and MLOps teams who run them for others.
+                  Researchers whose experiments have to reproduce. And whoever later has to answer for what an agent
+                  did, who needs the record rather than a recollection.
+                </p>
+              </div>
+              <div>
+                <h3 style={{ fontSize: "15px", fontWeight: 600, color: "var(--color-ink)", marginBottom: "8px" }}>What it is not</h3>
+                <p style={{ fontSize: "14px", color: "var(--color-muted)", lineHeight: 1.75 }}>
+                  Not an observability platform: tracing shows a run while it happens; NovaFabric keeps it as an
+                  artifact you can replay, compare and verify later, so the two are complementary. Not a hosted
+                  service: no SaaS, no account. Not a scheduler: it captures what SLURM or Kubernetes runs. And a
+                  NovaFabric failure never blocks your workload by default.{" "}
+                  {/* docs/architecture.md is shadowed on this site by docs/architecture/README.md,
+                      so its "What NovaFabric is not" section is linked on GitHub. */}
+                  <a href="https://github.com/MSKazemi/novafabric/blob/main/docs/architecture.md#what-novafabric-is-not" style={{ color: "var(--color-amber)" }}>
+                    The boundaries →
+                  </a>
+                </p>
+              </div>
             </div>
           </div>
         </section>

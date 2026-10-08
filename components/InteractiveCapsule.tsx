@@ -16,7 +16,8 @@ interface CapsuleFile {
 
 // ─── Static data ──────────────────────────────────────────────────────────────
 
-const CAPSULE_ID = "4f8a1c2e";
+// The run id `nova capture` prints; replay, diff and validate accept it directly.
+const CAPSULE_ID = "01HXAY7M5JZ8R7K4P9DPBYK2WX";
 
 const FILES: CapsuleFile[] = [
   {
@@ -30,7 +31,7 @@ status: success  exit_code: 0
 started:  2026-05-19T14:23:01Z
 finished: 2026-05-19T14:26:12Z
 duration: 3m 11s
-nova_version: 0.24.0`,
+capture: wraps the command; no code changes`,
   },
   {
     id: "trace.jsonl",
@@ -80,46 +81,43 @@ cpu:      16 cores
 anthropic:   0.40.0
 langchain:   0.3.14
 numpy:       2.1.3
-novafabric:  0.24.0
+novafabric:  (installed version)
 
-ANTHROPIC_API_KEY: [REDACTED]
-HOME:              /home/nova`,
+runtime_env: allow-listed variables only
+  dropped:   3 secret-like keys (names hashed)`,
   },
   {
     id: "redaction-proof.json",
     label: "redaction-proof",
     connector: "├─",
-    detail: "1 secret",
+    detail: "1 finding",
     content: `{
-  "schema": "nova-redaction/v1",
-  "secrets_found": 1,
-  "secrets_redacted": 1,
-  "capsule_clean": true,
-  "proof": {
-    "ANTHROPIC_API_KEY": {
-      "redacted": true,
-      "hmac": "a7f3c2e1d9..."
-    }
-  }
-}`,
+  "scanner": { "name": "novafabric.secrets", "engine": "regex" },
+  "packs": [{ "name": "gitleaks-core-v0", "version": "0.6.0", "rules_count": 14 }],
+  "targets": [ … one entry per scanned file … ],
+  "findings_count": { "total": 1 },
+  "findings": [{
+    "rule_id": "anthropic-api-key",
+    "target_ref": "outputs/stdout.txt",
+    "redaction_strategy": "mask"
+  }],
+  "chain_hash": "sha256:9e1c…"
+}
+// a record of what the scanner checked and redacted —
+// rule-based: known key and token patterns, not every secret`,
   },
   {
-    id: "dsse.sig",
-    label: "dsse signature",
+    id: "replay.yaml",
+    label: "replay.yaml",
     connector: "└─",
-    detail: "ed25519",
-    content: `{
-  "payload_type": "nova.capsule+json",
-  "signatures": [{
-    "keyid": "nova-ed25519-2026-01",
-    "sig": "MEYCIQDp3n8f..."
-  }],
-  "timestamp": {
-    "tsa": "freetsa.org",
-    "rfc3161": true,
-    "verified": "2026-05-19T14:26:13Z"
-  }
-}`,
+    detail: "replay policy",
+    content: `# capture writes a minimal replay policy;
+# extend it with defaults, tool_overrides,
+# network and cost_caps as you need them
+schema_version: "0.1.0"
+
+# a default capture is not sealed: configure
+# novaseal.yaml with your own key to add .seal/`,
   },
 ];
 
@@ -618,7 +616,7 @@ export default function InteractiveCapsule() {
                       animation: "capsuleSealFadeIn 0.4s ease both",
                     }}
                   >
-                    <span style={{ color: "var(--color-jade)" }}>✓ capsule sealed (key configured)</span>
+                    <span style={{ color: "var(--color-jade)" }}>✓ run capsule written</span>
                     <span style={{ color: "var(--color-faint)" }}>·</span>
                     <span style={{ color: "var(--color-faint)" }}>replay with:</span>
                     <span style={{ color: "var(--color-amber)" }}>

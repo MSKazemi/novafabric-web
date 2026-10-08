@@ -77,6 +77,10 @@ if (existsSync(astroSitemap) && existsSync(mainSitemap)) {
     const path = loc.startsWith(SITE) ? loc.slice(SITE.length) : null;
     // Only list URLs this merged site actually serves.
     if (path === null || !existsSync(join(target, path, "index.html"))) continue;
+    // ...and never a redirect stub. Since issue #20 the Next.js build owns every
+    // former Astro page; the retired ones (/concepts/, /why/, /showcase/**) are
+    // noindex meta-refresh stubs, and a sitemap must not list a redirect.
+    if (/<meta name="robots" content="noindex/.test(readFileSync(join(target, path, "index.html"), "utf8"))) continue;
     extra.push(`<url><loc>${loc}</loc></url>`);
   }
   if (extra.length) {

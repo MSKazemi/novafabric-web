@@ -17,7 +17,7 @@ const PRINCIPLES = [
   {
     icon: "⬡",
     title: "Evidence-grade integrity",
-    body: "Sealed evidence uses cryptographic signatures and trusted timestamps so integrity can be checked later. NovaFabric provides evidence, not compliance certification.",
+    body: "Sealing is opt-in: with your own key, a capsule gets a cryptographic signature (and, if you configure one, an RFC 3161 timestamp) so integrity can be checked later. NovaFabric provides evidence, not compliance certification.",
   },
   {
     icon: "⟶",

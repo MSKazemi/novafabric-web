@@ -3,7 +3,7 @@
 // that works self-contained on a single machine and scales out unchanged.
 const STAGES: { verb: string; icon: string; line: string }[] = [
   { verb: "Capture", icon: "⚡", line: "Wrap any command. Record the model & tool calls capture can see." },
-  { verb: "Seal", icon: "🔐", line: "Optional, with your key: DSSE signature, RFC 3161 timestamp, Merkle proof." },
+  { verb: "Seal", icon: "🔐", line: "Optional, with your key: DSSE signature and Merkle proof; an RFC 3161 timestamp if you configure one." },
   { verb: "Replay", icon: "↺", line: "Five modes: inspect, or re-run against recorded model responses." },
   { verb: "Diff", icon: "≃", line: "Compare two runs structurally." },
   { verb: "Audit", icon: "⚖️", line: "Trace lineage, export signed evidence bundles." },

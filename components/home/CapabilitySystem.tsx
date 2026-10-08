@@ -89,7 +89,7 @@ const PILLARS: {
     key: "trust",
     icon: "🔐",
     title: "Trust",
-    tagline: "Sign, timestamp, and verify evidence.",
+    tagline: "Seal with your key (opt-in), verify offline.",
     hue: "var(--hue-orange)",
     subsystems: ["NovaSeal Signing", "Evidence Bundle", "Merkle Log"],
   },

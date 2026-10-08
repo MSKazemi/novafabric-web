@@ -7,6 +7,7 @@ import JsonLd from "@/components/JsonLd";
 import { PageHero, SectionHeader, TerminalFrame } from "@/components/ui";
 import CapsuleValidator from "@/components/demo/CapsuleValidator";
 import { INSTALL_COMMAND } from "@/lib/version";
+import { DEMOS } from "@/lib/data/demos";
 
 const DESCRIPTION =
   "A guided NovaFabric tour: capture a command, validate the capsule against its real schema in your browser, replay it, diff two runs and export signed evidence.";
@@ -191,6 +192,46 @@ export default function DemoPage() {
           </p>
         </div>
 
+        <section id="interactive-demos" style={{ margin: "0 0 72px", scrollMarginTop: "96px" }}>
+          <h2 className="font-display" style={{ fontSize: "26px", color: "var(--color-ink)", marginBottom: "8px" }}>
+            Interactive demos
+          </h2>
+          <p style={{ ...P, fontSize: "14px" }}>
+            One per primitive, each on its own page. They run in your browser on fixtures from the
+            repository and do not talk to a server.
+          </p>
+          <ul
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+              gap: "12px",
+              listStyle: "none",
+            }}
+          >
+            {DEMOS.map((d) => (
+              <li key={d.href}>
+                <Link
+                  href={d.href}
+                  style={{
+                    display: "block",
+                    height: "100%",
+                    border: "1px solid var(--color-edge)",
+                    borderRadius: "8px",
+                    padding: "16px",
+                    background: "var(--color-surface)",
+                    textDecoration: "none",
+                  }}
+                >
+                  <span style={{ display: "block", fontSize: "14px", fontWeight: 600, color: "var(--color-ink)", marginBottom: "6px" }}>
+                    {d.title} →
+                  </span>
+                  <span style={{ display: "block", fontSize: "13px", color: "var(--color-muted)", lineHeight: 1.6 }}>{d.blurb}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+
         <Step n="01" title="Capture any command" kind="works today">
           <p style={P}>
             NovaFabric wraps a process. Not a framework integration, not a decorator you
@@ -206,7 +247,7 @@ export default function DemoPage() {
               {"  "}model-calls.jsonl{"    "}✓{"  "}2 LLM calls{"\n"}
               {"  "}tool-calls.jsonl{"     "}✓{"  "}2 tool invocations{"\n"}
               {"  "}env.lock{"             "}✓{"  "}environment snapshot{"\n"}
-              {"  "}redaction-proof.json{" "}✓{"  "}no secrets found
+              {"  "}redaction-proof.json{" "}✓{"  "}secret scan: 0 findings
             </div>
           </TerminalFrame>
           <p style={{ ...P, marginTop: "18px", marginBottom: 0 }}>
@@ -353,16 +394,16 @@ export default function DemoPage() {
             The payoff. A signed bundle an auditor verifies <strong style={{ color: "var(--color-ink)" }}>offline, with
             no NovaFabric installed</strong> — only <code style={{ fontFamily: "var(--font-code)" }}>sha256sum</code>{" "}
             and an ed25519 verifier. Evidence only its own tool can check is not evidence;
-            it is a database row.
+            it is a database row. An RFC 3161 timestamp is opt-in (<code style={{ fontFamily: "var(--font-code)" }}>--timestamp</code>).
           </p>
           <TerminalFrame>
             <div style={{ padding: "16px 18px", whiteSpace: "pre-wrap" }}>
-              <span style={{ color: "var(--color-jade)" }}>$</span> nova export-evidence 01KR5SQZPDGTKE3MDP3ZRX8WP1
+              <span style={{ color: "var(--color-jade)" }}>$</span> nova export-evidence ~/.novafabric/capsules/01KR5SQZPDGTKE3MDP3ZRX8WP1/ -o evidence.zip
               {"\n"}
-              ✓ evidence-01KR5SQZPD.zip{"  "}(in-toto DSSE + RFC 3161 timestamp){"\n\n"}
-              <span style={{ color: "var(--color-jade)" }}>$</span> nova seal verify 01KR5SQZPDGTKE3MDP3ZRX8WP1
+              ✓ evidence.zip{"  "}(in-toto DSSE, signed with your local Ed25519 key){"\n\n"}
+              <span style={{ color: "var(--color-jade)" }}>$</span> nova verify evidence.zip
               {"\n"}
-              ✓ signature valid{"    "}✓ timestamp valid{"    "}✓ redaction proof intact
+              ✓ every artifact digest recomputed{"    "}✓ signature valid
             </div>
           </TerminalFrame>
         </Step>
@@ -426,7 +467,7 @@ export default function DemoPage() {
               <span style={{ color: "var(--color-jade)" }}>$</span> nova validate &lt;run-id&gt;{"\n"}
               <span style={{ color: "var(--color-jade)" }}>$</span> nova replay &lt;run-id&gt; --mode forensic{"\n"}
               <span style={{ color: "var(--color-jade)" }}>$</span> nova diff &lt;run-a&gt; &lt;run-b&gt;{"\n"}
-              <span style={{ color: "var(--color-jade)" }}>$</span> nova export-evidence &lt;run-id&gt;
+              <span style={{ color: "var(--color-jade)" }}>$</span> nova export-evidence ~/.novafabric/capsules/&lt;run-id&gt;/ -o evidence.zip
             </div>
           </TerminalFrame>
           <p style={{ ...P, marginTop: "22px" }}>

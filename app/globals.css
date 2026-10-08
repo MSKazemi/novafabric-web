@@ -511,3 +511,36 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
+/* ── Interactive demo islands (/demo/*) ──
+   Ported from the former Astro showcase, which was written against its own token
+   names (--color-text, --color-bg-raised, --color-status-*…). These aliases map
+   those names onto this site's palette inside `.nf-demo` only, so the islands
+   follow the light/dark toggle without rewriting every class. */
+.nf-demo {
+  --color-bg: var(--color-canvas);
+  --color-bg-raised: var(--color-surface);
+  --color-bg-sunken: var(--color-surface-2);
+  --color-border: var(--color-edge);
+  --color-border-strong: var(--color-edge-2);
+  --color-text: var(--color-ink);
+  --color-text-muted: var(--color-muted);
+  --color-text-faint: var(--color-faint);
+  --color-status-success: var(--color-jade);
+  --color-status-failure: var(--hue-red);
+  --color-status-pending: var(--color-amber-true);
+  --color-accent-fg: var(--color-on-accent);
+  --color-accent-hover: var(--color-accent-2);
+  --font-mono: var(--font-code);
+
+  /* lineage edge colours, one per edge_type */
+  --color-edge-consumed: var(--hue-blue);
+  --color-edge-produced-by: var(--color-jade);
+  --color-edge-replayed-from: var(--hue-orange);
+  --color-edge-derived-from: var(--hue-violet);
+  --color-edge-evaluated-by: var(--hue-gold);
+  --color-edge-attested-by: var(--color-accent);
+  --color-edge-contains: var(--hue-slate);
+  --color-edge-delegated-to: var(--color-amber-true);
+  --color-edge-spawned: var(--hue-red);
+}
