@@ -274,14 +274,12 @@ export default function NovafabricPage() {
                   >
                     github ↗
                   </a>
-                  <a
-                    href="https://github.com/MSKazemi/novafabric/blob/main/docs/getting-started.md"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <Link
+                    href="/docs/getting-started/"
                     style={{ fontFamily: "var(--font-code), monospace", fontSize: "13px", color: "var(--color-muted)", border: "1px solid var(--color-edge-2)", padding: "9px 20px", borderRadius: "4px", textDecoration: "none" }}
                   >
                     docs →
-                  </a>
+                  </Link>
                 </div>
               </div>
 
@@ -382,6 +380,11 @@ export default function NovafabricPage() {
               Click &quot;run&quot; to simulate a capture. Explore the files a capsule produces.
             </p>
             <InteractiveCapsule />
+            <p style={{ marginTop: "24px" }}>
+              <Link href="/docs/architecture/run-capsule/" style={{ fontFamily: "var(--font-code), monospace", fontSize: "13px", color: "var(--color-amber)", textDecoration: "none" }}>
+                What is inside a Run Capsule, file by file →
+              </Link>
+            </p>
           </div>
         </section>
 
@@ -463,6 +466,11 @@ export default function NovafabricPage() {
                 </div>
               ))}
             </div>
+            <p style={{ marginTop: "32px" }}>
+              <Link href="/docs/architecture/replay-modes/" style={{ fontFamily: "var(--font-code), monospace", fontSize: "13px", color: "var(--color-amber)", textDecoration: "none" }}>
+                Replay modes in depth: what each one reuses and what runs live →
+              </Link>
+            </p>
           </div>
         </section>
 
@@ -509,12 +517,10 @@ export default function NovafabricPage() {
               ))}
             </div>
 
-            {/* Docs CTA */}
+            {/* Docs CTA: the guide is published on this site, so keep the reader here. */}
             <div style={{ marginTop: "48px", display: "flex", justifyContent: "center" }}>
-              <a
-                href="https://github.com/MSKazemi/novafabric/blob/main/docs/getting-started.md"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href="/docs/getting-started/"
                 style={{
                   fontFamily: "var(--font-code), monospace",
                   fontSize: "13px",
@@ -526,8 +532,8 @@ export default function NovafabricPage() {
                   letterSpacing: "0.02em",
                 }}
               >
-                full documentation on GitHub →
-              </a>
+                read the getting-started guide →
+              </Link>
             </div>
           </div>
         </section>
