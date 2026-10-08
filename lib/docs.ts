@@ -96,7 +96,7 @@ function resolveRelative(dir: string, target: string): { path: string; escapes: 
  * URL for a page that is never generated. Search Console reported the result as
  * "Not found (404)" against novafabric.ai.
  */
-function rewriteLinks(html: string, file: string, published: ReadonlySet<string>): string {
+function rewriteLinks(html: string, file: string, published: ReadonlyMap<string, string>): string {
   const dir = file.includes("/") ? file.slice(0, file.lastIndexOf("/")) : "";
 
   return html.replace(/href="([^"]+)"/g, (whole, href: string) => {
@@ -117,7 +117,10 @@ function rewriteLinks(html: string, file: string, published: ReadonlySet<string>
     if (escapes === 0 && target.endsWith(".md")) {
       const slug = toSlug(path);
       if (slug === "" || slug === "index") return `href="/docs/${suffix}"`;
-      if (published.has(slug)) return `href="/docs/${slug}/${suffix}"`;
+      // Only the file that actually owns the URL. `architecture.md` and
+      // `architecture/README.md` share /docs/architecture/; links to the one that
+      // lost (and its anchors) belong on GitHub, not on the other page.
+      if (published.get(slug) === path) return `href="/docs/${slug}/${suffix}"`;
     }
 
     // Everything else has no route on this site. Send the reader to the source
@@ -184,7 +187,7 @@ export async function docPages(): Promise<DocPage[]> {
   // The slug set has to exist before any page is rendered: rewriteLinks decides
   // between a /docs/ URL and a GitHub URL by asking whether the target is a page
   // this build actually produces, and it cannot ask that mid-render.
-  const published = new Set(files.map(toSlug));
+  const published = new Map(files.map((file) => [toSlug(file), file]));
 
   const render = async (markdown: string, file: string) =>
     rewriteLinks(await renderMarkdown(markdown), file, published);
