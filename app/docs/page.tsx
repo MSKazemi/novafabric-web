@@ -8,7 +8,7 @@ import { PageHero } from "@/components/ui";
 import { docPages, titleFor, descriptionFor } from "@/lib/docs";
 
 const DESCRIPTION =
-  "Guides, concepts, CLI reference, architecture, and operations documentation for NovaFabric — the open-source, self-hosted system for capturing, replaying, diffing and auditing AI and HPC runs.";
+  "NovaFabric docs: getting started, concepts, CLI and Python API reference, architecture and operations for capturing, replaying and verifying AI-agent runs.";
 
 export const metadata: Metadata = {
   title: "Documentation — NovaFabric",

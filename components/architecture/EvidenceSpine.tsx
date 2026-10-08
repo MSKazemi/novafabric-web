@@ -2,11 +2,11 @@
 // strategic core is one verb chain — Capture → Seal → Replay → Diff → Audit —
 // that works self-contained on a single machine and scales out unchanged.
 const STAGES: { verb: string; icon: string; line: string }[] = [
-  { verb: "Capture", icon: "⚡", line: "Wrap any command. Record every model & tool call." },
-  { verb: "Seal", icon: "🔐", line: "DSSE signature + RFC 3161 timestamp + Merkle proof." },
-  { verb: "Replay", icon: "↺", line: "Re-run forensic, mocked, semantic, or exact." },
-  { verb: "Diff", icon: "≃", line: "Compare runs; gate regressions in CI." },
-  { verb: "Audit", icon: "⚖️", line: "Trace lineage, export sealed evidence bundles." },
+  { verb: "Capture", icon: "⚡", line: "Wrap any command. Record the model & tool calls capture can see." },
+  { verb: "Seal", icon: "🔐", line: "Optional, with your key: DSSE signature, RFC 3161 timestamp, Merkle proof." },
+  { verb: "Replay", icon: "↺", line: "Five modes: inspect, or re-run against recorded model responses." },
+  { verb: "Diff", icon: "≃", line: "Compare two runs structurally." },
+  { verb: "Audit", icon: "⚖️", line: "Trace lineage, export signed evidence bundles." },
 ];
 
 export default function EvidenceSpine() {

@@ -17,26 +17,25 @@ export const metadata: Metadata = {
   openGraph: {
     title: "NovaFabric CLI — capture, replay & audit AI agent runs",
     description:
-      "Capture, replay, and audit AI-agent and agentic application executions. Local-first evidence by default.",
+      "Open-source, self-hosted replay and evidence infrastructure for AI agents. Capture runs as portable Run Capsules you own.",
     url: "https://novafabric.ai/novafabric/",
     images: [{ url: "https://novafabric.ai/og.png", width: 1200, height: 630 }],
   },
 };
 
-const softwareSchema = {
+// The software has one entity, declared once in app/layout.tsx (#software). This
+// page describes it rather than re-declaring a second, partly different
+// SoftwareApplication (different name casing, an unverified OS list) — two
+// entities for one product is what entity resolvers report as a conflict.
+const productPageSchema = {
   "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  name: "novafabric",
-  applicationCategory: "DeveloperApplication",
-  operatingSystem: "Linux, macOS, Windows",
+  "@type": "WebPage",
+  "@id": "https://novafabric.ai/novafabric/#webpage",
   url: "https://novafabric.ai/novafabric/",
-  description:
-    "NovaFabric captures AI-agent runs as portable, secret-scanned Run Capsules you can seal. Replay, validate, diff, and audit executions.",
-  author: { "@type": "Person", name: "Mohsen Seyedkazemi Ardebili" },
-  // License must match the visible claim on the site (footer: Apache-2.0).
-  license: "https://www.apache.org/licenses/LICENSE-2.0",
-  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-  codeRepository: "https://github.com/MSKazemi/novafabric",
+  name: "NovaFabric CLI — capture, replay and audit AI agent runs",
+  isPartOf: { "@id": "https://novafabric.ai/#website" },
+  about: { "@id": "https://novafabric.ai/#software" },
+  mainEntity: { "@id": "https://novafabric.ai/#software" },
 };
 
 const faqSchema = {
@@ -45,10 +44,10 @@ const faqSchema = {
   mainEntity: [
     {
       "@type": "Question",
-      name: "How do you monitor an AI agent or agentic application?",
+      name: "How do you capture and replay an AI agent run?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Wrap the agent with novafabric. Running `nova capture python my_agent.py` records every model call, tool invocation, and environment detail as a portable capsule — no code changes required. Each capsule holds an OpenTelemetry-compatible execution trace you can inspect, replay, diff, and audit locally.",
+        text: "Wrap the agent with novafabric. Running `nova capture python my_agent.py` records the environment and the model calls and tool invocations it can see as a portable Run Capsule — no code changes required. Each capsule holds an OpenTelemetry-compatible execution trace you can inspect, replay, diff, and audit locally.",
       },
     },
     {
@@ -56,7 +55,7 @@ const faqSchema = {
       name: "What does novafabric capture from an AI-agent run?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Model-call evidence (model name, prompt, completion, token counts, latency), tool invocations (MCP exchanges, function calls, shell commands), a full environment snapshot with secrets redacted, OpenTelemetry-compatible execution spans, a cryptographic redaction proof, and a tamper-evident DSSE + RFC 3161 seal.",
+        text: "Model-call evidence (model name, prompt, completion, token counts, latency), tool invocations (MCP exchanges, function calls, shell commands), an environment snapshot, OpenTelemetry-compatible execution spans, and a record of the built-in secret scan. When you configure a signing key, a capsule can also be sealed (DSSE signature, optional RFC 3161 timestamp) and verified offline.",
       },
     },
     {
@@ -64,7 +63,7 @@ const faqSchema = {
       name: "Can you replay an AI-agent execution for debugging?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Yes. `nova replay` re-executes any captured capsule. Forensic mode is read-only for inspection; mocked mode replays recorded LLM responses for deterministic, offline debugging and regression testing.",
+        text: "Yes. `nova replay` has five modes. Forensic mode is read-only inspection. Mocked mode re-runs the command and serves the recorded model responses from the capsule, so no model call is made; tool calls still run live. Semantic and exact modes do not re-run anything: they score the recorded responses and report whether a byte-exact re-run is possible. Intervention mode is experimental.",
       },
     },
     {
@@ -80,7 +79,7 @@ const faqSchema = {
       name: "Does novafabric work with LangChain, MCP, OpenAI, and Anthropic?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "novafabric captures runs via CLI wrapping, an SDK decorator, an API/MCP proxy, and OpenTelemetry GenAI semantic conventions — so agents built on common frameworks and model providers can be monitored without rewriting them.",
+        text: "novafabric captures runs via CLI wrapping, an SDK decorator, an API/MCP proxy, and OpenTelemetry GenAI semantic conventions — so agents built on common frameworks and model providers can be captured and replayed without rewriting them.",
       },
     },
   ],
@@ -90,10 +89,10 @@ const CAPSULE_TREE = [
   { path: ".novafabric/runs/01HXAY7M5JZ8R7K4P9DPBYK2WX/", type: "dir" },
   { path: "  capsule.yaml", note: "run manifest — id, status, timing", type: "file" },
   { path: "  trace.jsonl", note: "execution spans", type: "file" },
-  { path: "  model-calls.jsonl", note: "every LLM call", type: "file" },
-  { path: "  tool-calls.jsonl", note: "every tool invocation", type: "file" },
-  { path: "  env.lock", note: "full environment snapshot", type: "file" },
-  { path: "  redaction-proof.json", note: "proof no secrets leaked", type: "file" },
+  { path: "  model-calls.jsonl", note: "LLM calls captured", type: "file" },
+  { path: "  tool-calls.jsonl", note: "tool invocations captured", type: "file" },
+  { path: "  env.lock", note: "environment snapshot", type: "file" },
+  { path: "  redaction-proof.json", note: "record of the secret scan", type: "file" },
   { path: "  replay.yaml", note: "replay policy", type: "file" },
   { path: "  inputs/", type: "dir" },
   { path: "  outputs/", type: "dir" },
@@ -108,31 +107,31 @@ const COMMANDS = [
   },
   {
     cmd: "nova replay runs/01HXAY7M5 --mode forensic",
-    desc: "Re-execute any capsule. Forensic mode is read-only. Mocked mode uses recorded LLM responses.",
+    desc: "Replay a capsule. Forensic mode is read-only. Mocked mode re-runs the command against the recorded model responses; tools run live.",
   },
   {
-    cmd: "nova validate runs/01HXAY7M5",
-    desc: "Validate a capsule against schema. Checks integrity, redaction proof, and signature.",
+    cmd: "nova diff runs/01HXAY7M5 runs/01HXB2K4Q",
+    desc: "Compare two capsules structurally: what changed in the outputs and the environment.",
   },
   {
-    cmd: "nova seal verify runs/01HXAY7M5",
-    desc: "Verify DSSE signature and RFC 3161 timestamp. Works offline, forever.",
+    cmd: "nova verify runs/01HXAY7M5",
+    desc: "Verify a sealed capsule's signature, timestamp and Merkle-log inclusion. Needs only the capsule; works offline.",
   },
 ];
 
 const WHAT_IT_CAPTURES = [
   { icon: "⟶", label: "Model-call evidence", body: "Model name, prompt, completion, token counts, latency — for API calls where capture is enabled." },
   { icon: "▦", label: "Tool invocations", body: "MCP exchanges, function calls, shell commands — the tool-call chain where capture hooks are active." },
-  { icon: "◎", label: "Environment snapshot", body: "Python version, installed packages, env vars (secrets redacted) — so you can reproduce the execution context." },
+  { icon: "◎", label: "Environment snapshot", body: "Python version, installed packages and environment variables, secret-scanned — so you can reproduce the execution context." },
   { icon: "⊚", label: "Execution spans", body: "OpenTelemetry-compatible spans for the execution tree. Queryable, exportable, visualisable." },
-  { icon: "◈", label: "Redaction proof", body: "Cryptographic proof that no secrets appear in the capsule. Auditable by anyone, no access to secrets required." },
-  { icon: "⬡", label: "Tamper-evident seal", body: "DSSE signature + RFC 3161 timestamp. Designed for audit evidence workflows; regulatory fit requires independent review." },
+  { icon: "◈", label: "Secret-scan record", body: "Built-in secret scanning of captured evidence, with a record of what ran. Rule-based: it catches known key and token patterns, not every possible secret." },
+  { icon: "⬡", label: "Optional seal", body: "Seal a capsule with your own key (DSSE signature; RFC 3161 timestamp is opt-in) and verify it offline later. A seal shows the record is unchanged since it was signed — not that it is complete. Not a compliance certification." },
 ];
 
 export default function NovafabricPage() {
   return (
     <>
-      <JsonLd data={softwareSchema} />
+      <JsonLd data={productPageSchema} />
       <JsonLd data={faqSchema} />
       <Nav />
       <BreadcrumbJsonLd trail={[{ name: "novafabric", path: "/novafabric/" }]} />
@@ -218,7 +217,7 @@ export default function NovafabricPage() {
                 prompt. You rerun it. It fails differently.
               </p>
               <p className="font-code" style={{ fontSize: "13px", color: "var(--color-amber)", marginTop: "12px", letterSpacing: "0.02em" }}>
-                This is a novafabric problem.
+                This is a NovaFabric problem.
               </p>
             </div>
 
@@ -226,9 +225,9 @@ export default function NovafabricPage() {
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px", alignItems: "center" }} className="nova-hero-grid">
               <div>
                 <h1 className="font-display" style={{ fontSize: "clamp(36px, 4.5vw, 64px)", lineHeight: 1.05, letterSpacing: "-0.02em", fontStyle: "italic", marginBottom: "20px", color: "var(--color-ink)" }}>
-                  Capture every run.
+                  Capture the run.
                   <br />
-                  <span style={{ color: "var(--color-amber)" }}>Replay it</span> anywhere.
+                  <span style={{ color: "var(--color-amber)" }}>Replay it</span> later.
                 </h1>
                 <p style={{ fontSize: "16px", color: "var(--color-muted)", lineHeight: "1.75", marginBottom: "32px" }}>
                   Wrap any command. NovaFabric captures the environment and the model calls and tool exchanges it
@@ -308,8 +307,9 @@ export default function NovafabricPage() {
                   <span style={{ color: "var(--color-amber)" }}>Everything</span> recorded.
                 </h2>
                 <p style={{ fontSize: "15px", color: "var(--color-muted)", lineHeight: "1.75", marginBottom: "28px" }}>
-                  Every captured run produces a structured directory — a capsule — that contains everything
-                  needed to understand, validate, and replay the execution. No instrumentation required.
+                  Every captured run produces a structured directory — a NovaFabric Run Capsule, a portable
+                  execution-evidence artifact you own — holding the evidence needed to inspect, compare and
+                  replay the execution. No instrumentation required.
                 </p>
                 <div
                   style={{
@@ -396,7 +396,7 @@ export default function NovafabricPage() {
             </div>
 
             <h2 className="font-display" style={{ fontSize: "clamp(28px, 3.5vw, 44px)", fontStyle: "italic", color: "var(--color-ink)", lineHeight: 1.1, marginBottom: "40px" }}>
-              Four ways to replay.
+              Five ways to replay.
             </h2>
 
             <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "16px" }} className="replay-grid">
@@ -404,26 +404,32 @@ export default function NovafabricPage() {
                 {
                   mode: "forensic",
                   cmd: "nova replay --mode forensic",
-                  desc: "Read-only. Replays the exact execution environment without re-running model calls. Safe for debugging, auditing, and forensic investigation.",
+                  desc: "Read-only. Inspects the capsule and runs nothing. Safe for debugging, auditing, and post-incident investigation.",
                   color: "var(--color-jade)",
                 },
                 {
                   mode: "mocked",
                   cmd: "nova replay --mode mocked",
-                  desc: "Uses recorded LLM responses. No API calls, no cost. Deterministic replay for CI pipelines and regression testing.",
+                  desc: "Re-runs the command and serves recorded model responses from the capsule: no model API calls, no cost. Tool calls run live, so tools may have side effects. Useful for CI and regression testing.",
                   color: "var(--color-amber)",
                 },
                 {
                   mode: "semantic",
                   cmd: "nova replay --mode semantic",
-                  desc: "Re-runs with live model calls but validates that outputs are semantically equivalent. Detects prompt drift and model behavior changes.",
+                  desc: "Does not re-run. Scores how similar the capsule's recorded model responses are to each other (0.0–1.0).",
                   color: "var(--hue-blue)",
                 },
                 {
                   mode: "exact",
                   cmd: "nova replay --mode exact",
-                  desc: "Full re-execution. Every tool call, every model call, live. Compares outputs byte-for-byte. Strictest reproduction guarantee.",
+                  desc: "Does not re-run. Reports whether a byte-exact re-run is possible: deterministic environment, seeds, no schema drift. Not available for remote models that can change under you.",
                   color: "var(--hue-violet)",
+                },
+                {
+                  mode: "intervention · experimental",
+                  cmd: "nova replay --mode intervention",
+                  desc: "Substitute one captured event, re-run downstream under mocked semantics, and record whether the outcome changes. Emits a diffable counterfactual capsule.",
+                  color: "var(--color-faint)",
                 },
               ].map(({ mode, cmd, desc, color }) => (
                 <div
@@ -532,7 +538,7 @@ export default function NovafabricPage() {
             <div>
               <div className="font-code" style={{ fontSize: "11px", color: "var(--color-faint)", marginBottom: "6px" }}>novafabric</div>
               <p style={{ fontSize: "14px", color: "var(--color-muted)" }}>
-                The flagship system: capture, replay, validate, and govern AI agent executions.
+                The flagship system: capture, replay, diff, and verify AI agent executions.
               </p>
             </div>
             <Link

@@ -10,7 +10,7 @@
     "postbuild": "node scripts/check-links.mjs",
     "check-links": "node scripts/check-links.mjs",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint app components lib scripts"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",

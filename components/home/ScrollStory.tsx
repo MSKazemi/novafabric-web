@@ -18,13 +18,13 @@ const CHAPTERS = [
     number: "02",
     headline: "nova capture wraps any command.",
     subtext:
-      "Every tool call, model interaction, and environment state — recorded.",
+      "The environment, plus the model calls and tool exchanges capture can see — recorded.",
     code: "$ nova capture python agent.py",
     accent: "var(--color-amber)",
   },
   {
     number: "03",
-    headline: "The capsule holds everything.",
+    headline: "The Run Capsule is the artifact you keep.",
     subtext: "Portable. Replayable. Sealable with your own key.",
     items: [
       "trace.jsonl  ✓  1,203 spans",
@@ -35,8 +35,8 @@ const CHAPTERS = [
   },
   {
     number: "04",
-    headline: "Replay. Validate. Audit.",
-    subtext: "Reopen a past run. Verify the sealed record. Evidence, not trust.",
+    headline: "Replay. Compare. Verify.",
+    subtext: "Reopen a past run. Compare it with another. Verify a sealed record. Evidence you can replay.",
     code: "$ nova replay 4f8a1c2e --mode forensic",
     accent: "var(--color-amber)",
   },

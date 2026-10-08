@@ -29,6 +29,9 @@ const ADAPTERS = [
   "Google ADK",
   "Bedrock AgentCore",
   "A2A",
+  "LlamaIndex",
+  "Pydantic AI",
+  "Haystack",
 ];
 
 const PILLARS: {
@@ -209,7 +212,7 @@ export default function CapabilitySystem() {
         {/* ── Framework adapters caption ── */}
         <div className="mt-8 flex flex-wrap items-center gap-x-2 gap-y-2">
           <span className="font-code text-[11px] text-faint tracking-wide uppercase mr-1">
-            8 framework adapters
+            11 framework adapters (experimental)
           </span>
           {ADAPTERS.map((a) => (
             <span
@@ -224,14 +227,14 @@ export default function CapabilitySystem() {
         {/* ── CTA ── */}
         <div className="mt-10 flex flex-wrap items-center gap-4">
           <Link
-            href="/architecture"
+            href="/architecture/"
             className="font-code text-[13px] text-canvas px-5 py-2.5 rounded transition-colors"
             style={{ backgroundColor: "var(--color-accent)" }}
           >
             explore the full architecture →
           </Link>
           <Link
-            href="/primitives"
+            href="/primitives/"
             className="font-code text-[13px] border border-edge-2 text-muted px-5 py-2.5 rounded hover:text-ink hover:border-faint transition-colors"
           >
             the five primitives ↗

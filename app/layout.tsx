@@ -109,13 +109,12 @@ const organizationSchema = {
   // surfacing for other people's products — "open fabric ai", "neuralfabric",
   // "modelscope agentfabric" — so state plainly what this is not.
   disambiguatingDescription:
-    "An independent open-source research project for recording, replaying and auditing AI-agent executions. Unrelated to data-analytics or network-fabric products that share the word \"fabric\".",
+    "An independent open-source project for capturing, replaying and verifying AI-agent executions. Unrelated to data-analytics or network-fabric products that share the word \"fabric\".",
   founder: { "@id": AUTHOR_ID },
   sameAs: [
     "https://github.com/novafabric",
     "https://github.com/MSKazemi/novafabric",
     "https://pypi.org/project/novafabric/",
-    "https://www.wikidata.org/wiki/Q140800195",
   ],
 };
 
@@ -148,7 +147,7 @@ const softwareApplicationSchema = {
   name: "NovaFabric",
   applicationCategory: "DeveloperApplication",
   applicationSubCategory:
-    "AI-agent execution capture, replay and audit",
+    "Replay and evidence infrastructure for AI agents",
   // Wording tracks the two sources of truth — this site and the docs the
   // running service serves itself ("Capture, replay, and audit any AI run.
   // Self-hosted … laptop to cluster"). Deliberately not the CLAIMS.md phrasing:
@@ -175,7 +174,11 @@ const softwareApplicationSchema = {
   sameAs: [
     "https://github.com/MSKazemi/novafabric",
     "https://pypi.org/project/novafabric/",
-    "https://www.wikidata.org/wiki/Q140800195",
+    // The software item. The earlier item (Q140800195, "NovaFabric Lab") was
+    // deleted from Wikidata on 2026-08-02 for notability, so it 404s; this one
+    // is bot-maintained from the GitHub repository. Re-check it still resolves
+    // whenever the entity graph is touched — a dangling sameAs is worse than none.
+    "https://www.wikidata.org/wiki/Q140935579",
   ],
 };
 

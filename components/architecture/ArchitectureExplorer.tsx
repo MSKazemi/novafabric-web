@@ -74,7 +74,7 @@ const C: Record<string, Comp> = {
   /* ── Capture ── */
   capture: {
     icon: "⚡", domain: "capture", title: "Capture Orchestrator", sub: "nova capture", ver: "v0.2",
-    tag: "The heart of capture. Wraps any subprocess and records every model call, tool call, and event into a schema-valid Run Capsule.",
+    tag: "The heart of capture. Wraps any subprocess and records the model calls, tool calls, and events it can see into a schema-valid Run Capsule.",
     connects: ["adapters", "runners", "capsule", "hooks", "secrets", "lineage"],
     summary: "CaptureOrchestrator.run() generates a ULID run_id, builds the capsule directory, snapshots the environment, installs wire hooks via sitecustomize, spawns the subprocess, streams events through CapsuleWriter, then scans for secrets, infers lineage, and finalizes the manifest.",
     subs: [["CaptureOrchestrator", "top-level run() flow"], ["CapsuleWriter", "thread-safe JSONL writer"], ["SecretScannerV0", "redacts 12 LLM key patterns"], ["EventRecorder", "File / Network / HumanApproval events"], ["capture_environment()", "OS, Python, package snapshot"], ["minimal_replay_policy()", "replay.yaml baseline"]],

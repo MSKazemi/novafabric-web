@@ -63,7 +63,8 @@ export default function Nav() {
 
   function isActive(href: string) {
     if (href === "/") return pathname === "/";
-    return pathname === href || pathname.startsWith(href + "/");
+    const base = href.replace(/\/$/, "");
+    return pathname === href || pathname === base || pathname.startsWith(base + "/");
   }
 
   // On inner pages always use frosted glass — transparent only on home hero

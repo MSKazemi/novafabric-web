@@ -10,7 +10,7 @@ import { VERSION_TAG } from "@/lib/version";
 
 export const metadata: Metadata = {
   title: "Changelog — NovaFabric",
-  description: "Every version of novafabric, from first commit to current.",
+  description: "NovaFabric release history from v0.1 to the current version: shipped features, fixes and milestones on the road to the v1.0 format freeze.",
   alternates: { canonical: "https://novafabric.ai/changelog/" },
   openGraph: {
     title: "Changelog — NovaFabric",

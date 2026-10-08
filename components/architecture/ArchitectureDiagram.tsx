@@ -56,12 +56,12 @@ const LAYERS: ArchLayer[] = [
     id: "global",
     number: "P5",
     name: "Global Query Plane",
-    subtitle: "Lab-wide audit and replay",
+    subtitle: "Fleet-wide audit and replay",
     color: "#ff8c42",
     techStack: ["NovaSeal verification", "Replay Engine", "Audit dashboard"],
     cliCommand: "nova replay --capsule 4f8a1c2e --mode forensic",
     description:
-      "The global query plane exposes replay, audit, and verification across all evidence. Any capsule can be replayed in forensic, mocked, semantic, or exact mode for debugging or compliance.",
+      "The global query plane exposes replay, audit, and verification across all evidence. Any capsule can be inspected or replayed in forensic, mocked, semantic, or exact mode for debugging or audit input.",
   },
 ];
 

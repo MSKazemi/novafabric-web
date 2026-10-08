@@ -133,7 +133,7 @@ export default function ResearchActivity({ activities = RESEARCH_AREAS, showAll 
         {!showAll && (
           <div style={{ marginTop: "32px", textAlign: "center" }}>
             <a
-              href="/research"
+              href="/research/"
               style={{ fontFamily: "var(--font-code), monospace", fontSize: "12px", color: "var(--color-muted)", border: "1px solid var(--color-edge-2)", padding: "9px 20px", borderRadius: "4px", textDecoration: "none" }}
             >
               all research areas →

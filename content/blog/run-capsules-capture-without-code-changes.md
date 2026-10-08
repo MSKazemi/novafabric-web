@@ -27,22 +27,23 @@ $ nova capture python agent.py
   tool-calls.jsonl     ✓   12 tool invocations
   env.lock             ✓   environment snapshot
   redaction-proof.json ✓   secret scan proof
-  dsse signature       ✓
+  seal                 ✓   (only when a signing key is configured)
 ```
 
 ### What gets captured
 
-- Every model call: prompt, response, token counts, latency, model version
+- The model calls capture can see: prompt, response, token counts, latency, model version
 - Tool invocations: name, input, output, duration
 - OpenTelemetry spans via the GenAI semantic conventions
-- Environment snapshot, with secrets redacted and a proof that redaction ran
+- Environment snapshot, secret-scanned, with a record that the scan ran
 - Process metadata: Python version, installed packages, working directory
 
-One clarification worth making, because it surprises people who expect a tracing tool:
-**full prompt and response capture is opt-in, not the default.** Prompts routinely contain
-personal or confidential data, and the safe default is not to collect them. The capsule
-records that a call happened, to which model, with what token counts and latency,
-regardless.
+One clarification worth making, because it matters for privacy: **by default, a capsule
+stores the request messages and the response text of each captured model call, in
+`model-calls.jsonl` on your machine.** That is what lets replay serve the recorded
+responses back. Prompts routinely contain personal or confidential data, so treat a
+capsule as sensitive: keep it where you would keep the prompts themselves. Built-in
+secret scanning looks for known key and token patterns; it does not remove personal data.
 
 The resulting capsule is a plain directory of JSON and JSONL files. No proprietary format,
 no vendor lock-in. A capsule written today will be readable by any text editor in a
@@ -52,5 +53,6 @@ decade.
 
 *Updated 2026-08-08: the example output originally showed `env.json` and a truncated
 hex-style capsule id. Capsules are ULID-named and the environment snapshot is `env.lock`;
-the sample now matches what `nova capture` actually writes. The opt-in note on prompt
-capture was added for the same reason.*
+the sample now matches what `nova capture` actually writes. A correction on 2026-10-08: an earlier version of this post said full prompt and response
+capture is opt-in. It is not — the default capsule stores them (see above) — and the
+"secrets redacted" wording is now "secret-scanned".*

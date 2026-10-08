@@ -171,7 +171,7 @@ export default function CapsuleShowcase({ capsules = DEFAULT_CAPSULES }: Capsule
               contributing guide ↗
             </a>
             <a
-              href="/capsules"
+              href="/capsules/"
               style={{ fontFamily: "var(--font-code), monospace", fontSize: "12px", color: "var(--color-muted)", border: "1px solid var(--color-edge-2)", padding: "9px 18px", borderRadius: "4px", textDecoration: "none" }}
             >
               all capsules →

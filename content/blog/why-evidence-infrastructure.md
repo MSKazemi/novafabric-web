@@ -3,7 +3,7 @@ title: Why AI agents need evidence infrastructure
 date: 2026-04-15
 category: lab-update
 tags: [capsules, reproducibility, audit]
-excerpt: AI agents are making consequential decisions autonomously. When something goes wrong, you need to know exactly what happened — and prove it. That is the problem NovaFabric is built to solve.
+excerpt: When an AI agent run goes wrong you need to know what happened, and to keep the evidence. That is the problem NovaFabric is built to solve.
 ---
 
 Reproducibility is a solved problem in traditional software. You commit code, pin
@@ -18,15 +18,17 @@ point, "it worked on my machine" is not an acceptable answer.
 ### The capsule abstraction
 
 NovaFabric introduces the run capsule as the atomic unit of evidence. A capsule is a
-self-contained directory that records everything about a single agent run: every model
-call, every tool invocation, every environment variable, every input and output. It is
+self-contained directory that records a single agent run: the model calls and tool
+invocations capture can see, the environment, the inputs and the outputs. It is
 portable, open, and human-readable.
 
 - Captured at runtime via SDK patching — no code changes required
-- Signed with DSSE + RFC 3161 timestamps for tamper-evident audit
-- Replayable: re-run any capsule with mocked LLM responses
+- Sealable with DSSE signatures (RFC 3161 timestamps optional) for tamper-evident audit
+- Replayable: re-run a capsule against its recorded model responses (tool calls run live)
 - Diffable: compare two capsules to understand what changed between runs
 
 The goal is not to make AI agents deterministic — that is not possible. The goal is to
 make their behavior inspectable, comparable, and verifiable after the fact. Evidence
 infrastructure for a world where agents act autonomously.
+
+*Updated 2026-10-08: the excerpt, the capture scope, sealing (opt-in) and the replay description were corrected to match the current product.*

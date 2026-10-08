@@ -276,7 +276,7 @@ const SEO_OVERRIDES: Record<string, { title?: string; description?: string }> = 
   // internal vocabulary ("Replay modes" / "Run Capsule anatomy" match nothing anyone
   // types). Descriptions stay derived from the page itself.
   "tutorials/prove-a-run-to-an-auditor": {
-    title: "Prove what an AI agent did, months later, offline",
+    title: "Verify a sealed AI agent run for an auditor, offline",
   },
   "architecture/replay-modes": {
     title: "Replay modes for AI agent runs",

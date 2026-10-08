@@ -107,8 +107,9 @@ export default function CinematicHero() {
             <p
               className="text-muted text-base max-w-md leading-relaxed mb-5 hero-reveal hero-reveal-3"
             >
-              Capture AI-agent executions as portable Run Capsules you can
-              replay, compare, trace, and verify. Self-hosted and local-first.
+              Replay and evidence infrastructure for AI agents. Capture executions as
+              portable Run Capsules you own — then replay, compare, trace, and verify
+              them. Self-hosted and local-first. <em>Evidence you can replay.</em>
             </p>
 
             {/* Install: the real commands from the README quickstart */}
@@ -125,9 +126,9 @@ export default function CinematicHero() {
               </div>
               <div className="mt-2 text-muted">
                 <div><span className="text-amber">$ </span>nova capture python my_agent.py</div>
-                <div><span className="text-amber">$ </span>nova validate &lt;capsule&gt;</div>
                 <div><span className="text-amber">$ </span>nova replay &lt;capsule&gt; --mode forensic</div>
                 <div><span className="text-amber">$ </span>nova diff &lt;capsule-a&gt; &lt;capsule-b&gt;</div>
+                <div><span className="text-amber">$ </span>nova verify &lt;capsule&gt;  <span className="text-faint"># once sealed</span></div>
               </div>
               <p className="mt-2 text-faint text-[11px]">Python {REQUIRES_PYTHON} · Apache-2.0</p>
             </div>
@@ -141,7 +142,7 @@ export default function CinematicHero() {
                 get started →
               </Link>
               <Link
-                href="/novafabric"
+                href="/novafabric/"
                 className="font-code text-[13px] border border-edge-2 text-muted px-5 py-2.5 rounded hover:text-ink hover:border-faint transition-colors"
               >
                 explore novafabric
@@ -169,7 +170,7 @@ export default function CinematicHero() {
                 <span className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]" />
                 <span className="w-2.5 h-2.5 rounded-full bg-[#febc2e]" />
                 <span className="w-2.5 h-2.5 rounded-full bg-[#28c840]" />
-                <span className="ml-2 text-faint text-[11px]">nova — bash</span>
+                <span className="ml-2 text-faint text-[11px]">nova — bash · illustrative, sealing configured</span>
               </div>
               {/* Terminal body */}
               <div className="p-5 space-y-1">
@@ -193,7 +194,7 @@ export default function CinematicHero() {
                   <span className="text-muted">   6 LLM calls</span>
                 </div>
                 <div>
-                  <span className="text-muted">  dsse signature     </span>
+                  <span className="text-muted">  seal (your key)    </span>
                   <span className="text-jade">✓</span>
                   <span className="text-muted">   ed25519</span>
                 </div>

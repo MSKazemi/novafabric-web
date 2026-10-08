@@ -5,19 +5,19 @@ import { MORE_GROUPS } from "@/lib/site-nav";
 
 const LINKS = {
   product: [
-    { label: "novafabric", href: "/novafabric" },
-    { label: "research", href: "/research" },
-    { label: "primitives", href: "/primitives" },
-    { label: "architecture", href: "/architecture" },
-    { label: "changelog", href: "/changelog" },
-    { label: "capsules", href: "/capsules" },
+    { label: "novafabric", href: "/novafabric/" },
+    { label: "research", href: "/research/" },
+    { label: "primitives", href: "/primitives/" },
+    { label: "architecture", href: "/architecture/" },
+    { label: "changelog", href: "/changelog/" },
+    { label: "capsules", href: "/capsules/" },
   ],
   primitives: [
-    { label: "asset registry", href: "/primitives#asset-registry" },
-    { label: "run capsule", href: "/primitives#run-capsule" },
-    { label: "replay engine", href: "/primitives#replay-engine" },
-    { label: "lineage graph", href: "/primitives#lineage-graph" },
-    { label: "evidence bundle", href: "/primitives#evidence-bundle" },
+    { label: "asset registry", href: "/primitives/#asset-registry" },
+    { label: "run capsule", href: "/primitives/#run-capsule" },
+    { label: "replay engine", href: "/primitives/#replay-engine" },
+    { label: "lineage graph", href: "/primitives/#lineage-graph" },
+    { label: "evidence bundle", href: "/primitives/#evidence-bundle" },
   ],
   project: [
     { label: "GitHub", href: "https://github.com/MSKazemi/novafabric" },
@@ -91,7 +91,7 @@ export default function Footer() {
                 github ↗
               </a>
               <a
-                href="/contact"
+                href="/contact/"
                 style={{
                   fontFamily: "var(--font-code), monospace",
                   fontSize: "11px",
@@ -133,8 +133,8 @@ export default function Footer() {
           </span>
           <div style={{ display: "flex", gap: "20px" }}>
             {[
-              { label: VERSION_TAG, href: "/changelog" },
-              { label: "experimental", href: "/novafabric" },
+              { label: VERSION_TAG, href: "/changelog/" },
+              { label: "experimental", href: "/novafabric/" },
             ].map((b) => (
               <a
                 key={b.label}

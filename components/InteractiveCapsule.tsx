@@ -618,7 +618,7 @@ export default function InteractiveCapsule() {
                       animation: "capsuleSealFadeIn 0.4s ease both",
                     }}
                   >
-                    <span style={{ color: "var(--color-jade)" }}>✓ capsule sealed</span>
+                    <span style={{ color: "var(--color-jade)" }}>✓ capsule sealed (key configured)</span>
                     <span style={{ color: "var(--color-faint)" }}>·</span>
                     <span style={{ color: "var(--color-faint)" }}>replay with:</span>
                     <span style={{ color: "var(--color-amber)" }}>

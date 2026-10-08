@@ -4,6 +4,7 @@ import CinematicHero from "@/components/home/CinematicHero";
 import ScrollStory from "@/components/home/ScrollStory";
 import CapabilitySystem from "@/components/home/CapabilitySystem";
 import LabOverview from "@/components/home/LabOverview";
+import RunCapsuleStory from "@/components/home/RunCapsuleStory";
 import ResearchActivity from "@/components/ResearchActivity";
 import CapsuleShowcase from "@/components/CapsuleShowcase";
 import Packages from "@/components/Packages";
@@ -31,6 +32,9 @@ export default function Home() {
       <main>
         <CinematicHero />
         <ScrollStory />
+        <AnimatedSection variant="fadeUp">
+          <RunCapsuleStory />
+        </AnimatedSection>
         <AnimatedSection variant="fadeUp">
           <CapabilitySystem />
         </AnimatedSection>

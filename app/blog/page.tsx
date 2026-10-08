@@ -8,7 +8,7 @@ import { getPosts } from "@/lib/blog";
 import type { PostCategory } from "@/lib/types";
 
 export const metadata: Metadata = {
-  title: "Blog — NovaFabric",
+  title: "Blog — NovaFabric Engineering Notes",
   description:
     "Technical notes, deep-dives, and release announcements from NovaFabric.",
   alternates: { canonical: "https://novafabric.ai/blog/" },

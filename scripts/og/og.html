@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>NovaFabric social preview (1200x630)</title>
+<style>
+@font-face{font-family:"Instrument Serif";font-style:normal;src:url(fonts/instrument-serif.woff2) format("woff2")}
+@font-face{font-family:"Instrument Serif";font-style:italic;src:url(fonts/instrument-serif-italic.woff2) format("woff2")}
+@font-face{font-family:"JetBrains Mono";font-weight:400 600;src:url(fonts/jetbrains-mono.woff2) format("woff2")}
+@font-face{font-family:"DM Sans";font-weight:400 600;src:url(fonts/dm-sans.woff2) format("woff2")}
+/* Tokens mirror app/globals.css (light theme). One idea per image: the category + the essence + the artifact. */
+:root{--canvas:#fbfbf9;--surface:#fff;--edge:#e6e6df;--edge2:#d6d6cc;--ink:#16161c;--muted:#5a5a68;--faint:#9a9aa6;--accent:#4f46e5}
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1200px;height:630px;background:var(--canvas);color:var(--ink);font-family:"DM Sans",sans-serif;position:relative;overflow:hidden}
+.bar{position:absolute;inset:0 0 auto 0;height:8px;background:var(--accent)}
+.wm{position:absolute;left:72px;top:60px;font-family:"JetBrains Mono",monospace;font-weight:600;font-size:30px;letter-spacing:-.01em}
+.wm i{font-style:normal;color:var(--accent)}
+h1{position:absolute;left:72px;top:140px;width:520px;font-family:"Instrument Serif",serif;font-weight:400;font-size:92px;line-height:1.02;letter-spacing:-.015em}
+h1 em{color:var(--accent)}
+.cat{position:absolute;left:72px;top:362px;width:610px;font-size:26px;color:var(--ink);line-height:1.35}
+.mem{position:absolute;left:72px;top:440px;font-family:"Instrument Serif",serif;font-style:italic;font-size:30px;color:var(--muted)}
+.foot{position:absolute;left:72px;bottom:42px;font-family:"JetBrains Mono",monospace;font-size:17px;color:var(--faint);letter-spacing:.04em}
+.card{position:absolute;right:64px;top:150px;width:440px;background:var(--surface);border:1px solid var(--edge2);border-left:4px solid var(--accent);border-radius:8px;padding:26px 28px;font-family:"JetBrains Mono",monospace;font-size:17px;line-height:2}
+.card .cap{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin-bottom:8px}
+.card .r{display:flex;gap:20px}.card dt{color:var(--faint);width:76px;flex:none}.card dd{color:var(--ink);overflow-wrap:anywhere}
+.card .st{color:var(--muted);font-weight:600}
+.card .act{margin-top:16px;padding-top:14px;border-top:1px dashed var(--edge2);color:var(--muted);letter-spacing:.14em;font-size:15px}
+</style></head><body>
+<div class="bar"></div>
+<div class="wm">Nova<i>Fabric</i></div>
+<h1>Evidence you can <em>replay.</em></h1>
+<p class="cat">Replay and evidence infrastructure for AI agents.</p>
+<p class="mem">The time machine for AI systems.</p>
+<div class="card" role="img" aria-label="Illustrative Run Capsule evidence card">
+  <div class="cap">NovaFabric Run Capsule · illustrative</div>
+  <dl>
+    <div class="r"><dt>RUN</dt><dd>01HXAY7M5JZ8R7K4P9DP…</dd></div>
+    <div class="r"><dt>TIME</dt><dd>2026-10-08T09:14:02Z</dd></div>
+    <div class="r"><dt>MODEL</dt><dd>gpt-4o-mini · 6 calls</dd></div>
+    <div class="r"><dt>TOOLS</dt><dd>3 tool calls</dd></div>
+    <div class="r"><dt>HASH</dt><dd>sha256:4f8a1c2e…9b07</dd></div>
+    <div class="r"><dt>STATUS</dt><dd class="st">UNSEALED · SEALABLE</dd></div>
+  </dl>
+  <div class="act">REPLAY · DIFF · VERIFY</div>
+</div>
+<div class="foot">open source · self-hosted · novafabric.ai</div>
+</body></html>

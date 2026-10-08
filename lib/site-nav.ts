@@ -15,21 +15,21 @@ export interface SiteLink {
 }
 
 export const PRIMARY_LINKS: SiteLink[] = [
-  { label: "product", href: "/novafabric" },
-  { label: "docs", href: "/docs" },
-  { label: "demo", href: "/demo" },
-  { label: "blog", href: "/blog" },
+  { label: "product", href: "/novafabric/" },
+  { label: "docs", href: "/docs/" },
+  { label: "demo", href: "/demo/" },
+  { label: "blog", href: "/blog/" },
 ];
 
 export const MORE_GROUPS: { title: string; links: SiteLink[] }[] = [
   {
     title: "project",
     links: [
-      { label: "research", href: "/research" },
-      { label: "primitives", href: "/primitives" },
-      { label: "architecture", href: "/architecture" },
-      { label: "changelog", href: "/changelog" },
-      { label: "capsules", href: "/capsules" },
+      { label: "research", href: "/research/" },
+      { label: "primitives", href: "/primitives/" },
+      { label: "architecture", href: "/architecture/" },
+      { label: "changelog", href: "/changelog/" },
+      { label: "capsules", href: "/capsules/" },
     ],
   },
   {

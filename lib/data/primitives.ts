@@ -50,7 +50,7 @@ export const PRIMITIVES: Primitive[] = [
     name: "Evidence Bundle",
     tagline: "Export. Sign. Verify offline.",
     description:
-      "A signed, self-contained export of a run's evidence — in-toto DSSE attestations, RFC 3161 timestamps, and a redaction proof. Sealing (NovaSeal) is part of the bundle, not a separate primitive. Designed to support SEC 17a-4, MiFID II, and CFTC 1.31 evidence workflows; verifiable with only sha256sum and an ed25519 verifier — no runtime required.",
+      "A signed, self-contained export of a run's evidence — in-toto DSSE attestations, optional RFC 3161 timestamps, and a secret-scan record. Sealing (NovaSeal) is part of the bundle, not a separate primitive. Designed to support SEC 17a-4, MiFID II, and CFTC 1.31 evidence workflows; verifiable with only sha256sum and an ed25519 verifier — no runtime required.",
     command: "nova export-evidence runs/9cf2a31b",
     icon: "⊚",
     shipped: true,

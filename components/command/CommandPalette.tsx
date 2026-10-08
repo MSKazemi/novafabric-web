@@ -16,17 +16,17 @@ import { INSTALL_COMMAND } from "@/lib/version";
 
 const PAGES: SiteLink[] = [
   { label: "home", href: "/" },
-  { label: "novafabric", href: "/novafabric" },
-  ...PRIMARY_LINKS.filter((l) => l.href !== "/novafabric"),
+  { label: "novafabric", href: "/novafabric/" },
+  ...PRIMARY_LINKS.filter((l) => l.href !== "/novafabric/"),
   ...MORE_GROUPS.flatMap((g) => g.links),
 ];
 
 const PRIMITIVES = [
-  { label: "asset registry", href: "/primitives#asset-registry" },
-  { label: "run capsule", href: "/primitives#run-capsule" },
-  { label: "replay engine", href: "/primitives#replay-engine" },
-  { label: "lineage graph", href: "/primitives#lineage-graph" },
-  { label: "novaseal", href: "/primitives#novaseal" },
+  { label: "asset registry", href: "/primitives/#asset-registry" },
+  { label: "run capsule", href: "/primitives/#run-capsule" },
+  { label: "replay engine", href: "/primitives/#replay-engine" },
+  { label: "lineage graph", href: "/primitives/#lineage-graph" },
+  { label: "novaseal", href: "/primitives/#novaseal" },
 ];
 
 export function CommandPalette() {

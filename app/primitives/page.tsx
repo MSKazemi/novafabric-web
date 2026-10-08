@@ -10,7 +10,7 @@ import { VERSION_TAG } from "@/lib/version";
 export const metadata: Metadata = {
   title: "Primitives — NovaFabric",
   description:
-    "The five primitives NovaFabric composes to capture, replay, and audit AI-agent activity: Asset Registry, Run Capsule, Replay Engine (forensic, mocked, dry-run), Lineage Graph, and Evidence Bundle — the building blocks of local-first evidence infrastructure for agentic applications.",
+    "The five NovaFabric primitives — Asset Registry, Run Capsule, Replay Engine, Lineage Graph and Evidence Bundle — for replaying and verifying AI-agent runs.",
   alternates: { canonical: "https://novafabric.ai/primitives/" },
   openGraph: {
     title: "Primitives — NovaFabric",

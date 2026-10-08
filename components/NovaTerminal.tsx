@@ -15,7 +15,7 @@ const TERMINAL_LINES: { text: string; type: string; delay: number }[] = [
   { text: "  model-calls/           ✓   14 LLM calls", type: "ok", delay: 2140 },
   { text: "  mcp-exchanges/         ✓   7 tool calls", type: "ok", delay: 2320 },
   { text: "", type: "blank", delay: 2500 },
-  { text: "  sealing ─ NovaSeal ...", type: "info", delay: 2700 },
+  { text: "  sealing ─ NovaSeal (your key) ...", type: "info", delay: 2700 },
   { text: "  dsse signature         ✓", type: "ok", delay: 3000 },
   { text: "  rfc-3161 timestamp     ✓", type: "ok", delay: 3200 },
   { text: "", type: "blank", delay: 3400 },

@@ -3,37 +3,37 @@ import Link from "next/link";
 const LAB_PAGES = [
   {
     label: "novafabric",
-    href: "/novafabric",
+    href: "/novafabric/",
     desc: "Run capsules, replay, lineage, audit.",
     icon: "◆",
   },
   {
     label: "research",
-    href: "/research",
+    href: "/research/",
     desc: "Open problems and the NovaFabric paper (arXiv:2609.12582).",
     icon: "⬡",
   },
   {
     label: "primitives",
-    href: "/primitives",
+    href: "/primitives/",
     desc: "Five composable building blocks.",
     icon: "⊞",
   },
   {
     label: "architecture",
-    href: "/architecture",
+    href: "/architecture/",
     desc: "Five-layer evidence infrastructure.",
     icon: "≡",
   },
   {
     label: "changelog",
-    href: "/changelog",
+    href: "/changelog/",
     desc: "Every version from v0.1 to current.",
     icon: "⊙",
   },
   {
     label: "capsules",
-    href: "/capsules",
+    href: "/capsules/",
     desc: "Community capsule gallery.",
     icon: "⬡",
   },
@@ -48,6 +48,24 @@ const LAB_PAGES = [
     href: "/demo/",
     desc: "A walkthrough of capture, replay and diff.",
     icon: "▶",
+  },
+  {
+    label: "what is a run capsule?",
+    href: "/docs/architecture/run-capsule/",
+    desc: "The portable execution-evidence artifact you own: what is inside it and why it is not just a trace.",
+    icon: "◇",
+  },
+  {
+    label: "replay modes",
+    href: "/docs/architecture/replay-modes/",
+    desc: "The five replay modes, and exactly what each one reuses and what it runs live.",
+    icon: "↻",
+  },
+  {
+    label: "audit and verify",
+    href: "/docs/tutorials/prove-a-run-to-an-auditor/",
+    desc: "Seal a run with your key and verify it offline months later.",
+    icon: "✓",
   },
   {
     label: "compare",

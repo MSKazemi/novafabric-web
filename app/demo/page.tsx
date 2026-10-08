@@ -241,15 +241,15 @@ export default function DemoPage() {
 
         <Step n="03" title="Replay it" kind="works today">
           <p style={P}>
-            A replay re-executes or inspects the capsule with every external call under
-            NovaFabric&apos;s control — and produces a new capsule, so you can diff a replay
-            against the original.
+            A replay inspects the capsule, or re-runs it with model calls served from the
+            recording — and produces a new capsule, so you can diff a replay against the
+            original. There are five modes; what each one does is below.
           </p>
           <div style={{ overflowX: "auto", maxWidth: "680px", marginBottom: "18px" }}>
             <table style={{ borderCollapse: "collapse", fontSize: "13.5px", width: "100%" }}>
               <thead>
                 <tr>
-                  {["Mode", "Network", "Best for"].map((h) => (
+                  {["Mode", "Re-runs the command?", "Best for"].map((h) => (
                     <th
                       key={h}
                       style={{
@@ -268,10 +268,11 @@ export default function DemoPage() {
               </thead>
               <tbody style={{ color: "var(--color-muted)" }}>
                 {[
-                  ["forensic", "none", "Audit and post-incident inspection"],
-                  ["mocked", "served from cache", "CI and regression testing"],
-                  ["semantic", "re-executes", "Remote LLMs that drift — judges meaning"],
-                  ["exact", "controlled", "Local / on-prem byte-exact re-run"],
+                  ["forensic", "no — read-only", "Audit and post-incident inspection"],
+                  ["mocked", "yes — model replies served from the capsule; tools run live", "CI and regression testing"],
+                  ["semantic", "no — scores the recorded model responses", "Remote LLMs that drift"],
+                  ["exact", "no — reports whether a byte-exact re-run is possible", "Local / on-prem models"],
+                  ["intervention (experimental)", "yes — one captured event substituted", "Counterfactual root-cause"],
                 ].map(([mode, net, use]) => (
                   <tr key={mode}>
                     <td style={{ padding: "8px 12px", borderBottom: "1px solid var(--color-edge)" }}>
@@ -299,7 +300,7 @@ export default function DemoPage() {
               That needs a deterministic environment and a per-call seed — realistic for a
               local model, not for a hosted endpoint that can change under you. For remote
               models that drift, <code style={{ fontFamily: "var(--font-code)" }}>semantic</code>{" "}
-              mode scores similarity of meaning on a 0.0–1.0 scale. If you have seen
+              mode scores how similar the recorded responses are on a 0.0–1.0 scale. If you have seen
               &ldquo;deterministic replay&rdquo; advertised for hosted models, this is what
               the honest version of that claim looks like.
             </p>
@@ -309,8 +310,8 @@ export default function DemoPage() {
         <Step n="04" title="Diff two runs" kind="works today">
           <p style={P}>
             Something changed between Tuesday and Wednesday and the git diff is empty.
-            Structural diff compares two capsules — model version, environment, tool
-            responses, outputs — rather than diffing log text.
+            Structural diff compares two capsules — outputs, environment, recorded
+            files — rather than diffing log text.
           </p>
           <TerminalFrame>
             <div style={{ padding: "16px 18px", whiteSpace: "pre-wrap" }}>

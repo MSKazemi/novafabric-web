@@ -11,7 +11,7 @@ import { VERSION_TAG } from "@/lib/version";
 export const metadata: Metadata = {
   title: "Architecture — NovaFabric",
   description:
-    "The black-box recorder for AI agents: one verb chain — capture, seal, replay, diff, audit — across six subsystem domains. Self-contained on a single machine; the same capsule format scales out to clusters.",
+    "How NovaFabric works: capture, seal, replay, diff and audit across six subsystem domains. Runs on one machine; the Run Capsule format scales to clusters.",
   alternates: { canonical: "https://novafabric.ai/architecture/" },
   openGraph: {
     title: "Architecture — NovaFabric",

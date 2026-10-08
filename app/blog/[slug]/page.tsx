@@ -55,6 +55,7 @@ export default async function BlogPostPage({
   const { slug } = await params;
   const post = await getPost(slug);
   if (!post) notFound();
+  const related = (await getPosts()).filter((p) => p.slug !== post.slug).slice(0, 3);
 
   const articleSchema = {
     "@context": "https://schema.org",
@@ -98,7 +99,7 @@ export default async function BlogPostPage({
               alignItems: "center",
             }}
           >
-            <Link href="/blog" style={{ color: "var(--color-faint)", textDecoration: "none" }}>
+            <Link href="/blog/" style={{ color: "var(--color-faint)", textDecoration: "none" }}>
               blog
             </Link>
             <span>/</span>
@@ -183,10 +184,41 @@ export default async function BlogPostPage({
             ))}
           </div>
 
+          {/* Keep reading: contextual internal links to sibling posts and the core docs */}
+          <nav aria-label="Keep reading" style={{ marginTop: "56px" }}>
+            <h2 className="font-code" style={{ fontSize: "12px", color: "var(--color-faint)", marginBottom: "12px" }}>
+              keep reading
+            </h2>
+            <ul style={{ listStyle: "none", padding: 0, display: "grid", gap: "8px", fontSize: "14px" }}>
+              {related.map((r) => (
+                <li key={r.slug}>
+                  <Link href={`/blog/${r.slug}/`} style={{ color: "var(--color-amber)", textDecoration: "none" }}>
+                    {r.title}
+                  </Link>
+                </li>
+              ))}
+              <li>
+                <Link href="/docs/getting-started/" style={{ color: "var(--color-amber)", textDecoration: "none" }}>
+                  Install NovaFabric and capture your first Run Capsule
+                </Link>
+              </li>
+              <li>
+                <Link href="/docs/concepts/" style={{ color: "var(--color-amber)", textDecoration: "none" }}>
+                  Concepts: Run Capsules, replay modes and lineage
+                </Link>
+              </li>
+              <li>
+                <Link href="/docs/tutorials/novafabric-vs-langfuse/" style={{ color: "var(--color-amber)", textDecoration: "none" }}>
+                  NovaFabric vs LLM observability: how they complement each other
+                </Link>
+              </li>
+            </ul>
+          </nav>
+
           {/* Back link */}
           <div style={{ marginTop: "60px" }}>
             <Link
-              href="/blog"
+              href="/blog/"
               className="font-code"
               style={{
                 fontSize: "12px",
