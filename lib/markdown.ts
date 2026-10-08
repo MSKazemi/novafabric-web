@@ -43,9 +43,14 @@ export function headingId(text: string): string {
   return text
     .toLowerCase()
     .replace(/<[^>]+>/g, "")
+    // Inline HTML arrives entity-escaped ("nova capture &lt;cmd&gt;"). GitHub slugs
+    // the visible text, so drop the entity: "#nova-capture-cmd", not "-ltcmdgt".
+    .replace(/&(?:[a-z]+|#\d+|#x[0-9a-f]+);/g, "")
     .replace(/[^\w\s-]/g, "")
     .trim()
-    .replace(/\s+/g, "-");
+    // One hyphen per space, never collapsed: GitHub turns "a — b" into "a--b",
+    // and the docs' hand-written anchors were written against GitHub.
+    .replace(/\s/g, "-");
 }
 
 /** Render a markdown string to HTML, with GFM and syntax-highlighted code. */

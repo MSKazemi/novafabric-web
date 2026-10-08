@@ -111,6 +111,7 @@ export default async function DocPageRoute({ params }: { params: Promise<Params>
       <BreadcrumbJsonLd
         trail={[
           { name: "Docs", path: "/docs/" },
+          ...(page.parent ? [{ name: page.parent.title, path: `/docs/${page.parent.slug}/` }] : []),
           { name: title, path: `/docs/${page.slug}/` },
         ]}
       />
@@ -125,6 +126,14 @@ export default async function DocPageRoute({ params }: { params: Promise<Params>
             Docs
           </Link>
           <span aria-hidden="true"> / </span>
+          {page.parent && (
+            <>
+              <Link className="hover:underline" href={`/docs/${page.parent.slug}/`}>
+                {page.parent.title}
+              </Link>
+              <span aria-hidden="true"> / </span>
+            </>
+          )}
           <span>{title}</span>
         </nav>
 

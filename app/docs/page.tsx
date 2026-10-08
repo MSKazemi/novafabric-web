@@ -37,7 +37,9 @@ const GROUP_LABELS: Record<string, string> = {
 const ORDER = ["", "tutorials", "integrations", "ops", "lineage", "governance", "rfcs"];
 
 export default async function DocsIndexPage() {
-  const pages = await docPages();
+  // Pages split out of one long document (the CLI reference) are listed on
+  // that document's own index page, not here.
+  const pages = (await docPages()).filter((page) => !page.parent);
 
   const grouped = new Map<string, typeof pages>();
   for (const page of pages) {
