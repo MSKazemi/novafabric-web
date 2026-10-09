@@ -16,9 +16,16 @@
  *
  * The build fails loudly if neither is available. A site that quietly ships zero
  * doc pages looks identical to a successful build until someone visits /docs/.
+ *
+ * Pinning: CI checks the product out twice — once at .source/ (version metadata,
+ * shallow) and once here (docs, with history for page dates). Both used to follow
+ * `main` independently, so a product push between the two steps would have built
+ * the version of one commit with the docs of another. When .source/ is present,
+ * this checkout is reset to exactly its commit; NOVAFABRIC_DOCS_REF pins it
+ * explicitly. The commit used is printed either way.
  */
 import { execFileSync } from "node:child_process";
-import { existsSync, mkdirSync, rmSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, rmSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -29,10 +36,54 @@ const REPO = "https://github.com/MSKazemi/novafabric.git";
 /** Where lib/docs.ts will look. Kept in one place so the two cannot disagree. */
 export const DOCS_DIR = join(CHECKOUT, "docs");
 
+/**
+ * Where docs/assets/ is published. The markdown embeds its diagrams as
+ * `../assets/architecture/*.svg`; lib/docs.ts rewrites those to /docs/assets/…,
+ * so the files have to be served there. public/ is copied into out/ by the
+ * export, and works under `next dev` too. Generated — gitignored, never edited.
+ */
+const ASSETS_OUT = join(ROOT, "public", "docs", "assets");
+
+function publishAssets(docsDir) {
+  const source = join(docsDir, "assets");
+  rmSync(ASSETS_OUT, { recursive: true, force: true });
+  if (!existsSync(source)) {
+    console.warn(`  ! no ${source}; docs pages that embed images will fail check-links`);
+    return;
+  }
+  mkdirSync(dirname(ASSETS_OUT), { recursive: true });
+  cpSync(source, ASSETS_OUT, { recursive: true });
+  console.log(`  ✓ docs/assets → public/docs/assets/`);
+}
+
 function git(args, cwd) {
   return execFileSync("git", args, { cwd, stdio: ["ignore", "pipe", "pipe"] })
     .toString()
     .trim();
+}
+
+/** The product commit this build must use, or null to follow main. */
+function pinnedRef() {
+  if (process.env.NOVAFABRIC_DOCS_REF) return process.env.NOVAFABRIC_DOCS_REF;
+  const source = join(ROOT, ".source");
+  if (existsSync(join(source, ".git"))) return git(["rev-parse", "HEAD"], source);
+  return null;
+}
+
+/**
+ * Moves the checkout to the pinned commit. A pin that cannot be honoured is fatal:
+ * building other docs than the ones asked for is exactly what pinning prevents.
+ */
+function applyPin() {
+  const ref = pinnedRef();
+  if (!ref) return;
+  try {
+    // The ref may be a tag or a commit not reachable from main; fetch it by name.
+    try { git(["fetch", "origin", ref], CHECKOUT); } catch { /* already present, or a local-only ref */ }
+    git(["reset", "--hard", ref], CHECKOUT);
+  } catch (error) {
+    throw new Error(`Could not pin .docs-src to ${ref}: ${error.message}`);
+  }
 }
 
 function main() {
@@ -43,6 +94,7 @@ function main() {
       throw new Error(`NOVAFABRIC_DOCS is set to ${dir}, which does not exist.`);
     }
     console.log(`▸ docs source: ${dir} (NOVAFABRIC_DOCS)`);
+    publishAssets(dir);
     return;
   }
 
@@ -57,9 +109,11 @@ function main() {
       }
       git(["reset", "--hard", "origin/main"], CHECKOUT);
     } catch (error) {
-      // An offline build against the existing checkout is better than no build.
+      // An offline build against the existing checkout is better than no build —
+      // unless a pin was asked for, which is checked (and enforced) below.
       console.warn(`  ! refresh failed, using the existing checkout: ${error.message}`);
     }
+    applyPin();
   } else {
     console.log(`▸ docs source: cloning ${REPO} → .docs-src/`);
     rmSync(CHECKOUT, { recursive: true, force: true });
@@ -71,12 +125,14 @@ function main() {
     // shallow clone would stamp every page with the clone date, which is
     // exactly the auto-stamp pathology the sitemap was flagged for.
     git(["clone", "--filter=blob:none", "--branch=main", REPO, CHECKOUT], ROOT);
+    applyPin();
   }
 
   if (!existsSync(DOCS_DIR)) {
     throw new Error(`Expected ${DOCS_DIR} after sync, but it is missing.`);
   }
   console.log(`  ✓ ${git(["rev-parse", "--short", "HEAD"], CHECKOUT)}`);
+  publishAssets(DOCS_DIR);
 }
 
 main();

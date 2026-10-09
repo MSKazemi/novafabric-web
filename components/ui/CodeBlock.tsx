@@ -25,7 +25,8 @@ export default function CodeBlock({ code, lang = "bash", className = "" }: CodeB
           lang,
           theme: "github-dark",
         });
-        if (!cancelled) setHtml(rendered);
+        // Same comment-contrast fix as lib/markdown.ts (#6A737D is 3.05:1 here).
+        if (!cancelled) setHtml(rendered.replace(/color:#6A737D/gi, "color:#959DA5"));
       },
       { rootMargin: "200px" }
     );

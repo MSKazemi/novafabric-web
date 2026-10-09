@@ -62,8 +62,20 @@ export async function renderMarkdown(markdown: string): Promise<string> {
     renderer: {
       code({ text, lang }) {
         const language = (lang ?? "").split(/\s+/)[0].toLowerCase();
+        // GitHub draws ```mermaid blocks; this site has no Mermaid renderer, so they
+        // used to appear as raw flowchart syntax under the illustrated SVG of the
+        // same diagram (every docs page with a Mermaid block also embeds one). The
+        // source stays on the page, collapsed and labelled, as the diagram's text form.
+        if (language === "mermaid") {
+          return `<details class="diagram-source"><summary>Diagram source (Mermaid)</summary><pre><code>${escapeHtml(text)}</code></pre></details>`;
+        }
         if (language && LANGS.includes(language)) {
-          return highlighter.codeToHtml(text, { lang: language, theme: "github-dark" });
+          // github-dark renders comments in #6A737D: 3.05:1 on its #24292e
+          // background, under WCAG AA's 4.5:1 (Lighthouse flagged 48 nodes on one
+          // CLI page). #959DA5 is 5.34:1 and keeps comments visibly muted.
+          return highlighter
+            .codeToHtml(text, { lang: language, theme: "github-dark" })
+            .replace(/color:#6A737D/gi, "color:#959DA5");
         }
         return `<pre><code>${escapeHtml(text)}</code></pre>`;
       },

@@ -41,7 +41,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // a dozen identical, meaningless timestamps (see the note above on docs).
   //
   // Redirect stubs (/concepts/, /why/, /showcase/**, /dashboard/; see
-  // components/RedirectStub.tsx) are noindex and never listed here.
+  // components/RedirectStub.tsx) are redirects, not pages, and are never listed
+  // here; scripts/check-seo.mjs fails the build if one is.
   return [
     { url: `${BASE}/`,               changeFrequency: "weekly",  priority: 1.0 },
     { url: `${BASE}/novafabric/`,    changeFrequency: "monthly", priority: 0.9 },

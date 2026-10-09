@@ -9,7 +9,7 @@ import { VERSION } from "@/lib/version";
 
 const TITLE = "NovaFabric JSON Schemas — Run Capsule, Evidence Bundle, diff";
 const DESCRIPTION =
-  "The JSON Schema 2020-12 documents an installed NovaFabric validates against: Run Capsule manifest, model and tool calls, environment, lineage, replay, redaction proof, Evidence Bundle and diff report.";
+  "The JSON Schemas (2020-12) an installed NovaFabric validates against: Run Capsule manifest, calls, environment, lineage, replay, Evidence Bundle and diff.";
 
 export const metadata: Metadata = {
   title: TITLE,

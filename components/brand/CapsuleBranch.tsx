@@ -3,7 +3,7 @@
  * and two journeys branch from it.
  *   developer: Capture -> Replay -> Diff -> Debug   (what happened, what changed?)
  *   trust:     Seal -> Verify -> Audit              (can I preserve and verify it later?)
- * Brand source: novafabric-private strategy/brand/brand-core.md ("Core verb chains").
+ * Brand source: the NovaFabric brand guidelines ("Core verb chains").
  *
  * Legible in grayscale and print: the two journeys differ by line style
  * (solid vs dashed) and by label, not by colour alone.

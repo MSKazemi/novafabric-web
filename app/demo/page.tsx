@@ -6,6 +6,7 @@ import BreadcrumbJsonLd from "@/components/BreadcrumbJsonLd";
 import JsonLd from "@/components/JsonLd";
 import { PageHero, SectionHeader, TerminalFrame } from "@/components/ui";
 import CapsuleValidator from "@/components/demo/CapsuleValidator";
+import YouTubeFacade from "@/components/demo/YouTubeFacade";
 import { INSTALL_COMMAND } from "@/lib/version";
 import { DEMOS } from "@/lib/data/demos";
 
@@ -149,13 +150,9 @@ export default function DemoPage() {
               overflow: "hidden",
             }}
           >
-            <iframe
-              src="https://www.youtube-nocookie.com/embed/uQatmJIJI68"
+            <YouTubeFacade
+              id="uQatmJIJI68"
               title="I tried to forge my AI agent's evidence — it caught me | NovaFabric"
-              loading="lazy"
-              allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", border: 0 }}
             />
           </div>
           <p style={{ ...P, fontSize: "13.5px", marginTop: "16px", marginBottom: 0 }}>

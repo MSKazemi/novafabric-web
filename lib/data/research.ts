@@ -31,7 +31,7 @@ export const RESEARCH_AREAS: ResearchArea[] = [
     title: "Server + dashboard",
     status: "experimental",
     description:
-      "Multi-tenant server with OIDC/RBAC, 13-tab dashboard, offline tokens, and topology views. Production-scale operation is not claimed.",
+      "Server mode (experimental) with OIDC/RBAC, a 13-tab dashboard, offline tokens and topology views. Production-scale operation is not claimed.",
     tags: ["server", "OIDC", "dashboard"],
   },
   {

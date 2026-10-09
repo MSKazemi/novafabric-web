@@ -7,8 +7,11 @@
     "sync-docs": "node scripts/sync-docs.mjs",
     "prebuild": "npm run sync-docs",
     "build": "next build",
-    "postbuild": "node scripts/check-links.mjs",
+    "postbuild": "node scripts/check-links.mjs && node scripts/check-seo.mjs && node --no-warnings scripts/check-cli-reference.mjs",
     "check-links": "node scripts/check-links.mjs",
+    "check-seo": "node scripts/check-seo.mjs",
+    "check-cli-reference": "node --no-warnings scripts/check-cli-reference.mjs",
+    "test": "node --no-warnings --test 'scripts/tests/*.test.mjs'",
     "start": "next start",
     "lint": "eslint app components lib scripts"
   },

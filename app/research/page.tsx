@@ -8,12 +8,12 @@ import { RESEARCH_AREAS } from "@/lib/data/research";
 import JsonLd from "@/components/JsonLd";
 
 export const metadata: Metadata = {
-  title: "Research — NovaFabric",
+  title: "AI agent replay and provenance research — NovaFabric",
   description:
     "Research areas and open problems from NovaFabric: replay, reproducibility, evidence infrastructure, provenance, and audit for AI agents and agentic systems.",
   alternates: { canonical: "https://novafabric.ai/research/" },
   openGraph: {
-    title: "Research — NovaFabric",
+    title: "AI agent replay and provenance research — NovaFabric",
     description:
       "Open problems in AI-agent reproducibility, evidence infrastructure, and audit. Active investigations.",
     url: "https://novafabric.ai/research/",

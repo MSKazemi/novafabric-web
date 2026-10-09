@@ -67,12 +67,11 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     images: ["https://novafabric.ai/og.png"],
   },
-  verification: { google: "google2a87e4dc9c54dc74" },
+  // No verification meta. Google ownership is the DNS TXT record plus
+  // public/google2a87e4dc9c54dc74.html; the meta that used to sit here carried that
+  // file's code, which is not a meta token, so it verified nothing. Bing shows data
+  // for the site without any on-site token (most likely imported from Search Console).
   category: "technology",
-  // TODO: Add Bing Webmaster Tools verification
-  // Step — Bing Webmaster Tools: https://www.bing.com/webmasters
-  //   Add site → novafabric.ai → XML tag → copy the content value → paste below
-  // other: { "msvalidate.01": "PASTE_BING_VERIFICATION_CODE_HERE" },
 };
 
 export const viewport: Viewport = {
@@ -105,9 +104,7 @@ const organizationSchema = {
   description:
     "Open-source, self-hosted replay and evidence infrastructure for AI agents and agentic systems: capture past executions as portable Run Capsules for replay, diff, lineage, provenance, and audit.",
   // Disambiguation: "fabric" is a crowded namespace (data-platform and
-  // networking products share the word). Search Console shows novafabric.ai
-  // surfacing for other people's products — "open fabric ai", "neuralfabric",
-  // "modelscope agentfabric" — so state plainly what this is not.
+  // networking products share the word), so state plainly what this is not.
   disambiguatingDescription:
     "An independent open-source project for capturing, replaying and verifying AI-agent executions. Unrelated to data-analytics or network-fabric products that share the word \"fabric\".",
   founder: { "@id": AUTHOR_ID },

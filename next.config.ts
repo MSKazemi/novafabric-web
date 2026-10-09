@@ -8,14 +8,20 @@ import type { NextConfig } from "next";
  * (and the Astro half of the site once said "Python 3.11+" while the package
  * needs 3.12), so they are read from the product repo at build time.
  *
- * In CI the product source is checked out at .source/. Locally it is found next
- * to this repo, or via NOVAFABRIC_PYPROJECT. CI fails if it is missing, so a
+ * In CI the product source is checked out at .source/. Locally the public clone
+ * that scripts/sync-docs.mjs maintains (.docs-src/) comes next, so a local build
+ * shows what the public build would. A sibling checkout of the product is only the
+ * last resort: it may be the private tree, with an unreleased version number.
+ * NOVAFABRIC_PYPROJECT overrides all of them. CI fails if none is found, so a
  * deploy can never publish a number that was not read from the product.
  */
 function productFacts(): { version: string; python: string } | null {
   const candidates = [
     process.env.NOVAFABRIC_PYPROJECT,
+    // Docs taken from a local checkout: read the version from that same checkout.
+    process.env.NOVAFABRIC_DOCS && join(process.env.NOVAFABRIC_DOCS, "..", "pyproject.toml"),
     join(process.cwd(), ".source", "pyproject.toml"),
+    join(process.cwd(), ".docs-src", "pyproject.toml"),
     join(process.cwd(), "..", "..", "novafabric", "pyproject.toml"),
   ].filter((p): p is string => Boolean(p));
   const file = candidates.find((p) => existsSync(p));

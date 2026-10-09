@@ -16,7 +16,7 @@ import { INSTALL_COMMAND, REQUIRES_PYTHON, VERSION } from "@/lib/version";
  */
 
 const TITLE = "Install NovaFabric — capture and replay AI agent runs";
-const DESCRIPTION = `pip install novafabric (Python ${REQUIRES_PYTHON}), then capture, replay and diff your first AI agent run. Local-first: no account, no telemetry; Run Capsules stay on your machine.`;
+const DESCRIPTION = `pip install novafabric (Python ${REQUIRES_PYTHON}), then capture, replay and diff your first AI agent run. No account, no telemetry; Run Capsules stay on your machine.`;
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -153,7 +153,12 @@ export default function InstallPage() {
             <Link href="/docs/architecture/replay-modes/" className="text-amber">
               five replay modes
             </Link>{" "}
-            are described in the docs; <code className={CODE}>intervention</code> is experimental.
+            are described in the docs; <code className={CODE}>intervention</code> is experimental. Every flag
+            of <code className={CODE}>nova replay</code> and <code className={CODE}>nova diff</code> is in the{" "}
+            <Link href="/docs/cli-reference/replay-and-diff/" className="text-amber">
+              replay and diff command reference
+            </Link>
+            .
           </p>
         </Step>
 

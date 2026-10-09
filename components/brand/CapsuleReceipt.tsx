@@ -1,6 +1,6 @@
 /**
  * Run Capsule evidence card — the NovaFabric "execution receipt" motif.
- * Brand source: novafabric-private strategy/brand/visual-identity.md (Signature devices).
+ * Brand source: the NovaFabric brand guidelines (signature devices).
  *
  * Rules the brand sets for this card:
  *  - JetBrains Mono (the "evidence/data" type role), one field per line.

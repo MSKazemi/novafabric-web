@@ -50,10 +50,15 @@ jobs:
           cache: npm
           cache-dependency-path: package-lock.json
 
-      - name: Build (runs the internal-link gate)
+      - name: Build (runs the link, SEO and CLI-reference gates)
         run: |
           npm ci
           npm run build
+
+      # Fixture tests: each gate must fail on the defect it exists for. Public-safe:
+      # tiny generated sites in a temp dir, no production content, no network.
+      - name: Gate tests
+        run: npm test
 
       - name: Verify the artifact
         run: |

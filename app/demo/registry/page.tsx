@@ -7,7 +7,7 @@ const PATH = "/demo/registry/";
 export const metadata: Metadata = demoMetadata(
   PATH,
   "Asset registry with eval-gated promotion — NovaFabric demo",
-  "Browse a NovaFabric asset registry fixture: name@version identity for models, prompts, tools and datasets, and why a failed eval keeps a version out of production.",
+  "A NovaFabric asset registry fixture: name@version identity for models, prompts, tools and datasets, and why a failed eval blocks a promotion.",
 );
 
 export default function RegistryDemoPage() {

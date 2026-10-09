@@ -7,7 +7,7 @@ const PATH = "/demo/lineage/";
 export const metadata: Metadata = demoMetadata(
   PATH,
   "Lineage graph: provenance and blast radius — NovaFabric demo",
-  "An interactive NovaFabric lineage graph over runs, assets and artifacts: provenance, blast radius and replay chain, the same three queries as the nova lineage CLI.",
+  "An interactive NovaFabric lineage graph over runs, assets and artifacts: provenance, blast radius and replay chain, as in the nova lineage CLI.",
 );
 
 export default function LineageDemoPage() {

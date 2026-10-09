@@ -22,7 +22,7 @@ const LAB_PAGES = [
   {
     label: "architecture",
     href: "/architecture/",
-    desc: "Five-layer evidence infrastructure.",
+    desc: "Capture, seal, replay, diff, audit, across six domains.",
     icon: "≡",
   },
   {

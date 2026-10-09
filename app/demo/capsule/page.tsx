@@ -11,7 +11,7 @@ const PATH = "/demo/capsule/";
 export const metadata: Metadata = demoMetadata(
   PATH,
   "Inside a Run Capsule, with a schema check — NovaFabric demo",
-  "The files one captured AI-agent run leaves behind: manifest, execution spans, model calls and tool calls. Validate the manifest against the shipped JSON Schema in your browser.",
+  "The files one captured AI-agent run leaves behind (manifest, spans, model and tool calls), validated against the shipped JSON Schema in your browser.",
 );
 
 const DIR = join(process.cwd(), "lib", "data", "demo", "fixtures", "capsules", "RUN_A");

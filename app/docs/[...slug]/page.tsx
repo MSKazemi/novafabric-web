@@ -141,6 +141,7 @@ export default async function DocPageRoute({ params }: { params: Promise<Params>
           className="docs-prose mt-8 text-muted leading-relaxed"
           dangerouslySetInnerHTML={{ __html: page.html }}
         />
+        {page.movedAnchors && <MovedAnchors base="/docs/" map={page.movedAnchors} />}
 
         <footer className="mt-16 border-t border-edge pt-6 text-sm text-muted">
           {updated && (
@@ -173,4 +174,22 @@ export default async function DocPageRoute({ params }: { params: Promise<Params>
       <Footer />
     </>
   );
+}
+
+/**
+ * Forwards a pre-split bookmark such as /docs/cli-reference/#nova-replay-capsule to
+ * the child page that now holds that heading. A static host cannot redirect on a
+ * fragment (browsers never send it), so this is an inline script that runs while
+ * the page parses, and only when the fragment names no element on this page.
+ * Slugs are stored once and referenced by position to keep the payload small.
+ */
+function MovedAnchors({ base, map }: { base: string; map: Record<string, string> }) {
+  const slugs = [...new Set(Object.values(map))];
+  const ids = Object.fromEntries(Object.entries(map).map(([id, slug]) => [id, slugs.indexOf(slug)]));
+  const data = JSON.stringify({ b: base, s: slugs, i: ids }).replace(/</g, "\\u003c");
+  const code =
+    `(function(){var d=${data};var h=location.hash.slice(1);try{h=decodeURIComponent(h)}catch(e){}` +
+    `if(!h||document.getElementById(h)||!Object.prototype.hasOwnProperty.call(d.i,h))return;` +
+    `location.replace(d.b+d.s[d.i[h]]+"/#"+encodeURIComponent(h))})();`;
+  return <script dangerouslySetInnerHTML={{ __html: code }} />;
 }

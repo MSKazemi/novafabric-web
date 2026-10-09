@@ -59,7 +59,13 @@ export const MILESTONES: Milestone[] = [
     version: "v0.97–v0.102",
     label: "Dashboard modernization · enterprise readiness · lean install · authorization · paper",
     status: "shipped",
-    detail: "Dashboard design system; horizontal scaling, pooling and signed artifacts; default install cut from 412 MB to 113 MB; ten enterprise-grade ADR slices (v0.101); thirty more experimental ADR slices, authorization for nova serve and the first behaviour break (ADR-0270, v0.102.0). System paper published as arXiv:2609.12582. Latest release v0.102.1 (2026-09-27).",
+    detail: "Dashboard design system; horizontal scaling, pooling and signed artifacts; default install cut from 412 MB to 113 MB; ten enterprise-grade ADR slices (v0.101); thirty more experimental ADR slices, authorization for nova serve and the first behaviour break (ADR-0270, v0.102.0). System paper published as arXiv:2609.12582.",
+  },
+  {
+    version: "v0.103–v0.104",
+    label: "Secret-scan coverage · cross-capture diff · governed delete · strict capture",
+    status: "shipped",
+    detail: "Secret scanning covers every file ADR-0009 names (rule pack 0.6.0); nova diff pairs model calls across two separate captures, and --assert-no-regressions exits 1 on any structural change; mocked replay serves a recorded tool-calling turn back (tools still run live); the adapter registry lists all 11 framework adapters (experimental); RFC 3161 timestamping is opt-in; governed capsule delete; opt-in strict capture; OTLP logs ingest (experimental).",
   },
   {
     version: "v1.0 (future)",
@@ -96,5 +102,6 @@ export const ROADMAP: RoadmapEntry[] = [
   { version: "v0.61", label: "Cluster Event Bus (NATS)", shipped: true },
   { version: "v0.80", label: "KG Ingestion + Lineage Backends", shipped: true },
   { version: "v0.96", label: "TypeScript SDK + Taxonomy Reconciliation", shipped: true },
+  { version: "v0.104", label: "Secret-Scan Coverage + Cross-Capture Diff", shipped: true },
   { version: "v1.0", label: "Schema freeze + Production", shipped: false },
 ];

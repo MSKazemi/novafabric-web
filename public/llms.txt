@@ -19,7 +19,7 @@ If you are looking for a way to **debug agent runs**, **replay an AI-agent execu
 - [Demo](https://novafabric.ai/demo/) — guided tour plus in-browser demos of each primitive: [Run Capsule](https://novafabric.ai/demo/capsule/) (schema check), [replay & diff](https://novafabric.ai/demo/replay/), [lineage](https://novafabric.ai/demo/lineage/), [asset registry](https://novafabric.ai/demo/registry/), [Evidence Bundle](https://novafabric.ai/demo/evidence/) (real Ed25519 verification)
 - [Spec](https://novafabric.ai/spec/) — the JSON Schemas (2020-12) an installed CLI validates against; pre-1.0, not frozen
 - [Primitives](https://novafabric.ai/primitives/) — The five core building blocks: Asset Registry, Run Capsule, Replay Engine, Lineage Graph, Evidence Bundle (cryptographic sealing / NovaSeal is part of the Evidence Bundle, not a sixth primitive), the five replay modes, and why NovaFabric is self-hosted and CLI-first
-- [Architecture](https://novafabric.ai/architecture/) — Five-layer system architecture from compute plane to global query layer
+- [Architecture](https://novafabric.ai/architecture/) — How NovaFabric works: capture, seal, replay, diff and audit across six subsystem domains; the Run Capsule format scales to clusters
 - [Research](https://novafabric.ai/research/) — Publications and open problems in AI-agent replay, reproducibility, provenance, and evidence infrastructure
 - [Paper: NovaFabric: Tamper-Evident, Replayable Evidence for Autonomous AI Agent Runs](https://arxiv.org/abs/2609.12582) — arXiv:2609.12582 (2026): design, threat model and evaluation
 - [Capsules](https://novafabric.ai/capsules/) — Community-contributed examples of AI-agent execution captures

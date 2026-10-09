@@ -1,20 +1,15 @@
 import Script from "next/script";
 
 /**
- * Privacy-friendly, cookieless web analytics — no consent banner required.
+ * Cookieless web analytics, off by default: no external script loads while
+ * ANALYTICS_PROVIDER is "none" (the deployed setting). Enabling it is an owner
+ * decision (privacy, consent and budget), not a code change to make in passing:
+ * "cookieless" does not by itself settle whether consent or a notice is needed.
  *
- * Disabled by default so no external script loads until you opt in. To enable,
- * pick ONE provider, fill in its id below, and set ANALYTICS_PROVIDER.
- *
- *  • Plausible (hosted, paid ~$9/mo, or self-hostable):
- *      set ANALYTICS_PROVIDER = "plausible"  (data-domain is already novafabric.ai)
- *      → sign up at https://plausible.io, add the domain novafabric.ai.
- *
- *  • Umami (free cloud tier, or self-host on the Hetzner VM — most on-brand):
- *      set ANALYTICS_PROVIDER = "umami" and UMAMI_WEBSITE_ID + UMAMI_SRC
- *      → https://umami.is (cloud) or self-host; create a website, copy its id.
- *
- * Both are GDPR-friendly and don't use cookies, so no cookie banner is needed.
+ *  • Plausible (hosted or self-hosted): ANALYTICS_PROVIDER = "plausible"
+ *    (data-domain is already novafabric.ai).
+ *  • Umami (cloud or self-hosted): ANALYTICS_PROVIDER = "umami", plus
+ *    UMAMI_WEBSITE_ID and UMAMI_SRC.
  */
 
 const ANALYTICS_PROVIDER: "none" | "plausible" | "umami" = "none";

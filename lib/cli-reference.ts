@@ -5,8 +5,8 @@
  * The source is one hand-written file (~67,000 words, 49 sections) and stays one
  * file: the product repository's tests check it covers every command, and other
  * docs link into it by anchor. Rendered as one page it was a 2.3 MB document
- * that took 80% of the site's Search Console impressions for strings that merely
- * occur somewhere inside it, with one click. Split here, each command area gets
+ * that matched searches for strings that merely occur somewhere inside it.
+ * Split here, each command area gets
  * its own URL, title and description; anchors are rewritten to the page that now
  * holds them (see `linkSplitReference` in lib/docs.ts).
  *
@@ -27,6 +27,8 @@ interface Group {
   description: string;
   /** Matched against each `##` heading of the source. */
   sections: RegExp;
+  /** Optional markdown shown under the page heading: where the concept is explained. */
+  context?: string;
 }
 
 // Order here is the order on the index page. Descriptions state only what the
@@ -45,6 +47,10 @@ const GROUPS: Group[] = [
     description:
       "Reference for nova replay and its modes, nova diff between two run capsules, and nova diagnose, which attributes a failed run to its most likely step.",
     sections: /^(Replay commands|Diagnose commands)\b/,
+    // The command reference and the concept page link to each other: flags here,
+    // what each mode reuses and runs live there.
+    context:
+      "What each of the five modes reuses from the capsule, and what still runs live, is explained in [Replay modes for AI agent runs](/docs/architecture/replay-modes/).",
   },
   {
     slug: "query-search-drift",
@@ -201,7 +207,7 @@ export function splitCliReference(raw: string): { index: string; parts: Referenc
       indexSections.push(section);
       continue;
     }
-    const group =
+    const group: Omit<Group, "sections"> =
       GROUPS.find((g) => g.sections.test(section.title)) ?? {
         // Unclaimed section: its own page, titled without the "(v0.x, ADR-…)" tail.
         slug: headingId(section.title.replace(/\s*\([^)]*\)\s*$/, "")),
@@ -226,6 +232,7 @@ export function splitCliReference(raw: string): { index: string; parts: Referenc
       raw: [
         `# ${group.title}`,
         `Part of the [NovaFabric CLI reference](/docs/${CLI_REFERENCE_SLUG}/). Both \`nova\` and \`novafabric\` run the same binary.`,
+        ...(group.context ? [group.context] : []),
         ...own.map((s) => s.markdown),
       ].join("\n\n"),
     }));

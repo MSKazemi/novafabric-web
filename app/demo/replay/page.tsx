@@ -7,7 +7,7 @@ const PATH = "/demo/replay/";
 export const metadata: Metadata = demoMetadata(
   PATH,
   "Replay modes and structural diff — NovaFabric demo",
-  "What each of the five NovaFabric replay modes does (intervention is experimental), with tools running live in mocked replay, plus a structural diff of two captured runs.",
+  "What each of the five NovaFabric replay modes does (intervention is experimental; tools run live in mocked replay), plus a structural diff of two runs.",
 );
 
 export default function ReplayDemoPage() {

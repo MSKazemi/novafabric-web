@@ -359,7 +359,7 @@ export default function NovafabricPage() {
                     }}
                   >
                     <span style={{ fontSize: "18px", color: "var(--color-amber)", display: "block", marginBottom: "10px" }}>{item.icon}</span>
-                    <h4 style={{ fontSize: "13px", fontWeight: 600, color: "var(--color-ink)", marginBottom: "6px" }}>{item.label}</h4>
+                    <h3 style={{ fontSize: "13px", fontWeight: 600, color: "var(--color-ink)", marginBottom: "6px" }}>{item.label}</h3>
                     <p style={{ fontSize: "12px", color: "var(--color-muted)", lineHeight: "1.6" }}>{item.body}</p>
                   </div>
                 ))}

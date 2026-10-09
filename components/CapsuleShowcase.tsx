@@ -38,8 +38,8 @@ export default function CapsuleShowcase({ capsules = DEFAULT_CAPSULES }: Capsule
             </h2>
             <div>
               <p style={{ fontSize: "15px", color: "var(--color-muted)", lineHeight: "1.75", marginBottom: "16px" }}>
-                These are example capsules, not third-party deployments. Each snippet shows what a
-                typical run of that kind produces; capture your own with nova capture.
+                These are example capsules, not third-party deployments. Each snippet is read from
+                the capsule files at build time; capture your own with nova capture.
               </p>
               <a
                 href="https://github.com/MSKazemi/novafabric/blob/main/CONTRIBUTING.md"

@@ -1,49 +1,121 @@
+/**
+ * The capsule gallery (/capsules/ and the home page's "Example capsules" section).
+ *
+ * Every number and file name below is read from real capsule files at build time.
+ * Until 2026-10-09 this list was three hand-written snippets (span counts, call
+ * counts, capsule ids) labelled "real-world community examples"; none came from a
+ * recorded run and none was a community submission. Only capsules that exist as
+ * files are listed here, and the text says what each one is.
+ *
+ * Sources:
+ *   - examples/capsules/minimal-run/ in the product repository: a capture of
+ *     examples/minimal-agent-run/agent.py committed by the maintainers. Read from
+ *     the checkout scripts/sync-docs.mjs puts in place (or $NOVAFABRIC_DOCS/..).
+ *   - lib/data/demo/fixtures/capsules/RUN_A/: the showcase fixture the in-browser
+ *     demos read (a byte-for-byte copy of the product's fixture; see
+ *     lib/demo/fixtures.ts). A fixture in the Run Capsule format, not a recording.
+ *
+ * Server-only (node:fs). Client components receive these entries as props.
+ */
+import { existsSync, readFileSync } from "node:fs";
+import { join, resolve } from "node:path";
 import type { CapsuleEntry } from "../types";
 
-export const CAPSULES: CapsuleEntry[] = [
-  {
-    project: "novafabric eval suite",
-    useCase:
-      "Capturing the novafabric test pipeline itself — a wrapped pytest run produces a capsule with model calls, tool exchanges, and a secret-scan record. Sealing is a separate, opt-in step.",
-    snippet: [
-      "$ nova capture python -m pytest tests/integration/",
-      "",
-      "  capsule   ─ e5a7c013",
-      "  trace.jsonl        ✓   1,203 spans",
-      "  model-calls.jsonl  ✓   6 LLM calls",
-      "  redaction-proof.json ✓ secret scan",
-    ],
-    repo: "https://github.com/MSKazemi/novafabric",
-    tags: ["pytest", "integration", "self-hosted"],
-  },
-  {
-    project: "agent experiment · lineage at scale",
-    useCase:
-      "A research agent that queries KuzuDB lineage graphs and generates provenance reports. Capsules let us replay any failed query with mocked LLM responses.",
-    snippet: [
-      "$ nova capture python lineage_agent.py --depth 4",
-      "",
-      "  capsule   ─ 7b3d9e11",
-      "  trace.jsonl        ✓   4,847 spans",
-      "  model-calls.jsonl  ✓   23 LLM calls",
-      "  tool-calls.jsonl   ✓   14 tool calls",
-    ],
-    repo: "https://github.com/MSKazemi/novafabric",
-    tags: ["KuzuDB", "lineage", "agent"],
-  },
-  {
-    project: "HPC job orchestration",
-    useCase:
-      "SLURM prolog/epilog hooks wrapped with nova capture. Every job submission produces a capsule; failed jobs are replayed in forensic mode without re-running on the cluster.",
-    snippet: [
-      "$ nova capture sbatch --wrap 'python train.py'",
-      "",
-      "  capsule   ─ c2f0a88d",
-      "  env.lock           ✓   host, interpreter, packages",
-      "  trace.jsonl        ✓   892 spans",
-      "  replay.yaml        ✓   replay policy",
-    ],
-    repo: "https://github.com/MSKazemi/novafabric",
-    tags: ["SLURM", "HPC", "forensic"],
-  },
-];
+const PRODUCT_ROOT = process.env.NOVAFABRIC_DOCS
+  ? resolve(process.env.NOVAFABRIC_DOCS, "..")
+  : resolve(process.cwd(), ".docs-src");
+const TREE = "https://github.com/MSKazemi/novafabric/tree/main";
+
+/** Non-empty lines of a JSONL file; 0 when the file is absent. */
+function records(file: string): number {
+  if (!existsSync(file)) return 0;
+  return readFileSync(file, "utf8").split("\n").filter((line) => line.trim()).length;
+}
+
+/** A top-level `key: value` scalar from capsule.yaml (quoted or not). */
+function scalar(yaml: string, key: string): string {
+  const value = yaml.match(new RegExp(`^${key}:\\s*"?([^"\\n]*)"?\\s*$`, "m"))?.[1];
+  if (!value) throw new Error(`capsule.yaml has no ${key}`);
+  return value;
+}
+
+/** The `command:` list from capsule.yaml, in either block style the product writes. */
+function command(yaml: string): string {
+  const block = yaml.match(/^command:\s*\n((?:[ \t]*-[^\n]*\n?)+)/m)?.[1];
+  if (!block) throw new Error("capsule.yaml has no command list");
+  return block
+    .split("\n")
+    .map((line) => line.replace(/^[ \t]*-[ \t]*/, "").replace(/^"(.*)"$/, "$1").trim())
+    .filter(Boolean)
+    .join(" ");
+}
+
+const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? "" : "s"}`;
+
+/**
+ * `captured` is true only for a capsule known to come from `nova capture` (the
+ * repository example's README says so). A fixture shows its recorded command as a
+ * field instead of a `$ nova capture …` prompt, which would claim a run happened.
+ */
+function read(dir: string, captured: boolean) {
+  const yaml = readFileSync(join(dir, "capsule.yaml"), "utf8");
+  const spans = records(join(dir, "trace.jsonl"));
+  const modelCalls = records(join(dir, "model-calls.jsonl"));
+  const toolCalls = records(join(dir, "tool-calls.jsonl"));
+  const has = (file: string) => existsSync(join(dir, file));
+  const snippet = [
+    captured ? `$ nova capture ${command(yaml)}` : `  command ${command(yaml)}`,
+    "",
+    `  run_id  ${scalar(yaml, "run_id")}`,
+    `  capsule.yaml        ✓   status ${scalar(yaml, "status")}, written by novafabric ${scalar(yaml, "novafabric_version")}`,
+    // Only files that exist get a line, so a missing file can never show a ✓.
+    ...(has("trace.jsonl") ? [`  trace.jsonl         ✓   ${plural(spans, "span")}`] : []),
+    ...(has("model-calls.jsonl") ? [`  model-calls.jsonl   ✓   ${plural(modelCalls, "model call")}`] : []),
+    ...(has("tool-calls.jsonl") ? [`  tool-calls.jsonl    ✓   ${plural(toolCalls, "tool call")}`] : []),
+    ...(has("env.lock") ? ["  env.lock            ✓   host, interpreter, packages"] : []),
+    ...(has("replay.yaml") ? ["  replay.yaml         ✓   replay policy"] : []),
+    ...(has("redaction-proof.json") ? ["  redaction-proof.json ✓  secret-scan record"] : []),
+  ];
+  const files = [
+    "the manifest",
+    has("trace.jsonl") && "the trace",
+    has("env.lock") && "the environment lock",
+    has("replay.yaml") && "the replay policy",
+    has("redaction-proof.json") && "the secret-scan record",
+  ].filter(Boolean) as string[];
+  return { snippet, modelCalls, toolCalls, files };
+}
+
+function minimalRun(): CapsuleEntry {
+  const dir = join(PRODUCT_ROOT, "examples", "capsules", "minimal-run");
+  if (!existsSync(join(dir, "capsule.yaml"))) {
+    throw new Error(`Example capsule not found at ${dir}. Run "npm run sync-docs" first.`);
+  }
+  const { snippet, modelCalls, toolCalls, files } = read(dir, true);
+  const list = files.length > 1 ? `${files.slice(0, -1).join(", ")} and ${files[files.length - 1]}` : files.join("");
+  const calls =
+    modelCalls + toolCalls === 0
+      ? "It makes no model or tool calls, so it shows the files a capture writes for any command"
+      : `It records ${plural(modelCalls, "model call")} and ${plural(toolCalls, "tool call")}`;
+  return {
+    project: "minimal agent run",
+    useCase: `A real capture committed to the NovaFabric repository: examples/minimal-agent-run/agent.py run under nova capture, with no code changes. ${calls}: ${list}.`,
+    snippet,
+    repo: `${TREE}/examples/capsules/minimal-run`,
+    tags: ["repository example", "python", "no code changes"],
+  };
+}
+
+function demoFixture(): CapsuleEntry {
+  const dir = join(process.cwd(), "lib", "data", "demo", "fixtures", "capsules", "RUN_A");
+  const { snippet, modelCalls, toolCalls } = read(dir, false);
+  return {
+    project: "code-review agent · demo fixture",
+    useCase: `The capsule the in-browser demos on this site read: a code-review agent with ${plural(modelCalls, "model call")} and ${plural(toolCalls, "tool call")}, its trace, and the input diff and output review its manifest references. It is a showcase fixture in the Run Capsule format, not a recording of a real run.`,
+    snippet,
+    repo: `${TREE}/ui/dashboard/src/data/fixtures/capsules/RUN_A`,
+    tags: ["demo fixture", "model calls", "tool calls"],
+  };
+}
+
+export const CAPSULES: CapsuleEntry[] = [minimalRun(), demoFixture()];

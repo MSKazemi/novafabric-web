@@ -49,6 +49,13 @@ export interface DocPage {
   parent?: { slug: string; title: string };
   /** Hand-written meta description; wins over SEO_OVERRIDES and the derived one. */
   description?: string;
+  /**
+   * Set on the CLI reference index only: heading ids that lived on the single-page
+   * reference before the split and now live on a child page, keyed by id, valued by
+   * the child's slug. The page forwards an old bookmark (`/docs/cli-reference/#id`)
+   * to the child that holds the heading; see app/docs/[...slug]/page.tsx.
+   */
+  movedAnchors?: Record<string, string>;
 }
 
 function toSlug(file: string): string {
@@ -131,6 +138,45 @@ function rewriteLinks(html: string, file: string, published: ReadonlyMap<string,
   });
 }
 
+/**
+ * Rewrites relative image sources the same way rewriteLinks rewrites hrefs.
+ *
+ * `![…](../assets/architecture/replay-modes.svg)` is correct in a checkout, but on
+ * the web it resolves against the page URL (`/docs/architecture/replay-modes/`),
+ * gains a path level, and 404s — which is how every architecture diagram on this
+ * site went missing. Files under `docs/assets/` are published at `/docs/assets/`
+ * by scripts/sync-docs.mjs, so an image that exists there is pointed at that URL.
+ * Anything else is left exactly as written, and scripts/check-links.mjs fails the
+ * build on it: a missing diagram should stop a deploy, not ship as a broken image.
+ */
+function rewriteSources(html: string, file: string): string {
+  const dir = file.includes("/") ? file.slice(0, file.lastIndexOf("/")) : "";
+
+  return html.replace(/(<(?:img|source)\b[^>]*?\s)src="([^"]+)"/g, (whole, head: string, src: string) => {
+    if (/^(?:[a-z]+:|\/|#)/i.test(src)) return whole;
+    const { path, escapes } = resolveRelative(dir, src);
+    if (escapes === 0 && path.startsWith("assets/") && existsSync(join(DOCS_DIR, path))) {
+      return `${head}src="/docs/${path}"`;
+    }
+    return whole;
+  });
+}
+
+/**
+ * Gives repeated heading ids a numeric suffix, the way GitHub does: the second
+ * "Environment variables" heading on a page becomes `environment-variables-1`.
+ * Two elements sharing one id make the second unreachable by fragment, and the
+ * split CLI pages produce exactly that when a page title repeats a section title.
+ */
+function uniqueHeadingIds(html: string): string {
+  const seen = new Map<string, number>();
+  return html.replace(/(<h[1-6]\b[^>]*\sid=")([^"]+)(")/g, (whole, open: string, id: string, close: string) => {
+    const n = seen.get(id) ?? 0;
+    seen.set(id, n + 1);
+    return n === 0 ? whole : `${open}${id}-${n}${close}`;
+  });
+}
+
 /** Recursively collect `*.md` paths under `dir`, relative to it. */
 function walk(dir: string, base = dir): string[] {
   const found: string[] = [];
@@ -190,7 +236,7 @@ export async function docPages(): Promise<DocPage[]> {
   const published = new Map(files.map((file) => [toSlug(file), file]));
 
   const render = async (markdown: string, file: string) =>
-    rewriteLinks(await renderMarkdown(markdown), file, published);
+    uniqueHeadingIds(rewriteSources(rewriteLinks(await renderMarkdown(markdown), file, published), file));
 
   const pages = (
     await Promise.all(
@@ -244,6 +290,16 @@ function linkSplitReference(pages: DocPage[]): void {
   }
   if (index) for (const id of idsOf(index.html)) if (!owner.has(id)) owner.set(id, index.slug);
   if (owner.size === 0) return;
+
+  // Before the split every one of these ids was an anchor on /docs/cli-reference/.
+  // Links inside the site are rewritten below; links from elsewhere (bookmarks,
+  // other sites, search results) still arrive at the index with the old fragment.
+  if (index) {
+    const onIndex = idsOf(index.html);
+    index.movedAnchors = Object.fromEntries(
+      [...owner].filter(([id, slug]) => slug !== index.slug && !onIndex.has(id)),
+    );
+  }
 
   const to = (whole: string, id: string) => {
     const slug = owner.get(id);
@@ -343,8 +399,10 @@ export function faqEntries(page: DocPage): FaqEntry[] | undefined {
  * from the document (first heading, first prose paragraph).
  */
 const SEO_OVERRIDES: Record<string, { title?: string; description?: string }> = {
+  // The page compares five tools; "NovaFabric vs Langfuse" belongs to the tutorial
+  // of that name, so the two no longer share one title.
   comparison: {
-    title: "NovaFabric vs Langfuse and LangSmith",
+    title: "How NovaFabric compares to Langfuse, LangSmith and MLflow",
     description:
       "An honest comparison of NovaFabric with Langfuse, LangSmith, MLflow, Weights & Biases and OpenTelemetry, including where NovaFabric is the wrong choice.",
   },
@@ -373,7 +431,10 @@ const SEO_OVERRIDES: Record<string, { title?: string; description?: string }> = 
     description:
       "How nova capture records an agent's LLM calls at the HTTP layer without code changes, and what a captured call looks like in OpenTelemetry GenAI format.",
   },
+  // "Getting Started with NovaFabric — NovaFabric docs" named the brand twice and
+  // said nothing a searcher types.
   "getting-started": {
+    title: "Get started: capture and replay an AI agent run",
     description:
       "Install NovaFabric, capture a command into a Run Capsule without code changes, then validate, replay, diff and export it. Local-first, no account needed.",
   },
