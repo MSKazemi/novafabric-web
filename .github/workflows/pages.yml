@@ -4,6 +4,11 @@ name: Build and deploy novafabric.ai (GitHub Pages)
 on:
   push:
     branches: [main]
+  # The docs pages and the version come from MSKazemi/novafabric at build time, so a
+  # product change reaches the site only when the site rebuilds. A daily rebuild picks
+  # them up. It deploys only when every gate passes, like a push does.
+  schedule:
+    - cron: "17 5 * * *"
   workflow_dispatch:
     inputs:
       deploy:
@@ -79,7 +84,7 @@ jobs:
   deploy:
     name: Deploy to GitHub Pages
     needs: build
-    if: github.event_name == 'push' || inputs.deploy
+    if: github.event_name == 'push' || github.event_name == 'schedule' || inputs.deploy
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
