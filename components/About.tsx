@@ -164,7 +164,8 @@ export default function About() {
                   alignItems: "center",
                 }}
               >
-                <span style={{ opacity: 0.6 }}>{r.version}</span>
+                {/* Full opacity: at 0.6 the version failed WCAG AA contrast on the tinted chip. */}
+                <span>{r.version}</span>
                 <span style={{ color: "var(--color-edge-2)" }}>·</span>
                 <span>{r.label}</span>
                 {!r.shipped && (
