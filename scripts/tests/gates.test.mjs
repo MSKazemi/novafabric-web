@@ -94,6 +94,10 @@ const seoFailures = {
   "page claims four replay modes": ["Replay: five modes", (f) => { f["a/index.html"] = page({ path: "/a/", body: "<p>4 replay modes</p>" }); }],
   "llms.txt claims tamper-proof": ["/llms.txt", (f) => { f["llms.txt"] += "NovaFabric is tamper-proof.\n"; }],
   "marketing page claims multi-tenant": ["not multi-tenant", (f) => { f["a/index.html"] = page({ path: "/a/", body: "<p>A multi-tenant server.</p>" }); }],
+  "page claims signed capsules": ["not signed by default", (f) => { f["a/index.html"] = page({ path: "/a/", body: "<p>Record runs as signed, replayable Run Capsules.</p>" }); }],
+  "page calls the redaction proof proof of absence": ["not proof of absence", (f) => { f["a/index.html"] = page({ path: "/a/", body: "<p>redaction-proof.json: proof no secrets leaked</p>" }); }],
+  "llms.txt uses the flight-simulator metaphor": ["/llms.txt", (f) => { f["llms.txt"] += "NovaFabric is a flight simulator - it re-flies the route.\n"; }],
+  "llms.txt calls capsules secret-redacted": ["not secret-redacted", (f) => { f["llms.txt"] += "Portable, secret-redacted Run Capsules.\n"; }],
 };
 for (const [name, [message, mutate]] of Object.entries(seoFailures)) {
   test(`check-seo fails: ${name}`, () => {

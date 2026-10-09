@@ -146,7 +146,8 @@ export default function InstallPage() {
           />
           <p className={`${P} mt-5 mb-0`}>
             Forensic replay is read-only: it inspects the capsule and runs nothing. Mocked replay re-runs the
-            command and serves the recorded model replies from the capsule, so no model call is made, but{" "}
+            command and serves the recorded replies of supported model calls from the capsule (synchronous,
+            non-streaming OpenAI chat completions and Anthropic messages in v0.104.0), but{" "}
             <strong className="text-ink">tool calls still run live</strong>. Use{" "}
             <code className={CODE}>nova replay --dry-run &lt;run-id&gt;</code> to see what would execute first.
             The{" "}
@@ -171,7 +172,8 @@ export default function InstallPage() {
           <Cmd lines={["nova init", "nova doctor"]} />
           <p className={`${P} mt-5 mb-0`}>
             A default capture is not sealed. To seal capsules with your own key and verify them offline later,
-            configure <code className={CODE}>novaseal.yaml</code>; see{" "}
+            configure <code className={CODE}>novaseal.yaml</code> (a one-command{" "}
+            <code className={CODE}>nova seal init</code> is on main and not yet released); see{" "}
             <Link href="/docs/tutorials/prove-a-run-to-an-auditor/" className="text-amber">
               verify a sealed run for an auditor
             </Link>

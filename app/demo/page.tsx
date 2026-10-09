@@ -279,9 +279,10 @@ export default function DemoPage() {
 
         <Step n="03" title="Replay it" kind="works today">
           <p style={P}>
-            A replay inspects the capsule, or re-runs it with model calls served from the
-            recording — and produces a new capsule, so you can diff a replay against the
-            original. There are five modes; what each one does is below.
+            A replay inspects the capsule, or re-runs it with supported model calls served
+            from the recording, and writes a replay result. The experimental intervention
+            mode also writes a counterfactual capsule you can diff against the original.
+            There are five modes; what each one does is below.
           </p>
           <div style={{ overflowX: "auto", maxWidth: "680px", marginBottom: "18px" }}>
             <table style={{ borderCollapse: "collapse", fontSize: "13.5px", width: "100%" }}>
@@ -307,7 +308,7 @@ export default function DemoPage() {
               <tbody style={{ color: "var(--color-muted)" }}>
                 {[
                   ["forensic", "no — read-only", "Audit and post-incident inspection"],
-                  ["mocked", "yes — model replies served from the capsule; tools run live", "CI and regression testing"],
+                  ["mocked", "yes — supported OpenAI / Anthropic replies served from the capsule; tools run live", "CI and regression testing"],
                   ["semantic", "no — scores the recorded model responses", "Remote LLMs that drift"],
                   ["exact", "no — reports whether a byte-exact re-run is possible", "Local / on-prem models"],
                   ["intervention (experimental)", "yes — one captured event substituted", "Counterfactual root-cause"],

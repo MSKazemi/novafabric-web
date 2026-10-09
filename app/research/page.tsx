@@ -104,8 +104,8 @@ export default function ResearchPage() {
         <SectionHeader number="03" title="Open Problems" className="mt-20" />
         <p className="text-muted leading-relaxed max-w-2xl">
           The core open problem: given an AI-agent run, can we produce a verifiable certificate
-          that another researcher can independently verify? NovaFabric explores sealed capsules
-          as the atomic unit of evidence, with DSSE signing and RFC 3161 timestamping.
+          that another researcher can independently verify? NovaFabric explores capsules as the
+          atomic unit of evidence, sealable with opt-in DSSE signing and optional RFC 3161 timestamping.
           We are actively investigating: (1) capsule deduplication at scale, (2) semantic
           equivalence for replay validation, (3) lineage graph query languages for provenance
           forensics.

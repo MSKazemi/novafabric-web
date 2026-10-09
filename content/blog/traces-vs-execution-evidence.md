@@ -36,15 +36,19 @@ copy it, archive it, attach it to a ticket, or hand it to someone else. It needs
 server and no account.
 
 Capture wraps your command without code changes, and runs a built-in secret scanner
-(14 key and token rules) over the capsule's free-text streams. The scanner matches known
-patterns; it does not find every possible secret, so review a capsule before sharing it.
+(14 key and token rules in v0.104.0) over the capsule's event streams, manifest, `env.lock`
+and the files under `inputs/` and `outputs/`. The scanner matches known formats; it does not
+find every possible secret (PEM private keys, JWTs, passwords and connection strings are
+among [the formats it misses](/docs/architecture/run-capsule/)), so review a capsule before
+sharing it.
 
 ### Replay is a different job from tracing
 
 Because the capsule keeps the recorded model responses, a run can be replayed from it.
 There are [five replay modes](/docs/architecture/replay-modes/); `intervention` is
-experimental. In mocked replay, NovaFabric serves the recorded replies to synchronous
-OpenAI and Anthropic chat calls, so no live model call is made. Tools still run live.
+experimental. In mocked replay, NovaFabric serves the recorded replies to synchronous,
+non-streaming OpenAI chat completions and Anthropic messages calls (v0.104.0), so those
+calls reach no live model. Tools still run live.
 This is not deterministic replay of an arbitrary agent, and it is not an offline re-run
 of one. The replay page states exactly what each mode reuses and what it does not.
 
@@ -72,3 +76,8 @@ runs it end to end.
 
 The capsule format is documented but pre-1.0, so expect additive changes until the
 freeze. To try it, start with [Getting Started](/docs/getting-started/).
+
+---
+
+*Updated 2026-10-09: the secret scanner's coverage and the calls mocked replay serves now
+name exactly what v0.104.0 does.*

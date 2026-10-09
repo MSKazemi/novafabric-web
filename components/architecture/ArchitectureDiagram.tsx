@@ -11,11 +11,11 @@ const LAYERS: ArchLayer[] = [
     name: "Compute Plane",
     subtitle: "Where AI agents run",
     color: "var(--color-amber)",
-    techStack: ["Python nova CLI", "Go event collector", "DSSE signing"],
+    techStack: ["Python nova CLI", "Go event collector", "DSSE signing (opt-in)"],
     metrics: "295K events/sec batch signing",
     cliCommand: "nova capture python agent.py",
     description:
-      "The nova CLI wraps any command, capturing all tool calls, model interactions, and environment state. The Go collector handles high-throughput event ingestion with crash-safe spooling.",
+      "The nova CLI wraps any command, capturing the environment and the model and tool calls its hooks and proxies can see. The Go collector handles high-throughput event ingestion with crash-safe spooling.",
   },
   {
     id: "node",
@@ -23,11 +23,11 @@ const LAYERS: ArchLayer[] = [
     name: "Node Collector",
     subtitle: "Per-machine aggregation",
     color: "#4a9eff",
-    techStack: ["Go daemon", "SQLite spool", "RFC 3161 timestamps"],
+    techStack: ["Go daemon", "SQLite spool", "Spool forwarder"],
     metrics: "Crash-safe spool, sub-ms local latency",
     cliCommand: "novafabric-collector --config collector.yaml",
     description:
-      "Each machine runs a lightweight Go daemon that aggregates spans from all local nova processes, applies RFC 3161 timestamps, and forwards to the cluster collector.",
+      "Each machine runs a lightweight Go daemon that aggregates spans from all local nova processes in a crash-safe spool and forwards them to the cluster collector.",
   },
   {
     id: "cluster",
@@ -61,7 +61,7 @@ const LAYERS: ArchLayer[] = [
     techStack: ["NovaSeal verification", "Replay Engine", "Audit dashboard"],
     cliCommand: "nova replay <run-id> --mode forensic",
     description:
-      "The global query plane exposes replay, audit, and verification across all evidence. Any capsule can be inspected or replayed in forensic, mocked, semantic, or exact mode for debugging or audit input.",
+      "The global query plane exposes replay, audit, and verification across all evidence. Any capsule can be inspected or replayed in any of the five replay modes (intervention is experimental) for debugging or audit input.",
   },
 ];
 

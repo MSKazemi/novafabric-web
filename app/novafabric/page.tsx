@@ -63,7 +63,7 @@ const faqSchema = {
       name: "Can you replay an AI-agent execution for debugging?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Yes. `nova replay` has five modes. Forensic mode is read-only inspection. Mocked mode re-runs the command and serves the recorded model responses from the capsule, so no model call is made; tool calls still run live. Semantic and exact modes do not re-run anything: they score the recorded responses and report whether a byte-exact re-run is possible. Intervention mode is experimental.",
+        text: "Yes. `nova replay` has five modes. Forensic mode is read-only inspection. Mocked mode re-runs a Python workload and serves recorded model responses from the capsule for supported calls (in v0.104.0, synchronous non-streaming OpenAI chat completions and Anthropic messages); tool calls still run live. Semantic and exact modes do not re-run anything: they score the recorded responses and report whether a byte-exact re-run is possible. Intervention mode is experimental.",
       },
     },
     {
@@ -108,7 +108,7 @@ const COMMANDS = [
   },
   {
     cmd: "nova replay <run-id> --mode forensic",
-    desc: "Replay a capsule. Forensic mode is read-only. Mocked mode re-runs the command against the recorded model responses; tools run live.",
+    desc: "Replay a capsule. Forensic mode is read-only. Mocked mode re-runs the command against the recorded responses of supported OpenAI and Anthropic calls; tools run live.",
   },
   {
     cmd: "nova diff <run-a> <run-b>",
@@ -125,7 +125,7 @@ const WHAT_IT_CAPTURES = [
   { icon: "▦", label: "Tool invocations", body: "MCP exchanges, function calls, shell commands — the tool-call chain where capture hooks are active." },
   { icon: "◎", label: "Environment snapshot", body: "Python version, installed packages and environment variables, secret-scanned — so you can reproduce the execution context." },
   { icon: "⊚", label: "Execution spans", body: "OpenTelemetry-compatible spans for the execution tree. Queryable, exportable, visualisable." },
-  { icon: "◈", label: "Secret-scan record", body: "Built-in secret scanning of captured evidence, with a record of what ran. Rule-based: it catches known key and token patterns, not every possible secret." },
+  { icon: "◈", label: "Secret-scan record", body: "Built-in secret scanning of captured evidence, with a record of what the scan checked and redacted. Rule-based: it catches known key and token formats, not every secret. PEM private keys, JWTs, passwords and connection strings are among the formats it does not detect." },
   { icon: "⬡", label: "Optional seal", body: "Seal a capsule with your own key (DSSE signature; RFC 3161 timestamp is opt-in) and verify it offline later. A seal shows the record is unchanged since it was signed — not that it is complete. Not a compliance certification." },
 ];
 
@@ -416,7 +416,7 @@ export default function NovafabricPage() {
                 {
                   mode: "mocked",
                   cmd: "nova replay --mode mocked",
-                  desc: "Re-runs the command and serves recorded model responses from the capsule: no model API calls, no cost. Tool calls run live, so tools may have side effects. Useful for CI and regression testing.",
+                  desc: "Re-runs a Python workload and serves recorded model responses from the capsule. In v0.104.0 that covers synchronous, non-streaming OpenAI chat completions and Anthropic messages. Tool calls run live, so tools may have side effects. Async, streamed and Responses API calls and recorded MCP tool results are on main, unreleased.",
                   color: "var(--color-amber)",
                 },
                 {

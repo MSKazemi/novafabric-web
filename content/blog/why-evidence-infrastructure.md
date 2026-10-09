@@ -22,13 +22,13 @@ self-contained directory that records a single agent run: the model calls and to
 invocations capture can see, the environment, the inputs and the outputs. It is
 portable, open, and human-readable.
 
-- Captured at runtime via SDK patching — no code changes required
+- Captured at runtime by patching supported Python clients — no code changes required
 - Sealable with DSSE signatures (RFC 3161 timestamps optional) for tamper-evident audit
-- Replayable: re-run a capsule against its recorded model responses (tool calls run live)
+- Replayable: re-run a capsule against the recorded responses of supported OpenAI and Anthropic calls (tool calls run live)
 - Diffable: compare two capsules to understand what changed between runs
 
 The goal is not to make AI agents deterministic — that is not possible. The goal is to
 make their behavior inspectable, comparable, and verifiable after the fact. Evidence
 infrastructure for a world where agents act autonomously.
 
-*Updated 2026-10-08: the excerpt, the capture scope, sealing (opt-in) and the replay description were corrected to match the current product.*
+*Updated 2026-10-08: the excerpt, the capture scope, sealing (opt-in) and the replay description were corrected to match the current product. Updated 2026-10-09: capture and mocked replay are scoped to the supported clients.*

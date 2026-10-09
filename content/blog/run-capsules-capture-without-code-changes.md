@@ -15,8 +15,8 @@ intercepts at the transport layer.
 
 When you run a Python process with NovaFabric, the SDK patches the HTTP clients used by
 popular AI frameworks (OpenAI, Anthropic, LangChain, LlamaIndex) before any application
-code runs. Every outgoing request to a model provider is intercepted, recorded, and
-written to the capsule directory.
+code runs. Requests made through the supported clients are intercepted, recorded, and
+written to the capsule directory; other clients can be captured through `nova api-proxy`.
 
 ```bash
 $ nova capture python agent.py
@@ -26,8 +26,8 @@ $ nova capture python agent.py
   model-calls.jsonl    ✓   8 LLM calls
   tool-calls.jsonl     ✓   12 tool invocations
   env.lock             ✓   environment snapshot
-  redaction-proof.json ✓   secret scan proof
-  seal                 ✓   (only when a signing key is configured)
+  redaction-proof.json ✓   secret-scan record
+  seal                 –   (only when a signing key is configured)
 ```
 
 ### What gets captured
@@ -55,4 +55,5 @@ decade.
 hex-style capsule id. Capsules are ULID-named and the environment snapshot is `env.lock`;
 the sample now matches what `nova capture` actually writes. A correction on 2026-10-08: an earlier version of this post said full prompt and response
 capture is opt-in. It is not — the default capsule stores them (see above) — and the
-"secrets redacted" wording is now "secret-scanned".*
+"secrets redacted" wording is now "secret-scanned". Updated 2026-10-09: capture is scoped to
+the supported clients, and the sample no longer shows a seal check mark on a default capture.*

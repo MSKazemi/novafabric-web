@@ -152,7 +152,7 @@ const softwareApplicationSchema = {
   // that file predates the current release, and its "evidence fabric" wording
   // feeds the very name-collision this schema is trying to resolve.
   description:
-    "NovaFabric captures AI-agent runs as portable Run Capsules you own — replay, compare and audit them, and seal them with your own key. Self-hosted and open source, from laptop to cluster. Developer journey: Capture → Replay → Diff. Trust journey: Capture → Seal → Verify → Audit.",
+    "NovaFabric captures AI-agent runs as portable Run Capsules you own — replay, compare and audit them, and seal them once you configure a signing key. Self-hosted and open source, from laptop to cluster. Developer journey: Capture → Replay → Diff. Trust journey: Capture → Seal → Verify → Audit.",
   url: "https://novafabric.ai/novafabric/",
   downloadUrl: "https://pypi.org/project/novafabric/",
   codeRepository: "https://github.com/MSKazemi/novafabric",

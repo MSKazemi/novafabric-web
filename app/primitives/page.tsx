@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 // section absorbed the former /concepts/ page, which still has a redirect stub.
 const REPLAY_MODES: { mode: string; reruns: string; desc: string }[] = [
   { mode: "forensic", reruns: "no", desc: "Read-only inspection of what the capsule recorded. Runs nothing; the audit mode." },
-  { mode: "mocked", reruns: "yes", desc: "Re-runs the command and serves the recorded model replies from the capsule, so no model call is made. Tool calls are not substituted: they run live." },
+  { mode: "mocked", reruns: "yes", desc: "Re-runs a Python workload and serves the recorded replies of supported model calls from the capsule (v0.104.0: synchronous, non-streaming OpenAI chat completions and Anthropic messages). Tool calls are not substituted: they run live." },
   { mode: "semantic", reruns: "no", desc: "Scores how similar the capsule's recorded model responses are to each other (0.0–1.0). No judge model is called." },
   { mode: "exact", reruns: "no", desc: "Reports whether a byte-exact re-run is possible (deterministic env.lock, seeds, no schema drift) and names every condition that fails." },
   { mode: "intervention", reruns: "yes", desc: "Experimental. Substitutes one captured event, re-runs downstream under mocked semantics, and writes a counterfactual capsule you can diff." },

@@ -28,7 +28,7 @@ export const PRIMITIVES: Primitive[] = [
     name: "Replay Engine",
     tagline: "Five modes, each with a stated guarantee.",
     description:
-      "Forensic mode is read-only inspection. Mocked mode re-runs the command and serves the recorded model replies from the capsule; tool calls run live. Semantic and exact do not re-run: they score the recorded responses and report whether a byte-exact re-run is possible. Intervention is experimental. --dry-run reports what would execute without running it.",
+      "Forensic mode is read-only inspection. Mocked mode re-runs the command and serves the recorded replies of supported OpenAI and Anthropic calls from the capsule; tool calls run live. Semantic and exact do not re-run: they score the recorded responses and report whether a byte-exact re-run is possible. Intervention is experimental. --dry-run reports what would execute without running it.",
     command: "nova replay <run-id> --mode forensic",
     icon: "↺",
     shipped: true,

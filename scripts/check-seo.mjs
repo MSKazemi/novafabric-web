@@ -52,6 +52,12 @@ const CLAIMS = [
   { re: /\b(?:4|four|3|three)\s+(?:replay\s+modes|ways\s+to\s+replay)\b/i, row: "Replay: five modes" },
   { re: /\b(?:8|eight|13|thirteen)\s+(?:framework\s+)?(?:adapters|drop-in\s+wrappers)\b/i, row: "Adapters: 11, experimental" },
   { re: /proof\s+that\s+no\s+secrets|secret-redacted\s+capsules?/i, row: "Secret scanning: secret-scanned, not proof of absence" },
+  // The four below mirror BANNED in the product's tests/docs/test_public_claims_match_the_code.py
+  // (2026-10-09). A leading double quote exempts a quotation ("write X, not Y").
+  { re: /(?<!")\bsecret-redacted\b/i, row: "Secret scanning: secret-scanned, not secret-redacted", marketing: true },
+  { re: /(?<!not\s)(?:proof|proves?|attests?)\s+(?:that\s+)?no\s+secrets?\s+(?:leaked|appear|remain)/i, row: "Secret scanning: secret-scanned, not proof of absence", marketing: true },
+  { re: /(?<!")\bsigned,?\s+(?:replayable,?\s+|verifiable,?\s+)*(?:Run\s+)?Capsules?\b|\bevery\s+run\s+is\s+signed\b/i, row: "Sealing: opt-in; a capsule is sealable, not signed by default", marketing: true },
+  { re: /flight\s+simulator|re-fl(?:y|ies)\s+the\s+route/i, row: "Replay: no flight-simulator metaphor", marketing: true },
   { re: /\btamper-proof\b/i, row: "Evidence Bundle: tamper-evident, not tamper-proof" },
   { re: /\bcatch(?:es)?\s+regressions\b/i, row: "CI gate: fails on any change" },
   { re: /\bfive-layer\b/i, row: "Architecture: six domains (five planes is the ingestion path only)" },
