@@ -67,6 +67,48 @@ software can honestly support. If you need the longer walk-through, the tutorial
 [Verify a sealed run for an auditor, months later, offline](/docs/tutorials/prove-a-run-to-an-auditor/)
 runs it end to end.
 
+### Keeping an audit trail of what an AI agent did
+
+To keep an audit trail of an AI agent run, keep the run itself as a record you hold, with
+a digest of every file and a signature that makes a later edit detectable, instead of
+relying on the rows a live system wrote about it. Someone reviewing that run months later
+needs five things:
+
+- **What was run:** the command, its inputs, the exit status and timing.
+- **What the agent called:** the model calls (request messages and response text) and the
+  tool calls that capture could see.
+- **The environment:** packages, versions and platform.
+- **What it produced:** the outputs, including a failed run's error record.
+- **A record that it has not changed:** something a reviewer can check without trusting
+  whoever kept it.
+
+A Run Capsule holds the first four in one directory, and its manifest records a SHA-256
+digest of each evidence file. [Sealing](/docs/architecture/sealing-and-verification/)
+supplies the fifth. Once you configure your own key (sealing is opt-in), capture seals
+each capsule as it writes it, and `nova verify` checks the seal offline, with no server
+and no account. An RFC 3161 timestamp from a third party is optional. To hand a run to someone
+outside your team, `nova export-evidence` builds an Evidence Bundle: a tamper-evident ZIP
+of the capsule manifest, event log and lineage, signed with a local Ed25519 key, one
+capsule per bundle. The tutorial
+[Verify a sealed run for an auditor](/docs/tutorials/prove-a-run-to-an-auditor/) runs
+capture, verification and export end to end.
+
+The difference from a live log or trace is where the record lives and who can check it.
+A log line or a span is written to a store its operator controls, under that store's
+retention and schema. Unless the store itself makes edits detectable, a reviewer has to
+take the operator's word that nothing was dropped or edited. A capsule is a folder
+you archive with your other records, and verifying it needs neither your server nor your
+logs.
+
+What this does not establish matters as much. A valid seal shows that the capsule is
+unchanged since the holder of that key signed it. Without a trust anchor, it does not show
+who that holder is. It does not show that the record is complete, because capture records
+only what it is wired to see. It does not show that the record is true, because a key
+holder can sign a false one. NovaFabric produces evidence for audit workflows. It issues
+no compliance verdict and no certification. Whether the evidence satisfies a given control
+is a reviewer's judgement, as the
+[standards and specifications page](/docs/standards-conformance/) sets out.
+
 ### Which one do you need?
 
 - Watching production behaviour across many runs: use your observability stack.

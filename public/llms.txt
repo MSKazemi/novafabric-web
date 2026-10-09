@@ -39,6 +39,7 @@ AI agents are non-deterministic: model weights change, API behavior drifts, and 
 - [What is a Run Capsule?](https://novafabric.ai/docs/architecture/run-capsule/) — the portable execution-evidence artifact: files, manifest, digests
 - [Replay modes](https://novafabric.ai/docs/architecture/replay-modes/) — what each of the five modes reuses and what runs live
 - [Traces vs execution evidence](https://novafabric.ai/blog/traces-vs-execution-evidence/) — what traces leave behind, and what sealing does and does not establish
+- [Find where two AI agent runs diverged](https://novafabric.ai/blog/find-where-two-agent-runs-diverged/) — capture two runs, pair their model calls with `nova diff`, and fail CI on any structural change
 - [How capture works](https://novafabric.ai/docs/tutorials/how-capture-works/) — zero-code-change hooks and transparent proxies
 - [Verify a run for an auditor](https://novafabric.ai/docs/tutorials/prove-a-run-to-an-auditor/) — seal a capsule and verify it offline
 - [NovaFabric vs Langfuse](https://novafabric.ai/docs/tutorials/novafabric-vs-langfuse/) — how this differs from LLM-observability platforms
