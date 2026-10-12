@@ -58,6 +58,9 @@ const CLAIMS = [
   { re: /(?<!not\s)(?:proof|proves?|attests?)\s+(?:that\s+)?no\s+secrets?\s+(?:leaked|appear|remain)/i, row: "Secret scanning: secret-scanned, not proof of absence", marketing: true },
   { re: /(?<!")\bsigned,?\s+(?:replayable,?\s+|verifiable,?\s+)*(?:Run\s+)?Capsules?\b|\bevery\s+run\s+is\s+signed\b/i, row: "Sealing: opt-in; a capsule is sealable, not signed by default", marketing: true },
   { re: /flight\s+simulator|re-fl(?:y|ies)\s+the\s+route/i, row: "Replay: no flight-simulator metaphor", marketing: true },
+  // Found live on /docs/for-researchers/ 2026-10-09; reworded in the product docs (H5 of the product-docs handoff).
+  { re: /\bredaction\s+proof\s+intact\b/i, row: "Secret scanning: secret-scanned, never a proof" },
+  { re: /\bre-?executes?\s+deterministically\b/i, row: "Replay: mocked replay re-runs against recorded responses; not deterministic re-execution" },
   { re: /\btamper-proof\b/i, row: "Evidence Bundle: tamper-evident, not tamper-proof" },
   { re: /\bcatch(?:es)?\s+regressions\b/i, row: "CI gate: fails on any change" },
   { re: /\bfive-layer\b/i, row: "Architecture: six domains (five planes is the ingestion path only)" },

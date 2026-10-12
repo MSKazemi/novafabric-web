@@ -97,6 +97,8 @@ const seoFailures = {
   "page claims signed capsules": ["not signed by default", (f) => { f["a/index.html"] = page({ path: "/a/", body: "<p>Record runs as signed, replayable Run Capsules.</p>" }); }],
   "page calls the redaction proof proof of absence": ["not proof of absence", (f) => { f["a/index.html"] = page({ path: "/a/", body: "<p>redaction-proof.json: proof no secrets leaked</p>" }); }],
   "llms.txt uses the flight-simulator metaphor": ["/llms.txt", (f) => { f["llms.txt"] += "NovaFabric is a flight simulator - it re-flies the route.\n"; }],
+  "llms.txt says the redaction proof is intact": ["/llms.txt", (f) => { f["llms.txt"] += "Replay with the redaction proof intact.\n"; }],
+  "llms.txt says replay re-executes deterministically": ["/llms.txt", (f) => { f["llms.txt"] += "The pipeline re-executes deterministically.\n"; }],
   "llms.txt calls capsules secret-redacted": ["not secret-redacted", (f) => { f["llms.txt"] += "Portable, secret-redacted Run Capsules.\n"; }],
 };
 for (const [name, [message, mutate]] of Object.entries(seoFailures)) {

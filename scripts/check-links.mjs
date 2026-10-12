@@ -56,10 +56,7 @@ const OWN_ORIGIN = /^(?:https?:)?\/\/(?:www\.)?novafabric\.ai(?=\/|$|[?#])/i;
  * the product fixing its own anchor must not block a website deploy.
  */
 const KNOWN_UPSTREAM_FRAGMENTS = new Map([
-  [
-    "/docs/cli-reference/ -> #nova-eval-agentversion",
-    "docs/cli-reference.md links #nova-eval-agentversion; the heading is `### nova eval agent` (broken on GitHub too)",
-  ],
+  // Empty since the product fixed its `#nova-eval-agentversion` anchor (shipped in v0.105.0).
 ]);
 
 /** Non-page assets that legitimately have no .html file behind them. */
