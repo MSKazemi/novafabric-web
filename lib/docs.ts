@@ -492,10 +492,18 @@ const SEO_OVERRIDES: Record<string, { title?: string; description?: string }> = 
   "support-policy": {
     title: "Support policy: supported versions and windows",
   },
+  // Search Console (2026-10-23): ~78% of the site's impressions, 0.1% CTR. The title
+  // names what the commands do; "NovaFabric" is in the description, since the brand
+  // suffix no longer fits.
   "cli-reference": {
-    title: "NovaFabric CLI reference",
+    title: "nova CLI reference: capture and replay AI agent runs",
     description:
-      "Command reference for the nova CLI: capture, validate, replay, diff, lineage, trust and compliance. nova and novafabric are the same binary.",
+      "Every nova command in NovaFabric: capture an AI agent run as a Run Capsule, replay it, diff two runs, trace lineage and verify signed evidence offline.",
+  },
+  // The derived description was the first sentence, which says only who the page is for.
+  "developer-guide": {
+    description:
+      "Contributor guide to the NovaFabric codebase: local setup, quality gates, and how to add a CLI command, API endpoint, framework adapter or report format.",
   },
 };
 
