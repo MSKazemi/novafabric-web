@@ -9,6 +9,7 @@ import {
   docPages,
   faqEntries,
   lastUpdatedFor,
+  markdownPathFor,
   titleFor,
   seoTitleFor,
   descriptionFor,
@@ -43,16 +44,22 @@ export async function generateMetadata({
 
   const description = descriptionFor(page);
   const url = `https://novafabric.ai/docs/${page.slug}/`;
+  const updated = lastUpdatedFor(page);
 
   return {
     title: seoTitleFor(page),
     description,
-    alternates: { canonical: url },
+    alternates: {
+      canonical: url,
+      // The page's Markdown twin, for answer engines and coding agents (lib/docs.ts).
+      types: { "text/markdown": `https://novafabric.ai${markdownPathFor(page)}` },
+    },
     openGraph: {
       title: seoTitleFor(page),
       description,
       url,
       type: "article",
+      ...(updated && { modifiedTime: updated }),
       images: [{ url: "https://novafabric.ai/og.png", width: 1200, height: 630 }],
     },
   };
@@ -70,14 +77,26 @@ export default async function DocPageRoute({ params }: { params: Promise<Params>
   // TechArticle — the Q&A structure mirrors the visible ### sections exactly,
   // which is what answer engines lift. Every other page stays TechArticle.
   const faq = page.slug === "faq" ? faqEntries(page) : undefined;
+  const url = `https://novafabric.ai/docs/${page.slug}/`;
+  // Every entity is referenced by the @id the root layout declares: a bare
+  // `{ "@type": "Organization", name }` stub parses as a second, under-specified
+  // organization competing with https://novafabric.ai/#organization.
+  const shared = {
+    url,
+    inLanguage: "en",
+    mainEntityOfPage: url,
+    ...(updated && { dateModified: updated }),
+    isPartOf: { "@id": "https://novafabric.ai/#website" },
+    about: { "@id": "https://novafabric.ai/#software" },
+    publisher: { "@id": "https://novafabric.ai/#organization" },
+  };
 
   const articleSchema = faq
     ? {
         "@context": "https://schema.org",
         "@type": "FAQPage",
         headline: title,
-        url: `https://novafabric.ai/docs/${page.slug}/`,
-        ...(updated && { dateModified: updated }),
+        ...shared,
         mainEntity: faq.map((entry) => ({
           "@type": "Question",
           name: entry.question,
@@ -89,19 +108,15 @@ export default async function DocPageRoute({ params }: { params: Promise<Params>
         "@type": "TechArticle",
         headline: title,
         description,
-        url: `https://novafabric.ai/docs/${page.slug}/`,
-        ...(updated && { dateModified: updated }),
+        ...shared,
         // Reference by @id: the full Person node (ORCID) is declared once in
         // the root layout's entity graph and present on every page.
         author: { "@id": "https://orcid.org/0000-0002-1166-6559" },
-        isPartOf: {
-          "@type": "SoftwareSourceCode",
-          name: "NovaFabric",
-          codeRepository: "https://github.com/MSKazemi/novafabric",
-          programmingLanguage: "Python",
-          license: "https://www.apache.org/licenses/LICENSE-2.0",
+        encoding: {
+          "@type": "MediaObject",
+          encodingFormat: "text/markdown",
+          contentUrl: `https://novafabric.ai${markdownPathFor(page)}`,
         },
-        publisher: { "@type": "Organization", name: "NovaFabric" },
       };
 
   return (

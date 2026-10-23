@@ -24,14 +24,14 @@ function run(script, args, env = {}) {
   return { code: r.status, out: `${r.stdout}${r.stderr}` };
 }
 
-function page({ path, title = "A page", description = "A short description.", canonical, ogUrl, robots, body = "<p>Text.</p>" }) {
+function page({ path, title = "A page", description = "A short description.", canonical, ogUrl, robots, head = "", body = "<p>Text.</p>" }) {
   const url = `${BASE}${path}`;
   return `<!DOCTYPE html><html><head><title>${title}</title>
 <meta name="description" content="${description}"/>
 ${robots ? `<meta name="robots" content="${robots}"/>` : ""}
 <link rel="canonical" href="${canonical ?? url}"/>
 <meta property="og:url" content="${ogUrl ?? canonical ?? url}"/>
-</head><body><h1 id="top-heading">${title}</h1>${body}
+${head}</head><body><h1 id="top-heading">${title}</h1>${body}
 <script type="application/ld+json">{"@type":"WebPage"}</script></body></html>`;
 }
 
@@ -41,7 +41,13 @@ const stub = (target) => `<!DOCTYPE html><html><head><title>Moved</title>
 <meta property="og:url" content="${BASE}${target}"/>
 </head><body><a href="${target}">moved</a></body></html>`;
 
-/** A valid two-page site with one redirect stub; `mutate` breaks it. */
+const TWIN = `${BASE}/docs/md/x.md`;
+const docsPage = (body = "<p>Docs text.</p>", twin = TWIN) =>
+  page({ path: "/docs/x/", head: `<link rel="alternate" type="text/markdown" href="${twin}"/>`, body });
+const twinFile = (links = "[next](https://novafabric.ai/docs/y/) and [top](#top)") =>
+  `---\ntitle: "X"\ncanonical: ${BASE}/docs/x/\n---\n\n# X\n\nSee ${links}.\n\n\`\`\`\n[in code](relative.md)\n\`\`\`\n`;
+
+/** A valid site (two pages, one docs page with its Markdown twin, one redirect stub); `mutate` breaks it. */
 function site(mutate = () => {}) {
   const dir = mkdtempSync(join(tmpdir(), "nf-gates-"));
   const files = {
@@ -50,8 +56,11 @@ function site(mutate = () => {}) {
     "old/index.html": stub("/a/"),
     "img.svg": "<svg xmlns='http://www.w3.org/2000/svg'/>",
     "robots.txt": `User-agent: *\nAllow: /\n\nSitemap: ${BASE}/sitemap.xml\n`,
-    "sitemap.xml": `<urlset><url><loc>${BASE}/</loc></url><url><loc>${BASE}/a/</loc></url></urlset>`,
-    "llms.txt": "# Site\n",
+    "docs/x/index.html": docsPage(),
+    "docs/md/x.md": twinFile(),
+    "sitemap.xml": `<urlset><url><loc>${BASE}/</loc></url><url><loc>${BASE}/a/</loc></url><url><loc>${BASE}/docs/x/</loc></url></urlset>`,
+    "llms.txt": `# Site\n\n- [X](${BASE}/docs/x/): a docs page\n`,
+    "llms-full.txt": `# Docs\n\nSource: ${BASE}/docs/x/\n`,
   };
   mutate(files);
   for (const [name, content] of Object.entries(files)) {
@@ -100,6 +109,14 @@ const seoFailures = {
   "llms.txt says the redaction proof is intact": ["/llms.txt", (f) => { f["llms.txt"] += "Replay with the redaction proof intact.\n"; }],
   "llms.txt says replay re-executes deterministically": ["/llms.txt", (f) => { f["llms.txt"] += "The pipeline re-executes deterministically.\n"; }],
   "llms.txt calls capsules secret-redacted": ["not secret-redacted", (f) => { f["llms.txt"] += "Portable, secret-redacted Run Capsules.\n"; }],
+  "docs page links no Markdown twin": ["0 text/markdown alternates", (f) => { f["docs/x/index.html"] = page({ path: "/docs/x/" }); }],
+  "Markdown twin was not exported": ["was not exported", (f) => { f["docs/md/x.md"] = null; }],
+  "Markdown twin names another canonical": ["front matter canonical", (f) => { f["docs/md/x.md"] = f["docs/md/x.md"].replace("/docs/x/", "/docs/z/"); }],
+  "Markdown twin keeps a relative link": ['relative link "concepts.md"', (f) => { f["docs/md/x.md"] = twinFile("[c](concepts.md)"); }],
+  "Markdown twin keeps a site-root link": ['relative link "/docs/y/"', (f) => { f["docs/md/x.md"] = twinFile("[y](/docs/y/)"); }],
+  "llms.txt leaves out a docs page": ["does not name 1 docs page", (f) => { f["llms.txt"] = "# Site\n"; }],
+  "llms-full.txt is missing": ["/llms-full.txt", (f) => { f["llms-full.txt"] = null; }],
+  "llms-full.txt claims tamper-proof": ["/llms-full.txt", (f) => { f["llms-full.txt"] += "NovaFabric is tamper-proof.\n"; }],
 };
 for (const [name, [message, mutate]] of Object.entries(seoFailures)) {
   test(`check-seo fails: ${name}`, () => {
@@ -111,8 +128,7 @@ for (const [name, [message, mutate]] of Object.entries(seoFailures)) {
 
 test("check-seo allows technical 'multi-tenant' under /docs/", () => {
   const r = gate("check-seo.mjs", (f) => {
-    f["docs/x/index.html"] = page({ path: "/docs/x/", body: "<p>The multi-tenant nova server API.</p>" });
-    f["sitemap.xml"] = f["sitemap.xml"].replace("</urlset>", `<url><loc>${BASE}/docs/x/</loc></url></urlset>`);
+    f["docs/x/index.html"] = docsPage("<p>The multi-tenant nova server API.</p>");
   });
   assert.equal(r.code, 0, r.out);
 });

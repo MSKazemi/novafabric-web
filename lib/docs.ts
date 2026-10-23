@@ -104,38 +104,56 @@ function resolveRelative(dir: string, target: string): { path: string; escapes: 
  * "Not found (404)" against novafabric.ai.
  */
 function rewriteLinks(html: string, file: string, published: ReadonlyMap<string, string>): string {
+  return html.replace(/href="([^"]+)"/g, (whole, href: string) => {
+    const resolved = resolveHref(href, file, published);
+    return resolved === null ? whole : `href="${resolved}"`;
+  });
+}
+
+/**
+ * Where one repository-relative link points on the web, or null when it is
+ * already correct (absolute URLs, site-root paths, pure anchors). Shared by the
+ * HTML renderer and the Markdown twins (markdownFor) so the two cannot disagree.
+ */
+function resolveHref(href: string, file: string, published: ReadonlyMap<string, string>): string | null {
   const dir = file.includes("/") ? file.slice(0, file.lastIndexOf("/")) : "";
 
-  return html.replace(/href="([^"]+)"/g, (whole, href: string) => {
-    // Absolute URLs, site-root paths and pure anchors are already correct.
-    if (/^(?:[a-z]+:|\/|#)/i.test(href)) return whole;
+  // Absolute URLs, site-root paths and pure anchors are already correct.
+  if (/^(?:[a-z]+:|\/|#)/i.test(href)) return null;
 
-    const [target, anchor = ""] = href.split("#");
-    if (!target) return whole;
+  const [target, anchor = ""] = href.split("#");
+  if (!target) return null;
 
-    const { path, escapes } = resolveRelative(dir, target);
-    const suffix = anchor ? `#${anchor}` : "";
+  const { path, escapes } = resolveRelative(dir, target);
+  const suffix = anchor ? `#${anchor}` : "";
 
-    // A link to a directory that resolves away to nothing — `.` from a file at the
-    // top of docs/, say — points at the tree's own root.
-    if (!path) return escapes > 0 ? `href="${GITHUB_TREE}${suffix}"` : `href="/docs/${suffix}"`;
+  // A link to a directory that resolves away to nothing — `.` from a file at the
+  // top of docs/, say — points at the tree's own root.
+  if (!path) return escapes > 0 ? `${GITHUB_TREE}${suffix}` : `/docs/${suffix}`;
 
-    // A markdown file inside docs/ that this site actually builds.
-    if (escapes === 0 && target.endsWith(".md")) {
-      const slug = toSlug(path);
-      if (slug === "" || slug === "index") return `href="/docs/${suffix}"`;
-      // Only the file that actually owns the URL. `architecture.md` and
-      // `architecture/README.md` share /docs/architecture/; links to the one that
-      // lost (and its anchors) belong on GitHub, not on the other page.
-      if (published.get(slug) === path) return `href="/docs/${slug}/${suffix}"`;
-    }
+  // A markdown file inside docs/ that this site actually builds.
+  if (escapes === 0 && target.endsWith(".md")) {
+    const slug = toSlug(path);
+    if (slug === "" || slug === "index") return `/docs/${suffix}`;
+    // Only the file that actually owns the URL. `architecture.md` and
+    // `architecture/README.md` share /docs/architecture/; links to the one that
+    // lost (and its anchors) belong on GitHub, not on the other page.
+    if (published.get(slug) === path) return `/docs/${slug}/${suffix}`;
+  }
 
-    // Everything else has no route on this site. Send the reader to the source
-    // rather than to a 404 — `tree` for a directory, `blob` for a file.
-    const base = target.endsWith("/") ? GITHUB_TREE : GITHUB_BLOB;
-    const prefix = escapes > 0 ? "" : "docs/";
-    return `href="${base}/${prefix}${path}${suffix}"`;
-  });
+  // A folder whose README this site publishes is that page, not a GitHub listing:
+  // `../rfcs/` used to leave /docs/rfcs/ with no inbound link from any doc.
+  if (escapes === 0 && target.endsWith("/")) {
+    const readme = `${path}/README.md`;
+    const slug = toSlug(readme);
+    if (published.get(slug) === readme) return `/docs/${slug}/${suffix}`;
+  }
+
+  // Everything else has no route on this site. Send the reader to the source
+  // rather than to a 404 — `tree` for a directory, `blob` for a file.
+  const base = target.endsWith("/") ? GITHUB_TREE : GITHUB_BLOB;
+  const prefix = escapes > 0 ? "" : "docs/";
+  return `${base}/${prefix}${path}${suffix}`;
 }
 
 /**
@@ -150,16 +168,21 @@ function rewriteLinks(html: string, file: string, published: ReadonlyMap<string,
  * build on it: a missing diagram should stop a deploy, not ship as a broken image.
  */
 function rewriteSources(html: string, file: string): string {
-  const dir = file.includes("/") ? file.slice(0, file.lastIndexOf("/")) : "";
-
   return html.replace(/(<(?:img|source)\b[^>]*?\s)src="([^"]+)"/g, (whole, head: string, src: string) => {
-    if (/^(?:[a-z]+:|\/|#)/i.test(src)) return whole;
-    const { path, escapes } = resolveRelative(dir, src);
-    if (escapes === 0 && path.startsWith("assets/") && existsSync(join(DOCS_DIR, path))) {
-      return `${head}src="/docs/${path}"`;
-    }
-    return whole;
+    const resolved = resolveSrc(src, file);
+    return resolved === null ? whole : `${head}src="${resolved}"`;
   });
+}
+
+/** The published URL of a relative image under docs/assets/, or null to leave it as written. */
+function resolveSrc(src: string, file: string): string | null {
+  if (/^(?:[a-z]+:|\/|#)/i.test(src)) return null;
+  const dir = file.includes("/") ? file.slice(0, file.lastIndexOf("/")) : "";
+  const { path, escapes } = resolveRelative(dir, src);
+  if (escapes === 0 && path.startsWith("assets/") && existsSync(join(DOCS_DIR, path))) {
+    return `/docs/${path}`;
+  }
+  return null;
 }
 
 /**
@@ -189,6 +212,10 @@ function walk(dir: string, base = dir): string[] {
 }
 
 let cache: DocPage[] | null = null;
+/** Slug → owning file, as decided by docPages(); read by markdownFor(). */
+let publishedFiles: ReadonlyMap<string, string> = new Map();
+/** CLI-reference heading id → slug of the split page that holds it (linkSplitReference). */
+let cliAnchorOwner: ReadonlyMap<string, string> = new Map();
 
 export async function docPages(): Promise<DocPage[]> {
   if (cache) return cache;
@@ -234,6 +261,7 @@ export async function docPages(): Promise<DocPage[]> {
   // between a /docs/ URL and a GitHub URL by asking whether the target is a page
   // this build actually produces, and it cannot ask that mid-render.
   const published = new Map(files.map((file) => [toSlug(file), file]));
+  publishedFiles = published;
 
   const render = async (markdown: string, file: string) =>
     uniqueHeadingIds(rewriteSources(rewriteLinks(await renderMarkdown(markdown), file, published), file));
@@ -289,6 +317,7 @@ function linkSplitReference(pages: DocPage[]): void {
     for (const id of idsOf(page.html)) if (!owner.has(id)) owner.set(id, page.slug);
   }
   if (index) for (const id of idsOf(index.html)) if (!owner.has(id)) owner.set(id, index.slug);
+  cliAnchorOwner = owner;
   if (owner.size === 0) return;
 
   // Before the split every one of these ids was an anchor on /docs/cli-reference/.
@@ -458,6 +487,11 @@ const SEO_OVERRIDES: Record<string, { title?: string; description?: string }> = 
     description:
       "How a NovaFabric capsule becomes tamper-evident: the opt-in NovaSeal seal, signed Evidence Bundles, and the checks nova verify runs offline.",
   },
+  // The heading runs to 62 characters, so the brand never fit and search engines
+  // cut it; this keeps the searched words ("support policy", "versions").
+  "support-policy": {
+    title: "Support policy: supported versions and windows",
+  },
   "cli-reference": {
     title: "NovaFabric CLI reference",
     description:
@@ -557,4 +591,203 @@ export function clipDescription(text: string, max = 155): string {
   if (out.length >= 70) return out;
   const cut = text.slice(0, max - 1);
   return `${cut.slice(0, cut.lastIndexOf(" ")).replace(/[\s,;:—–-]+$/, "")}…`;
+}
+
+export const SITE_URL = "https://novafabric.ai";
+
+/**
+ * Docs index grouping, by top-level directory, so the index (app/docs/page.tsx),
+ * llms.txt and llms-full.txt read as the same table of contents.
+ */
+const GROUP_LABELS: Record<string, string> = {
+  "": "Start here",
+  ops: "Operations",
+  tutorials: "Tutorials",
+  integrations: "Integrations",
+  governance: "Governance",
+  lineage: "Lineage",
+  rfcs: "RFCs",
+};
+
+const GROUP_ORDER = ["", "tutorials", "integrations", "ops", "lineage", "governance", "rfcs"];
+
+export interface DocGroup {
+  key: string;
+  label: string;
+  pages: DocPage[];
+}
+
+/**
+ * Pages grouped for a table of contents. Pages split out of one long document (the
+ * CLI reference) are listed on that document's own index page, so they are left out
+ * unless `withParts` is set.
+ */
+export function docGroups(pages: DocPage[], { withParts = false } = {}): DocGroup[] {
+  const grouped = new Map<string, DocPage[]>();
+  for (const page of pages) {
+    if (page.parent && !withParts) continue;
+    const parts = page.slug.split("/");
+    // A split page sits with its parent document (the CLI reference is top-level).
+    const key = page.parent || parts.length === 1 ? "" : parts[0];
+    if (!grouped.has(key)) grouped.set(key, []);
+    grouped.get(key)!.push(page);
+  }
+  const rank = (key: string) => (GROUP_ORDER.indexOf(key) === -1 ? 99 : GROUP_ORDER.indexOf(key));
+  return [...grouped.entries()]
+    .sort(([a], [b]) => rank(a) - rank(b))
+    .map(([key, groupPages]) => ({
+      key,
+      label: GROUP_LABELS[key] ?? key.replace(/-/g, " "),
+      pages: groupPages,
+    }));
+}
+
+/**
+ * Site path of a page's Markdown twin (app/docs/md/[...slug]/route.ts).
+ *
+ * Answer-engine crawlers and coding agents do not negotiate `Accept: text/markdown`;
+ * they ingest dedicated `.md` URLs they discover through
+ * `<link rel="alternate" type="text/markdown">` or llms.txt, and prefer them to the
+ * HTML (no scripts, no navigation, a fraction of the tokens). The twin lives under
+ * the static `md/` segment because a catch-all route cannot have a `.md` sibling.
+ */
+export function markdownPathFor(page: DocPage): string {
+  return `/docs/md/${page.slug}.md`;
+}
+
+const inCliReference = (page: DocPage) =>
+  page.slug === CLI_REFERENCE_SLUG || page.parent?.slug === CLI_REFERENCE_SLUG;
+
+/**
+ * One link target as an absolute URL for a Markdown twin, which is read out of
+ * context: a site-root path means nothing to an agent that fetched only the .md.
+ * Resolution is resolveHref's, and CLI-reference anchors follow the split exactly
+ * as linkSplitReference rewrites them in the HTML.
+ */
+function markdownHref(href: string, page: DocPage, ownIds: ReadonlySet<string>): string {
+  if (href.startsWith("#")) {
+    const id = href.slice(1);
+    const owner = cliAnchorOwner.get(id);
+    if (ownIds.has(id) || !owner || !inCliReference(page)) return href;
+    return `${SITE_URL}/docs/${owner}/#${id}`;
+  }
+  const resolved = resolveHref(href, page.file, publishedFiles) ?? href;
+  const moved = /^\/docs\/cli-reference\/#(.+)$/.exec(resolved);
+  const owner = moved && cliAnchorOwner.get(moved[1]);
+  if (owner) return `${SITE_URL}/docs/${owner}/#${moved[1]}`;
+  return resolved.startsWith("/") ? `${SITE_URL}${resolved}` : resolved;
+}
+
+function markdownSrc(src: string, page: DocPage): string {
+  const resolved = resolveSrc(src, page.file) ?? src;
+  return resolved.startsWith("/") ? `${SITE_URL}${resolved}` : resolved;
+}
+
+/** Rewrites the link and image targets of one run of prose (no code fences in it). */
+function rewriteMarkdownProse(prose: string, page: DocPage, ownIds: ReadonlySet<string>): string {
+  return (
+    prose
+      // Generated-file banners and other HTML comments carry nothing for a reader.
+      .replace(/<!--[\s\S]*?-->\n?/g, "")
+      // [text](target "title") and ![alt](target)
+      .replace(
+        /(!?)\[((?:[^[\]]|\[[^\]]*\])*)\]\(\s*<?([^)\s>]+)>?(\s+"[^"]*")?\s*\)/g,
+        (_whole, bang: string, text: string, target: string, title = "") =>
+          `${bang}[${text}](${bang ? markdownSrc(target, page) : markdownHref(target, page, ownIds)}${title})`,
+      )
+      // [label]: target   (reference definitions)
+      .replace(/^(\s{0,3}\[[^\]]+\]:\s*)<?([^\s>]+)>?/gm, (_whole, head: string, target: string) =>
+        `${head}${markdownHref(target, page, ownIds)}`,
+      )
+      // Inline HTML the docs use for figures and tables.
+      .replace(/(<a\b[^>]*?\shref=")([^"]+)"/g, (_w, head: string, href: string) => `${head}${markdownHref(href, page, ownIds)}"`)
+      .replace(/(<(?:img|source)\b[^>]*?\ssrc=")([^"]+)"/g, (_w, head: string, src: string) => `${head}${markdownSrc(src, page)}"`)
+  );
+}
+
+/** The page's markdown with every link made absolute; fenced code is left byte-for-byte. */
+function markdownBody(page: DocPage): string {
+  const ownIds = new Set([...page.html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]));
+  const chunks: string[] = [];
+  let prose: string[] = [];
+  let fence: string | null = null;
+  const flush = () => {
+    if (prose.length) chunks.push(rewriteMarkdownProse(prose.join("\n"), page, ownIds));
+    prose = [];
+  };
+  for (const line of page.raw.split("\n")) {
+    const marker = line.match(/^\s*(```|~~~)/)?.[1];
+    if (fence === null && !marker) {
+      prose.push(line);
+      continue;
+    }
+    flush();
+    chunks.push(line);
+    if (marker) fence = fence === null ? marker : fence === marker ? null : fence;
+  }
+  flush();
+  const body = chunks.join("\n").trim();
+  return /^#\s/m.test(body) ? body : `# ${titleFor(page)}\n\n${body}`;
+}
+
+/**
+ * The Markdown twin of a docs page: YAML front matter naming the canonical HTML
+ * page (the URL to cite), then the page's own markdown. Title, description and
+ * date are the same values the HTML page carries, so the two never disagree.
+ */
+export function markdownFor(page: DocPage): string {
+  const updated = lastUpdatedFor(page);
+  const meta = [
+    "---",
+    `title: ${JSON.stringify(titleFor(page))}`,
+    `description: ${JSON.stringify(descriptionFor(page))}`,
+    `canonical: ${SITE_URL}/docs/${page.slug}/`,
+    ...(updated ? [`last_updated: ${updated}`] : []),
+    `source: ${GITHUB_BLOB}/docs/${page.file}`,
+    "---",
+  ];
+  return `${meta.join("\n")}\n\n${markdownBody(page)}\n`;
+}
+
+/**
+ * `/llms-full.txt`: every docs page's markdown in one file, in table-of-contents
+ * order, each page headed by its canonical URL. For agents and IDE assistants that
+ * load a project's documentation whole rather than crawling it page by page.
+ */
+export async function llmsFullText(header: string): Promise<string> {
+  const sections: string[] = [header.trim()];
+  for (const group of docGroups(await docPages(), { withParts: true })) {
+    for (const page of group.pages) {
+      const updated = lastUpdatedFor(page);
+      sections.push(
+        [
+          `Source: ${SITE_URL}/docs/${page.slug}/${updated ? ` (last updated ${updated})` : ""}`,
+          "",
+          markdownBody(page),
+        ].join("\n"),
+      );
+    }
+  }
+  return `${sections.join("\n\n---\n\n")}\n`;
+}
+
+/**
+ * The generated part of `/llms.txt`: every published docs page, grouped like the
+ * docs index, as `- [title](url): description` entries (the llms.txt format). The
+ * hand-written part (content/llms.md) curates; this part cannot fall behind docs/.
+ */
+export async function llmsDocsIndex(): Promise<string> {
+  const lines: string[] = ["## All documentation pages", ""];
+  lines.push(
+    `Every page below also has a Markdown version at ${SITE_URL}/docs/md/<path>.md ` +
+      `(for example ${SITE_URL}/docs/md/getting-started.md), and ${SITE_URL}/llms-full.txt ` +
+      "holds all of them in one file. Cite the HTML page URL.",
+  );
+  for (const group of docGroups(await docPages(), { withParts: true })) {
+    lines.push("", `### ${group.label}`, "");
+    for (const page of group.pages) {
+      lines.push(`- [${titleFor(page)}](${SITE_URL}/docs/${page.slug}/): ${descriptionFor(page)}`);
+    }
+  }
+  return `${lines.join("\n")}\n`;
 }

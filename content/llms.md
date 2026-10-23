@@ -4,7 +4,7 @@
 
 **Evidence you can replay.** NovaFabric captures AI-agent executions as schema-valid, secret-scanned **NovaFabric Run Capsules** — portable execution-evidence artifacts you own — for replay, structural diff, lineage, provenance, debugging, and audit. A trace is a view of a run; a Run Capsule is an artifact you keep. The same capture layer can also wrap general commands, model runs, notebook cells, and HPC workloads.
 
-Maturity: NovaFabric is pre-1.0; the current release is v0.104.0 (`pip install novafabric`). The Run Capsule format is documented but **not frozen** (the v1.0 format freeze is a roadmap gate), and server mode, the dashboard, framework adapters, and `intervention` replay are experimental.
+Maturity: NovaFabric is pre-1.0; the current release is {{VERSION}} (`pip install novafabric`). The Run Capsule format is documented but **not frozen** (the v1.0 format freeze is a roadmap gate), and server mode, the dashboard, framework adapters, and `intervention` replay are experimental.
 
 If you are looking for a way to **debug agent runs**, **replay an AI-agent execution**, **compare two runs**, or **produce an audit trail for AI agents**, NovaFabric is built for exactly this.
 
@@ -52,13 +52,13 @@ AI agents are non-deterministic: model weights change, API behavior drifts, and 
 NovaFabric wraps any command without code changes. Model calls are captured automatically for Python workloads; for other clients, `nova api-proxy` records them. Capsules are written to `~/.novafabric/capsules/<run-id>/`, and `replay`, `diff` and `validate` accept the run id that `nova capture` prints:
 
 - `nova capture python my_agent.py` — capture a run as a portable Run Capsule (the environment, plus the model calls and tool invocations capture can see)
-- `nova replay <run-id> --mode forensic` — read-only inspection; `--mode mocked` re-runs a Python workload and serves the capsule's recorded model responses to supported calls (in v0.104.0: synchronous, non-streaming OpenAI chat completions and Anthropic messages); tool calls run live
+- `nova replay <run-id> --mode forensic` — read-only inspection; `--mode mocked` re-runs a Python workload and serves the capsule's recorded model responses to supported calls (OpenAI Chat Completions and Responses API, Anthropic messages; sync or async, streamed or not, since v0.105.0) and recorded MCP tool results; other tools run live, and a replay that diverges from the recording fails
 - `nova validate <run-id>` — validate a capsule against the Run Capsule JSON schemas
 - `nova diff <run-a> <run-b>` — structural comparison of two capsules; `--assert-no-regressions` exits 1 on any structural change
 - `nova verify ~/.novafabric/capsules/<run-id>/` — verify a sealed capsule's signature, timestamp and Merkle-log inclusion; needs only the capsule, works offline
 - `nova lineage provenance <run-id>` — query causal relationships between runs, assets, and artifacts (also `blast-radius`, `replay-chain`)
 
-Two journeys branch from the Run Capsule: **Capture → Replay → Diff** (what happened, and what changed?) and **Capture → Seal → Verify → Audit** (can I preserve and verify this later?). Sealing needs a signing key you configure (in v0.104.0, in `novaseal.yaml`); a default capture is not signed. A one-command `nova seal init` is on `main` and not yet released.
+Two journeys branch from the Run Capsule: **Capture → Replay → Diff** (what happened, and what changed?) and **Capture → Seal → Verify → Audit** (can I preserve and verify this later?). Sealing is opt-in: a default capture is not signed. `nova seal init` (experimental, since v0.105.0) creates a local, self-asserted signing identity and turns sealing on for that machine; earlier versions configure `novaseal.yaml` by hand.
 
 Capture works via CLI wrapping, an SDK decorator, an API/MCP proxy, and OpenTelemetry GenAI semantic conventions — so agents built on frameworks like LangChain and LlamaIndex, and providers like OpenAI and Anthropic, can be captured without rewriting them. The 11 framework adapters are experimental.
 
@@ -68,7 +68,7 @@ Capture works via CLI wrapping, an SDK decorator, an API/MCP proxy, and OpenTele
 - **Tool invocations** — MCP exchanges, function calls, shell commands
 - **Environment snapshot** — Python version, installed packages, environment variables, secret-scanned
 - **Execution spans** — OpenTelemetry-compatible spans for the execution tree
-- **Secret-scan record** — built-in, rule-based secret scanning of captured evidence (14 key and token rules in v0.104.0). The record shows what the scan checked and redacted, not that no secret remains: PEM private keys, JWTs and bearer tokens, passwords and connection strings, and Slack, Stripe, Google and Azure keys are among the formats it does not detect ([the full list](https://novafabric.ai/docs/architecture/run-capsule/))
+- **Secret-scan record** — built-in, rule-based secret scanning of captured evidence (18 key and token rules in rule pack `gitleaks-core-v0` 0.7.0, since v0.105.0). The record shows what the scan checked and redacted, not that no secret remains: PEM private keys, JWTs and bearer tokens, passwords and connection strings, and Slack, Stripe, Google and Azure keys are among the formats it does not detect ([the full list](https://novafabric.ai/docs/architecture/run-capsule/))
 - **Optional seal** — with a key you configure: DSSE signature, optional RFC 3161 timestamp, verifiable offline. A seal shows a record is unchanged since it was signed; it does not show the record is complete or true
 
 ## Key concepts
@@ -85,7 +85,7 @@ Capture works via CLI wrapping, an SDK decorator, an API/MCP proxy, and OpenTele
 A: Wrap it with `nova capture`. NovaFabric records the model calls and tool invocations it can see as a portable Run Capsule — no code changes for Python workloads, `nova api-proxy` for other clients — then lets you inspect, replay, diff, and audit it locally. This is an after-the-fact record, not a live monitoring feed.
 
 **Q: Can I replay an AI-agent run to debug it?**
-A: Yes, within limits. Forensic mode is read-only inspection. Mocked mode re-runs a Python workload and serves recorded model responses from the capsule. In the current release (v0.104.0) that covers synchronous, non-streaming OpenAI chat completions and Anthropic messages; other model calls are not served from the capsule, and tool calls still run live and may have side effects. Unreleased on `main`: async, streamed and Responses API calls and recorded MCP tool results are served too, and a replay that diverges from the recording fails instead of continuing. NovaFabric does not claim bit-for-bit replay of remote models.
+A: Yes, within limits. Forensic mode is read-only inspection. Mocked mode re-runs a Python workload and serves recorded model responses from the capsule. Since v0.105.0 that covers OpenAI Chat Completions and Responses API calls and Anthropic messages, sync or async, streamed or not, plus recorded MCP tool results; a replay that diverges from the recording fails instead of continuing. Other tool calls still run live and may have side effects (in v0.104.0 and earlier only synchronous, non-streaming OpenAI chat completions and Anthropic messages were served, and every tool ran live). NovaFabric does not claim bit-for-bit replay of remote models.
 
 **Q: Is it local-first and open source?**
 A: Yes. Capsules live on your machine in an open, human-readable format with no vendor lock-in. NovaFabric is open source (Apache-2.0). It is pre-1.0 — `pip install novafabric`, then capture, replay and diff work today; the format is not yet frozen.
@@ -102,4 +102,5 @@ Open source. Local-first by default.
 - Maintainer: https://github.com/MSKazemi
 - Site: https://novafabric.ai
 - Docs: https://novafabric.ai/docs/
+- Full documentation as one Markdown file: https://novafabric.ai/llms-full.txt
 - Sitemap: https://novafabric.ai/sitemap.xml

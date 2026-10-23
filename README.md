@@ -32,8 +32,11 @@ npm run build    # static export to ./out/, then the link and SEO checks below
 - `npm run check-seo`: every `sitemap.xml` URL is an indexable, self-canonical page whose `og:url` matches its
   canonical, with one title, one meta description of at most 160 characters, one `<h1>` and JSON-LD that
   parses. No other indexable page exists outside the sitemap. Each redirect stub points at a listed page in one
-  hop, and `robots.txt` does not block the site. No page and no `llms.txt` uses wording the product's claim
-  matrix marks unsafe (the `CLAIMS` list in `scripts/check-seo.mjs`, each entry naming its matrix row).
+  hop, and `robots.txt` does not block the site. Every `/docs/` page links exactly one exported Markdown twin
+  (`/docs/md/<slug>.md`, `rel="alternate" type="text/markdown"`) whose front matter names the page as canonical
+  and whose prose keeps no relative link; `llms.txt` and `llms-full.txt` name every docs page. No page, no
+  `llms.txt` and no `llms-full.txt` uses wording the product's claim matrix marks unsafe (the `CLAIMS` list in
+  `scripts/check-seo.mjs`, each entry naming its matrix row).
 - `npm run check-cli-reference`: splitting `docs/cli-reference.md` into an index and command-area pages loses no
   heading, repeats no id on a page, reuses no slug, and forwards every pre-split anchor
   (`/docs/cli-reference/#…`) to the page that now holds it.

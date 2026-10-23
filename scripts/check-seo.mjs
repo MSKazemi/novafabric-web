@@ -19,6 +19,11 @@
  *                 it points at the sitemap.
  *   descriptions  at most 160 characters on a sitemap page (search engines cut
  *                 longer ones mid-sentence; seven pages did until 2026-10-09).
+ *   markdown      every /docs/ page links exactly one Markdown twin
+ *                 (rel=alternate type=text/markdown) that was exported, names the
+ *                 page as its canonical, and has no relative link left in it (a
+ *                 twin is read out of context, where a relative link is dead).
+ *   llms          llms.txt and llms-full.txt exist and name every /docs/ page.
  *   claims        no rendered page and no llms.txt says what the product's claim
  *                 matrix marks unsafe: see CLAIMS below. Docs pages are rendered from the
  *                 product repository, so marketing-only wording is checked outside
@@ -113,6 +118,10 @@ function inspect(file) {
     descriptions: metaContent("name", "description"),
     robots: metaContent("name", "robots").join(","),
     canonicals: all(/<link[^>]*\brel="canonical"[^>]*\bhref="([^"]*)"/g),
+    markdownTwins: [...head.matchAll(/<link\b[^>]*>/g)]
+      .map((m) => m[0])
+      .filter((tag) => /\brel="alternate"/.test(tag) && /\btype="text\/markdown"/.test(tag))
+      .map((tag) => decode(/\bhref="([^"]*)"/.exec(tag)?.[1] ?? "")),
     ogUrls: metaContent("property", "og:url"),
     refresh: metaContent("http-equiv", "refresh")[0],
     h1: (html.match(/<h1[\s>]/g) || []).length,
@@ -159,14 +168,50 @@ for (const url of sitemap) {
   }
 }
 
-// llms.txt is written for answer engines; it gets the same claim check.
-const llmsFile = join(OUT, "llms.txt");
-if (existsSync(llmsFile)) {
-  const llms = readFileSync(llmsFile, "utf8");
-  for (const claim of CLAIMS) {
-    const hit = claim.re.exec(llms);
-    if (hit) fail("/llms.txt", `says "${hit[0]}" — claim matrix row "${claim.row}"`);
+// /docs/ pages → their Markdown twins
+const docsUrls = [...sitemap].filter((url) => url.startsWith(`${BASE}/docs/`) && url !== `${BASE}/docs/`);
+for (const url of docsUrls) {
+  const page = pages.get(url.slice(BASE.length));
+  if (!page) continue; // reported above
+  if (page.markdownTwins.length !== 1) { fail(url, `${page.markdownTwins.length} text/markdown alternates, expected 1`); continue; }
+  const twin = page.markdownTwins[0];
+  if (!twin.startsWith(`${BASE}/`) || !twin.endsWith(".md")) { fail(url, `Markdown twin ${twin} is not an absolute .md URL on ${BASE}`); continue; }
+  const twinFile = join(OUT, twin.slice(BASE.length));
+  if (!existsSync(twinFile)) { fail(url, `Markdown twin ${twin} was not exported`); continue; }
+  const markdown = readFileSync(twinFile, "utf8");
+  const canonical = /^canonical:\s*(\S+)$/m.exec(markdown.split(/\n---\n/)[0])?.[1];
+  if (canonical !== url) fail(twin, `front matter canonical is ${canonical}, expected ${url}`);
+  // Fenced code is quoted verbatim, so only prose links count. Line-based, the way
+  // lib/docs.ts splits it: a fence opens and closes on a line starting ``` or ~~~.
+  let fence = null;
+  const prose = markdown
+    .split("\n")
+    .filter((line) => {
+      const marker = /^\s*(```|~~~)/.exec(line)?.[1];
+      if (marker) fence = fence === null ? marker : fence === marker ? null : fence;
+      return fence === null && !marker;
+    })
+    .join("\n");
+  for (const m of prose.matchAll(/\]\(\s*<?([^)\s>]+)/g)) {
+    if (!/^(?:[a-z][a-z0-9+.-]*:|#)/i.test(m[1])) fail(twin, `relative link "${m[1]}" (dead outside the site)`);
   }
+}
+
+// llms.txt / llms-full.txt are written for answer engines: they name every docs
+// page, and they get the same claim check as the pages (llms-full.txt is the docs
+// text, so it is held to the docs rules, not the marketing-only ones).
+for (const [name, required, marketing] of [["llms.txt", true, true], ["llms-full.txt", true, false]]) {
+  const file = join(OUT, name);
+  if (!existsSync(file)) { if (required) fail(`/${name}`, "missing"); continue; }
+  const text = readFileSync(file, "utf8");
+  for (const claim of CLAIMS) {
+    if (claim.marketing && !marketing) continue;
+    const hit = claim.re.exec(text);
+    if (hit) fail(`/${name}`, `says "${hit[0]}" — claim matrix row "${claim.row}"`);
+  }
+  const named = new Set([...text.matchAll(/https:\/\/novafabric\.ai\/docs\/[^\s)#"]*\//g)].map((m) => m[0]));
+  const missing = docsUrls.filter((url) => !named.has(url));
+  if (missing.length) fail(`/${name}`, `does not name ${missing.length} docs page(s), e.g. ${missing.slice(0, 3).join(", ")}`);
 }
 
 // every other exported page: either listed, a stub, an error page, or explicitly noindex

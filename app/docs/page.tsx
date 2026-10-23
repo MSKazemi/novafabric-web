@@ -5,7 +5,7 @@ import Footer from "@/components/Footer";
 import BreadcrumbJsonLd from "@/components/BreadcrumbJsonLd";
 import JsonLd from "@/components/JsonLd";
 import { PageHero } from "@/components/ui";
-import { docPages, titleFor, descriptionFor } from "@/lib/docs";
+import { docGroups, docPages, titleFor, descriptionFor } from "@/lib/docs";
 
 const DESCRIPTION =
   "NovaFabric docs: getting started, concepts, CLI and Python API reference, architecture and operations for capturing, replaying and verifying AI-agent runs.";
@@ -22,38 +22,12 @@ export const metadata: Metadata = {
   },
 };
 
-// Grouped by top-level directory so the index reads as a table of contents
-// rather than a flat dump of filenames.
-const GROUP_LABELS: Record<string, string> = {
-  "": "Start here",
-  ops: "Operations",
-  tutorials: "Tutorials",
-  integrations: "Integrations",
-  governance: "Governance",
-  lineage: "Lineage",
-  rfcs: "RFCs",
-};
-
-const ORDER = ["", "tutorials", "integrations", "ops", "lineage", "governance", "rfcs"];
-
 export default async function DocsIndexPage() {
-  // Pages split out of one long document (the CLI reference) are listed on
-  // that document's own index page, not here.
-  const pages = (await docPages()).filter((page) => !page.parent);
-
-  const grouped = new Map<string, typeof pages>();
-  for (const page of pages) {
-    const parts = page.slug.split("/");
-    const group = parts.length > 1 ? parts[0] : "";
-    if (!grouped.has(group)) grouped.set(group, []);
-    grouped.get(group)!.push(page);
-  }
-
-  const groups = [...grouped.entries()].sort(
-    ([a], [b]) =>
-      (ORDER.indexOf(a) === -1 ? 99 : ORDER.indexOf(a)) -
-      (ORDER.indexOf(b) === -1 ? 99 : ORDER.indexOf(b)),
-  );
+  // Grouped by top-level directory so the index reads as a table of contents
+  // rather than a flat dump of filenames. Pages split out of one long document
+  // (the CLI reference) are listed on that document's own index page, not here.
+  const groups = docGroups(await docPages());
+  const pages = groups.flatMap((group) => group.pages);
 
   const collectionSchema = {
     "@context": "https://schema.org",
@@ -94,13 +68,11 @@ export default async function DocsIndexPage() {
         </p>
 
         <div className="mt-16 space-y-12">
-          {groups.map(([group, groupPages]) => (
-            <section key={group || "root"}>
-              <h2 className="font-display text-3xl text-ink">
-                {GROUP_LABELS[group] ?? group.replace(/-/g, " ")}
-              </h2>
+          {groups.map((group) => (
+            <section key={group.key || "root"}>
+              <h2 className="font-display text-3xl text-ink">{group.label}</h2>
               <ul className="mt-4 space-y-3">
-                {groupPages.map((page) => (
+                {group.pages.map((page) => (
                   <li key={page.slug}>
                     <a className="font-medium underline" href={`/docs/${page.slug}/`}>
                       {titleFor(page)}
