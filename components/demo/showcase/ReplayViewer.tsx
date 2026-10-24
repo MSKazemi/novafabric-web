@@ -70,8 +70,9 @@ interface ModeMeta {
   bannerTone: 'success' | 'pending' | 'failure' | 'muted';
 }
 
-// Mirrors src/novafabric/replay/_engine.py and `nova replay --help` (v0.104.0). Only `mocked`
-// and `intervention` re-run anything; tool calls are never served from the capsule.
+// Mirrors src/novafabric/replay/_engine.py and `nova replay --help` (v0.107.0). Only `mocked`
+// and `intervention` re-run anything; only recorded MCP and declared tool results are served
+// from the capsule, every other tool call runs live.
 const MODES: ModeMeta[] = [
   {
     value: 'forensic',
@@ -85,8 +86,8 @@ const MODES: ModeMeta[] = [
     value: 'mocked',
     label: 'Mocked',
     available: true,
-    guarantee: "Re-run the agent's Python process with the recorded OpenAI / Anthropic chat replies served from the capsule.",
-    oneLiner: 'No live model call. Tool calls still run live — this is not a sandbox.',
+    guarantee: "Re-run the agent's Python process with the recorded OpenAI / Anthropic replies and MCP tool results served from the capsule.",
+    oneLiner: 'No live model call. Other tool calls still run live — this is not a sandbox.',
     bannerTone: 'pending',
   },
   {

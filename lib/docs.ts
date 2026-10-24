@@ -619,6 +619,11 @@ const GROUP_LABELS: Record<string, string> = {
 
 const GROUP_ORDER = ["", "tutorials", "integrations", "ops", "lineage", "governance", "rfcs"];
 
+// "Start here" leads with the pages a newcomer reads first, in the order docs/README.md
+// gives them; the rest of the group follows alphabetically. Alphabetical alone put the
+// API reference first and buried Getting started.
+const START_HERE_LEAD = ["getting-started", "concepts", "user-guide", "cli-reference", "faq"];
+
 export interface DocGroup {
   key: string;
   label: string;
@@ -641,6 +646,13 @@ export function docGroups(pages: DocPage[], { withParts = false } = {}): DocGrou
     grouped.get(key)!.push(page);
   }
   const rank = (key: string) => (GROUP_ORDER.indexOf(key) === -1 ? 99 : GROUP_ORDER.indexOf(key));
+  const lead = (slug: string) => {
+    const at = START_HERE_LEAD.indexOf(slug.split("/")[0]);
+    return at === -1 ? START_HERE_LEAD.length : at;
+  };
+  // A stable sort keeps the alphabetical order inside each lead slot (a split CLI
+  // reference page stays after its parent).
+  grouped.get("")?.sort((a, b) => lead(a.slug) - lead(b.slug));
   return [...grouped.entries()]
     .sort(([a], [b]) => rank(a) - rank(b))
     .map(([key, groupPages]) => ({

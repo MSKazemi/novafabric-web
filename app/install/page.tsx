@@ -146,9 +146,10 @@ export default function InstallPage() {
           />
           <p className={`${P} mt-5 mb-0`}>
             Forensic replay is read-only: it inspects the capsule and runs nothing. Mocked replay re-runs the
-            command and serves the recorded replies of supported model calls from the capsule (synchronous,
-            non-streaming OpenAI chat completions and Anthropic messages in v0.104.0), but{" "}
-            <strong className="text-ink">tool calls still run live</strong>. Use{" "}
+            command and serves the recorded replies of supported model calls from the capsule (OpenAI Chat
+            Completions and Responses API calls and Anthropic messages, sync or async, streamed or not, plus
+            recorded MCP tool results, since v0.105.0), but{" "}
+            <strong className="text-ink">other tool calls still run live</strong>. Use{" "}
             <code className={CODE}>nova replay --dry-run &lt;run-id&gt;</code> to see what would execute first.
             The{" "}
             <Link href="/docs/architecture/replay-modes/" className="text-amber">

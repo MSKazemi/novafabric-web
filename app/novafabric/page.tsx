@@ -63,7 +63,7 @@ const faqSchema = {
       name: "Can you replay an AI-agent execution for debugging?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Yes. `nova replay` has five modes. Forensic mode is read-only inspection. Mocked mode re-runs a Python workload and serves recorded model responses from the capsule for supported calls (in v0.104.0, synchronous non-streaming OpenAI chat completions and Anthropic messages); tool calls still run live. Semantic and exact modes do not re-run anything: they score the recorded responses and report whether a byte-exact re-run is possible. Intervention mode is experimental.",
+        text: "Yes. `nova replay` has five modes. Forensic mode is read-only inspection. Mocked mode re-runs a Python workload and serves recorded model responses from the capsule for supported calls (since v0.105.0, OpenAI Chat Completions and Responses API calls and Anthropic messages, sync or async, streamed or not, plus recorded MCP tool results); other tool calls still run live. Semantic and exact modes do not re-run anything: they score the recorded responses and report whether a byte-exact re-run is possible. Intervention mode is experimental.",
       },
     },
     {
@@ -416,7 +416,7 @@ export default function NovafabricPage() {
                 {
                   mode: "mocked",
                   cmd: "nova replay --mode mocked",
-                  desc: "Re-runs a Python workload and serves recorded model responses from the capsule. In v0.104.0 that covers synchronous, non-streaming OpenAI chat completions and Anthropic messages. Tool calls run live, so tools may have side effects. Async, streamed and Responses API calls and recorded MCP tool results are on main, unreleased.",
+                  desc: "Re-runs a Python workload and serves recorded model responses from the capsule. Since v0.105.0 that covers OpenAI Chat Completions and Responses API calls and Anthropic messages, sync or async, streamed or not, plus recorded MCP tool results. Other tool calls run live, so they may have side effects.",
                   color: "var(--color-amber)",
                 },
                 {

@@ -96,10 +96,10 @@ const C: Record<string, Comp> = {
   },
   secrets: {
     icon: "🛡️", domain: "capture", title: "Secret Scanner", sub: "redaction + proof", ver: "v0.4",
-    tag: "Scans the capsule for 14 known API-key and token formats (v0.104.0), redacts matches, and records what it checked in a redaction proof.",
+    tag: "Scans the capsule for 18 known API-key and token formats (since v0.105.0), redacts matches, and records what it checked in a redaction proof.",
     connects: ["capture", "trust", "compliance"],
     summary: "SecretScannerV0 runs at capture finalize over the event streams, the manifest, env.lock and the files under inputs/ and outputs/. Matches are replaced with redaction markers, and redaction-proof.json records what was scanned and redacted. It matches known formats only (PEM private keys, JWTs and passwords are not detected), so a capsule is secret-scanned, not proven secret-free.",
-    subs: [["SecretScannerV0", "rule pack gitleaks-core-v0, 14 rules in v0.104.0"], ["redaction_proof", "record of what was scanned and redacted"]],
+    subs: [["SecretScannerV0", "rule pack gitleaks-core-v0 0.7.0, 18 rules"], ["redaction_proof", "record of what was scanned and redacted"]],
     cli: ["# runs automatically at capture finalize", "nova validate <capsule>  # checks redaction"],
     io: { in: "Raw capsule JSONL", out: "Redacted JSONL + proof" },
     resp: ["Scan capsule files for 14 known key and token formats", "Replace matches with redaction markers", "Emit a redaction_proof for evidence export gating"],
