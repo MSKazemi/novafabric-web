@@ -18,6 +18,9 @@ const LANGS = [
   "xml", "html", "css", "markdown", "text",
 ];
 
+/** Fence names that are common in docs but are not Shiki language ids. */
+const SHELL_ALIASES: Record<string, string> = { sh: "bash", zsh: "bash" };
+
 let highlighterPromise: Promise<Highlighter> | null = null;
 function getHighlighter(): Promise<Highlighter> {
   highlighterPromise ??= createHighlighter({ themes: ["github-dark"], langs: LANGS });
@@ -61,7 +64,8 @@ export async function renderMarkdown(markdown: string): Promise<string> {
   marked.use({
     renderer: {
       code({ text, lang }) {
-        const language = (lang ?? "").split(/\s+/)[0].toLowerCase();
+        const raw = (lang ?? "").split(/\s+/)[0].toLowerCase();
+        const language = SHELL_ALIASES[raw] ?? raw;
         // GitHub draws ```mermaid blocks; this site has no Mermaid renderer, so they
         // used to appear as raw flowchart syntax under the illustrated SVG of the
         // same diagram (every docs page with a Mermaid block also embeds one). The
