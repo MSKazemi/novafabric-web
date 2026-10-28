@@ -20,15 +20,27 @@ export async function generateMetadata({
   const { slug } = await params;
   const post = await getPost(slug);
   if (!post) return {};
+  const card = `https://novafabric.ai${post.ogImage ?? post.image ?? "/og.png"}`;
+  const cardSize = post.ogImage || !post.image ? { width: 1200, height: 630 } : { width: 1600, height: 900 };
   return {
     title: `${post.title} — NovaFabric`,
     description: post.excerpt,
     alternates: { canonical: `https://novafabric.ai/blog/${post.slug}/` },
     openGraph: {
+      type: "article",
+      publishedTime: post.date,
       title: post.title,
       description: post.excerpt,
       url: `https://novafabric.ai/blog/${post.slug}/`,
-      images: [{ url: "https://novafabric.ai/og.png", width: 1200, height: 630 }],
+      images: [{ url: card, ...cardSize, ...(post.imageAlt ? { alt: post.imageAlt } : {}) }],
+    },
+    // Metadata merges one level deep, so the site-wide twitter card in the root
+    // layout would otherwise keep pointing at /og.png for every post.
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.excerpt,
+      images: [card],
     },
   };
 }
@@ -65,7 +77,7 @@ export default async function BlogPostPage({
     url: `https://novafabric.ai/blog/${post!.slug}/`,
     datePublished: post!.date,
     dateModified: post!.date,
-    image: "https://novafabric.ai/og.png",
+    image: `https://novafabric.ai${post!.ogImage ?? post!.image ?? "/og.png"}`,
     author: { "@type": "Person", name: "Mohsen Seyedkazemi Ardebili" },
     publisher: {
       "@type": "Organization",
@@ -149,18 +161,35 @@ export default async function BlogPostPage({
             </p>
           </div>
 
-          <hr
-            style={{
-              border: "none",
-              borderTop: "1px solid var(--color-edge)",
-              marginBottom: "48px",
-              maxWidth: "680px",
-            }}
-          />
+          {post.image ? (
+            <figure className="post-hero">
+              {/* 16:9 by convention (content/blog/README.md); width/height reserve the space.
+                  next/image is a no-op here (images.unoptimized, static export). */}
+              {/* eslint-disable-next-line @next/next/no-img-element -- static export, pre-optimised WebP */}
+              <img
+                src={post.image}
+                alt={post.imageAlt}
+                width={1600}
+                height={900}
+                fetchPriority="high"
+                decoding="async"
+              />
+              {post.imageCaption ? <figcaption>{post.imageCaption}</figcaption> : null}
+            </figure>
+          ) : (
+            <hr
+              style={{
+                border: "none",
+                borderTop: "1px solid var(--color-edge)",
+                marginBottom: "48px",
+                maxWidth: "680px",
+              }}
+            />
+          )}
 
           {/* Body — rendered from content/blog/<slug>.md at build time. */}
           <div
-            className="docs-prose"
+            className="docs-prose blog-post"
             style={{ maxWidth: "680px" }}
             dangerouslySetInnerHTML={{ __html: post.html }}
           />

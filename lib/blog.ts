@@ -18,6 +18,8 @@ import type { PostCategory } from "./types";
 
 const BLOG_DIR = resolve(process.cwd(), "content", "blog");
 
+const PUBLIC_DIR = resolve(process.cwd(), "public");
+
 const CATEGORIES: PostCategory[] = ["lab-update", "technical", "release"];
 
 export interface Post {
@@ -28,6 +30,14 @@ export interface Post {
   category: PostCategory;
   tags: string[];
   excerpt: string;
+  /** Optional 16:9 header image, a site path under `public/` (e.g. `/blog/x/hero.webp`). */
+  image?: string;
+  /** Alt text for `image`. Required whenever `image` is set. */
+  imageAlt?: string;
+  /** Optional caption shown under `image`. */
+  imageCaption?: string;
+  /** Optional 1200x630 link-preview image; falls back to `image`, then the site card. */
+  ogImage?: string;
   /** Rendered HTML of the post body. */
   html: string;
   /** Rough reading time in minutes, for the post header. */
@@ -84,6 +94,23 @@ export async function getPosts(): Promise<Post[]> {
       const excerpt = asString(data.excerpt);
       if (!excerpt) throw new Error(`content/blog/${file}: missing "excerpt" in front matter.`);
 
+      // Optional header/preview images. A path that does not exist, or a hero
+      // without alt text, fails the build for the same reason a bad date does:
+      // it would otherwise ship as a broken image or an unlabelled one.
+      const image = asString(data.image) || undefined;
+      const ogImage = asString(data.ogImage) || undefined;
+      for (const [key, value] of [["image", image], ["ogImage", ogImage]] as const) {
+        if (value && (!value.startsWith("/") || !existsSync(join(PUBLIC_DIR, value)))) {
+          throw new Error(
+            `content/blog/${file}: "${key}" must be a path under public/ that exists, got "${value}".`,
+          );
+        }
+      }
+      const imageAlt = asString(data.imageAlt) || undefined;
+      if (image && !imageAlt) {
+        throw new Error(`content/blog/${file}: "image" needs "imageAlt" (alt text) in front matter.`);
+      }
+
       const words = content.split(/\s+/).filter(Boolean).length;
 
       return {
@@ -93,6 +120,10 @@ export async function getPosts(): Promise<Post[]> {
         category,
         tags: asList(data.tags),
         excerpt,
+        image,
+        imageAlt,
+        imageCaption: asString(data.imageCaption) || undefined,
+        ogImage,
         html: await renderMarkdown(content),
         readingMinutes: Math.max(1, Math.round(words / 220)),
       };
