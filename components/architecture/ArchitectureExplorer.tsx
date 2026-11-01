@@ -277,7 +277,7 @@ const C: Record<string, Comp> = {
   },
   /* ── Serve ── */
   server: {
-    icon: "🌐", domain: "serve", title: "Server (REST API)", sub: "OIDC · RBAC · 40+ routes", ver: "v0.7",
+    icon: "🌐", domain: "serve", title: "Server (REST API)", sub: "OIDC · RBAC · 200+ REST endpoints (nova serve)", ver: "v0.7",
     tag: "Multi-user FastAPI server. Every request flows auth → RBAC → route → backend.",
     connects: ["storage", "lineage", "kg", "policy", "compliance", "dashboard"],
     summary: "create_app() builds a FastAPI app with OIDC bearer / offline-token / device-grant auth, a reader<writer<admin RBAC layer (with last-admin lockout protection), and cursor-paginated routes for assets, capsules, runs, lineage, evidence, policy, compliance, and KG.",

@@ -173,8 +173,8 @@ export default function InstallPage() {
           <Cmd lines={["nova init", "nova doctor"]} />
           <p className={`${P} mt-5 mb-0`}>
             A default capture is not sealed. To seal capsules with your own key and verify them offline later,
-            configure <code className={CODE}>novaseal.yaml</code> (a one-command{" "}
-            <code className={CODE}>nova seal init</code> is on main and not yet released); see{" "}
+            configure <code className={CODE}>novaseal.yaml</code>, or run{" "}
+            <code className={CODE}>nova seal init</code> (experimental, since v0.105.0); see{" "}
             <Link href="/docs/tutorials/prove-a-run-to-an-auditor/" className="text-amber">
               verify a sealed run for an auditor
             </Link>

@@ -13,24 +13,24 @@ const PACKAGES = [
     language: "Python",
     langColor: "#3b82f6",
     description:
-      "Behavioral test suite verifying object storage backends meet WORM requirements. 10 mandatory test cases covering immutability, retention locks, legal holds, and lifecycle exemptions.",
+      "Behavioral test suite verifying object storage backends meet WORM requirements. 11 mandatory test cases covering immutability, retention locks, legal holds, lifecycle exemptions and checksum integrity. Tests object-store behavior against the requirements these rules describe; not a compliance certification.",
     tags: ["SEC 17a-4", "MiFID II", "CFTC 1.31", "FINRA 4370"],
     command:
       'pip install "git+https://github.com/MSKazemi/novafabric#subdirectory=packages/nova_worm_conformance"',
     backends: ["S3 / MinIO / Ceph", "Azure Blob"],
-    status: "stable",
+    status: "experimental",
     icon: "⬟",
   },
   {
     name: "nova-collector",
-    version: "0.1.0-alpha",
+    version: "experimental",
     language: "Go",
     langColor: "#00acd7",
     description:
-      "Cluster-scale OpenTelemetry collector for capsule events, spans, and metrics. Deployable to Kubernetes via DaemonSet or SLURM via prolog/epilog. Handles millions of events per node.",
+      "Cluster-scale OpenTelemetry collector for capsule events, spans, and metrics. Deployable to Kubernetes via DaemonSet or SLURM via prolog/epilog. Requires Go 1.26.5+.",
     tags: ["OpenTelemetry", "Kubernetes", "SLURM", "HPC"],
     command:
-      "git clone https://github.com/MSKazemi/novafabric && go build ./novafabric/collector/cmd/novafabric-collector",
+      "git clone https://github.com/MSKazemi/novafabric && cd novafabric/collector && go build ./cmd/novafabric-collector",
     backends: ["Kubernetes", "SLURM / HPC"],
     status: "alpha",
     icon: "⬡",
@@ -41,8 +41,8 @@ const PACKAGES = [
     language: "TypeScript",
     langColor: "#3178c6",
     description:
-      "Web UI for capsule inspection, lineage visualization, and asset registry browsing. Ships embedded in nova serve. 13 tabs covering all major primitives.",
-    tags: ["React 19", "Astro 5", "Tailwind v4"],
+      "Web UI for capsule inspection, lineage visualization, and asset registry browsing. Ships embedded in nova serve. 30 tabs in 7 workflow groups (experimental).",
+    tags: ["React 19", "Astro 7", "Tailwind v4"],
     command: "nova serve --experimental",
     backends: ["Embedded in nova serve"],
     status: "experimental",

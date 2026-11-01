@@ -60,7 +60,7 @@ export default function EvidenceSpine() {
             Distributed-ready · experimental
           </p>
           <p className="text-muted text-[15px] md:text-sm leading-relaxed">
-            The same capsule format scales out to clusters of thousands of nodes.
+            The same capsule format is designed to scale out to clusters; the September paper measured 314 producer VMs across ten regions (experimental).
             A one-node run is simply the smallest case of a distributed run.
           </p>
         </div>
