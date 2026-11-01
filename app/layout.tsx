@@ -43,7 +43,7 @@ export const metadata: Metadata = {
   // The keyword list is unchanged: those are the terms people search when they
   // have this problem, and capturing that demand is fine. Claiming to be a
   // monitoring product is not.
-  title: "NovaFabric — Replay and evidence infrastructure for AI agents",
+  title: "NovaFabric: replay & evidence infrastructure for AI agents",
   description:
     "Open-source, self-hosted replay and evidence infrastructure for AI agents. Capture executions as portable Run Capsules you can replay, compare, trace, and verify — no account or telemetry required.",
   icons: {

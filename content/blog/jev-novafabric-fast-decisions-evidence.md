@@ -1,5 +1,6 @@
 ---
 title: "Jev + NovaFabric: Fast Decisions, Evidence That Lasts"
+seoTitle: "Jev + NovaFabric: Decision Evidence Exploration"
 date: 2026-10-27
 category: technical
 tags: [jev, typesafe-ai, ai-agents, decision-provenance, audit]

@@ -6,16 +6,17 @@ import BreadcrumbJsonLd from "@/components/BreadcrumbJsonLd";
 import JsonLd from "@/components/JsonLd";
 import { PageHero } from "@/components/ui";
 import { docGroups, docPages, titleFor, descriptionFor } from "@/lib/docs";
+import { CLI_REFERENCE_SLUG } from "@/lib/cli-reference";
 
 const DESCRIPTION =
   "NovaFabric docs: getting started, concepts, CLI and Python API reference, architecture and operations for capturing, replaying and verifying AI-agent runs.";
 
 export const metadata: Metadata = {
-  title: "Documentation — NovaFabric",
+  title: "NovaFabric docs: getting started, CLI, API, architecture",
   description: DESCRIPTION,
   alternates: { canonical: "https://novafabric.ai/docs/" },
   openGraph: {
-    title: "Documentation — NovaFabric",
+    title: "NovaFabric docs: getting started, CLI, API, architecture",
     description: DESCRIPTION,
     url: "https://novafabric.ai/docs/",
     images: [{ url: "https://novafabric.ai/og.png", width: 1200, height: 630 }],
@@ -26,7 +27,10 @@ export default async function DocsIndexPage() {
   // Grouped by top-level directory so the index reads as a table of contents
   // rather than a flat dump of filenames. Pages split out of one long document
   // (the CLI reference) are listed on that document's own index page, not here.
-  const groups = docGroups(await docPages());
+  const allPages = await docPages();
+  const groups = docGroups(allPages);
+  // The split CLI-reference pages: listed under their parent so each is one click from /docs/.
+  const cliChildren = allPages.filter((p) => p.parent?.slug === CLI_REFERENCE_SLUG);
   const pages = groups.flatMap((group) => group.pages);
 
   const collectionSchema = {
@@ -78,6 +82,17 @@ export default async function DocsIndexPage() {
                       {titleFor(page)}
                     </a>
                     <p className="text-sm text-muted">{descriptionFor(page)}</p>
+                    {page.slug === CLI_REFERENCE_SLUG && cliChildren.length > 0 && (
+                      <ul className="mt-2 ml-4 space-y-1 text-sm">
+                        {cliChildren.map((child) => (
+                          <li key={child.slug}>
+                            <a className="underline" href={`/docs/${child.slug}/`}>
+                              {titleFor(child)}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                   </li>
                 ))}
               </ul>

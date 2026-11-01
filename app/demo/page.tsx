@@ -427,7 +427,7 @@ export default function DemoPage() {
               { t: "Local dashboard", k: "experimental" as const, d: "nova serve --experimental. Read-only, binds to 127.0.0.1 only." },
               { t: "Server mode", k: "experimental" as const, d: "Multi-user REST API, Postgres, object store, tenancy with row-level security." },
               { t: "Cluster-scale collector", k: "experimental" as const, d: "Node spools, parent/child capsules, object capsule store, four lineage backends." },
-              { t: "Knowledge graph & diagnosis", k: "experimental" as const, d: "Capsule knowledge graph, causal-graph attribution, counterfactual root-cause search." },
+              { t: "Knowledge graph & diagnosis", k: "experimental" as const, d: "Capsule knowledge graph, causal-graph attribution, counterfactual root-cause search.", href: "/docs/cli-reference/knowledge-graph/", hrefLabel: "nova kg: the capsule knowledge graph" },
             ].map((c) => (
               <div
                 key={c.t}
@@ -443,6 +443,14 @@ export default function DemoPage() {
                   <Tag kind={c.k} />
                 </div>
                 <p style={{ fontSize: "13.5px", color: "var(--color-muted)", lineHeight: 1.65 }}>{c.d}</p>
+                {c.href && (
+                  <p style={{ fontSize: "13px", marginTop: "8px" }}>
+                    CLI reference:{" "}
+                    <Link href={c.href} className="text-amber">
+                      {c.hrefLabel}
+                    </Link>
+                  </p>
+                )}
               </div>
             ))}
           </div>

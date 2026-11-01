@@ -9,7 +9,7 @@ import { PRIMITIVES } from "@/lib/data/primitives";
 import { VERSION_TAG } from "@/lib/version";
 
 export const metadata: Metadata = {
-  title: "NovaFabric primitives: Run Capsule, replay, lineage, evidence",
+  title: "NovaFabric primitives: capsule, replay, lineage, evidence",
   description:
     "The five NovaFabric primitives: Asset Registry, Run Capsule, Replay Engine, Lineage Graph and Evidence Bundle, plus the five replay modes.",
   alternates: { canonical: "https://novafabric.ai/primitives/" },
@@ -143,7 +143,11 @@ export default function PrimitivesPage() {
           <h3 className="text-ink text-[17px] font-semibold mb-2">Why CLI-first</h3>
           <p className="text-muted text-[15px] leading-relaxed">
             The <code className="font-code text-ink">nova</code> CLI is the canonical automation surface and emits
-            machine-readable output, so every step can run in CI. A local dashboard (
+            machine-readable output, so every step can run in CI; the docs show{" "}
+            <Link href="/docs/integrations/github-actions/" className="text-amber">
+              how to capture a CI step with GitHub Actions
+            </Link>
+            . A local dashboard (
             <code className="font-code text-ink">nova serve --experimental</code>) exists for browsing, with scoped
             authorization since v0.102.0; it is a view onto the same capsules, not a separate system of record.
           </p>

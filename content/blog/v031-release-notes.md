@@ -1,5 +1,6 @@
 ---
 title: "v0.31: knowledge graph, governance exports, WORM conformance"
+seoTitle: "v0.31: knowledge graph, governance, WORM tests"
 date: 2026-05-20
 category: release
 tags: [release, KuzuDB, governance, WORM]

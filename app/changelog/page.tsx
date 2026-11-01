@@ -9,11 +9,11 @@ import type { RoadmapEntry } from "@/lib/types";
 import { VERSION_TAG } from "@/lib/version";
 
 export const metadata: Metadata = {
-  title: "Changelog — NovaFabric",
+  title: "NovaFabric changelog: release history and roadmap",
   description: "NovaFabric release history from v0.1 to the current version: shipped features, fixes and milestones on the road to the v1.0 format freeze.",
   alternates: { canonical: "https://novafabric.ai/changelog/" },
   openGraph: {
-    title: "Changelog — NovaFabric",
+    title: "NovaFabric changelog: release history and roadmap",
     description: `Every version of novafabric from v0.1 to ${VERSION_TAG} — milestones, shipped features, and the road to v1.0.`,
     url: "https://novafabric.ai/changelog/",
     images: [{ url: "https://novafabric.ai/og.png", width: 1200, height: 630 }],
