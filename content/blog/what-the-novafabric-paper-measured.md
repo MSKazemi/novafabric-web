@@ -1,5 +1,6 @@
 ---
 title: "What the NovaFabric paper measured, and what it got wrong"
+seoTitle: "What the paper measured, and what it got wrong"
 date: 2026-10-27
 category: technical
 tags: [arxiv, evaluation, replay, tamper-evidence, provenance]

@@ -23,7 +23,7 @@ export async function generateMetadata({
   const card = `https://novafabric.ai${post.ogImage ?? post.image ?? "/og.png"}`;
   const cardSize = post.ogImage || !post.image ? { width: 1200, height: 630 } : { width: 1600, height: 900 };
   return {
-    title: `${post.title} — NovaFabric`,
+    title: `${post.seoTitle ?? post.title} — NovaFabric`,
     description: post.excerpt,
     alternates: { canonical: `https://novafabric.ai/blog/${post.slug}/` },
     openGraph: {

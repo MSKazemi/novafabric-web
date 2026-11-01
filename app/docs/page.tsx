@@ -11,11 +11,11 @@ const DESCRIPTION =
   "NovaFabric docs: getting started, concepts, CLI and Python API reference, architecture and operations for capturing, replaying and verifying AI-agent runs.";
 
 export const metadata: Metadata = {
-  title: "Documentation — NovaFabric",
+  title: "NovaFabric docs: getting started, CLI, API, architecture",
   description: DESCRIPTION,
   alternates: { canonical: "https://novafabric.ai/docs/" },
   openGraph: {
-    title: "Documentation — NovaFabric",
+    title: "NovaFabric docs: getting started, CLI, API, architecture",
     description: DESCRIPTION,
     url: "https://novafabric.ai/docs/",
     images: [{ url: "https://novafabric.ai/og.png", width: 1200, height: 630 }],

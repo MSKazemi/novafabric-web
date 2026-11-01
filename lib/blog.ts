@@ -25,6 +25,8 @@ const CATEGORIES: PostCategory[] = ["lab-update", "technical", "release"];
 export interface Post {
   slug: string;
   title: string;
+  /** Optional shorter `<title>` (without the site suffix) when `title` would push the page title past 60 characters. */
+  seoTitle?: string;
   /** ISO date, YYYY-MM-DD. */
   date: string;
   category: PostCategory;
@@ -116,6 +118,7 @@ export async function getPosts(): Promise<Post[]> {
       return {
         slug,
         title,
+        seoTitle: asString(data.seoTitle) || undefined,
         date,
         category,
         tags: asList(data.tags),

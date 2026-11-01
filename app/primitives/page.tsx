@@ -9,7 +9,7 @@ import { PRIMITIVES } from "@/lib/data/primitives";
 import { VERSION_TAG } from "@/lib/version";
 
 export const metadata: Metadata = {
-  title: "NovaFabric primitives: Run Capsule, replay, lineage, evidence",
+  title: "NovaFabric primitives: capsule, replay, lineage, evidence",
   description:
     "The five NovaFabric primitives: Asset Registry, Run Capsule, Replay Engine, Lineage Graph and Evidence Bundle, plus the five replay modes.",
   alternates: { canonical: "https://novafabric.ai/primitives/" },

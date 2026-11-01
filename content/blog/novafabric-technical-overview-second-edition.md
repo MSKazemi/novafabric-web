@@ -1,5 +1,6 @@
 ---
 title: "NovaFabric Technical Overview, second edition, is on arXiv"
+seoTitle: "Technical Overview, second edition, on arXiv"
 date: 2026-10-28
 category: lab-update
 tags: [arxiv, architecture, replay, evidence, technical-report]
