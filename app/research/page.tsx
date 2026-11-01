@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import Nav from "@/components/Nav";
 import BreadcrumbJsonLd from "@/components/BreadcrumbJsonLd";
 import Footer from "@/components/Footer";
@@ -35,10 +36,32 @@ const paperSchema = {
   "@context": "https://schema.org",
   "@type": "ScholarlyArticle",
   headline: "NovaFabric: Tamper-Evident, Replayable Evidence for Autonomous AI Agent Runs",
-  author: { "@type": "Person", name: "Mohsen Seyedkazemi Ardebili" },
+  author: {
+    "@type": "Person",
+    "@id": "https://orcid.org/0000-0002-1166-6559",
+    name: "Mohsen Seyedkazemi Ardebili",
+  },
   datePublished: "2026-09-11",
   url: "https://arxiv.org/abs/2609.12582",
   identifier: "arXiv:2609.12582",
+  publisher: { "@type": "Organization", name: "arXiv" },
+  about: { "@type": "SoftwareApplication", name: "NovaFabric", url: "https://novafabric.ai/novafabric/" },
+};
+
+// Second publication: the technical overview (second edition). A separate node with its
+// own arXiv id; it carries the same author @id as the Person entity in app/layout.tsx.
+const overviewSchema = {
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  headline: "NovaFabric: A Black-Box Recorder for AI Agents with Sealed, Replayable, Diffable and Auditable Runs",
+  author: {
+    "@type": "Person",
+    "@id": "https://orcid.org/0000-0002-1166-6559",
+    name: "Mohsen Seyedkazemi Ardebili",
+  },
+  datePublished: "2026-10-25",
+  url: "https://arxiv.org/abs/2610.34594",
+  identifier: "arXiv:2610.34594",
   publisher: { "@type": "Organization", name: "arXiv" },
   about: { "@type": "SoftwareApplication", name: "NovaFabric", url: "https://novafabric.ai/novafabric/" },
 };
@@ -48,6 +71,7 @@ export default function ResearchPage() {
     <>
       <JsonLd data={researchSchema} />
       <JsonLd data={paperSchema} />
+      <JsonLd data={overviewSchema} />
       <Nav />
       <BreadcrumbJsonLd trail={[{ name: "Research", path: "/research/" }]} />
 
@@ -65,7 +89,7 @@ export default function ResearchPage() {
           title="Publications"
           description="Peer-reviewable write-ups of the system and its measured results."
         />
-        <article className="max-w-2xl mb-20">
+        <article className="max-w-2xl mb-12">
           <h3 className="text-lg font-semibold leading-snug">
             <a href="https://arxiv.org/abs/2609.12582" className="underline underline-offset-4">
               NovaFabric: Tamper-Evident, Replayable Evidence for Autonomous AI Agent Runs
@@ -83,6 +107,26 @@ export default function ResearchPage() {
             Cite: <a href="https://doi.org/10.48550/arXiv.2609.12582" className="underline underline-offset-4">doi:10.48550/arXiv.2609.12582</a>
             {" "}· Software archive:{" "}
             <a href="https://doi.org/10.5281/zenodo.22997388" className="underline underline-offset-4">doi:10.5281/zenodo.22997388</a>
+          </p>
+        </article>
+        <article className="max-w-2xl mb-20">
+          <h3 className="text-lg font-semibold leading-snug">
+            <a href="https://arxiv.org/abs/2610.34594" className="underline underline-offset-4">
+              NovaFabric: A Black-Box Recorder for AI Agents with Sealed, Replayable, Diffable and Auditable Runs
+            </a>
+          </h3>
+          <p className="text-muted mt-1">
+            Mohsen Seyedkazemi Ardebili · arXiv:2610.34594 · 2026
+          </p>
+          <p className="text-muted leading-relaxed mt-3">
+            The Technical Overview, second edition: a reference report on the architecture of
+            NovaFabric v0.107.0, each engine&apos;s contract and the system&apos;s limits. It is a
+            technical report with no new experiments; the measured evaluation is in the paper above.
+          </p>
+          <p className="text-muted text-sm mt-3">
+            <Link href="/blog/novafabric-technical-overview-second-edition/" className="underline underline-offset-4">
+              Read the explainer: what the second edition covers
+            </Link>
           </p>
         </article>
 

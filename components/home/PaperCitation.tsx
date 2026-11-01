@@ -25,6 +25,12 @@ export default function PaperCitation() {
           {" "}· software archive:{" "}
           <a href="https://doi.org/10.5281/zenodo.22997388" style={{ color: "inherit" }}>doi:10.5281/zenodo.22997388</a>
         </p>
+        <p style={{ fontSize: "13px", color: "var(--color-muted)", lineHeight: 1.7, marginTop: "6px" }}>
+          Also: the technical overview, second edition,{" "}
+          <a href="https://arxiv.org/abs/2610.34594" style={{ color: "inherit" }}>arXiv:2610.34594</a>
+          {" "}(October 2026). See{" "}
+          <a href="/research/" style={{ color: "inherit" }}>all publications</a>.
+        </p>
       </div>
     </section>
   );
