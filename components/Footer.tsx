@@ -134,6 +134,12 @@ export default function Footer() {
           <span className="font-code" style={{ fontSize: "11px", color: "var(--color-faint)" }}>
             © {year} NovaFabric · Apache-2.0
           </span>
+          <span className="font-code" style={{ fontSize: "11px", color: "var(--color-faint)" }}>
+            Maintained by{" "}
+            <a href="https://mskazemi.com/" style={{ color: "var(--color-muted)", textDecoration: "underline" }}>
+              Mohsen Seyedkazemi Ardebili
+            </a>
+          </span>
           <div style={{ display: "flex", gap: "20px" }}>
             {[
               { label: VERSION_TAG, href: "/changelog/" },
