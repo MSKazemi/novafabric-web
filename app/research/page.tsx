@@ -45,7 +45,7 @@ const paperSchema = {
   url: "https://arxiv.org/abs/2609.12582",
   identifier: "arXiv:2609.12582",
   publisher: { "@type": "Organization", name: "arXiv" },
-  about: { "@type": "SoftwareApplication", name: "NovaFabric", url: "https://novafabric.ai/novafabric/" },
+  about: { "@id": "https://novafabric.ai/#software" },
 };
 
 // Second publication: the technical overview (second edition). A separate node with its
@@ -63,7 +63,7 @@ const overviewSchema = {
   url: "https://arxiv.org/abs/2610.34594",
   identifier: "arXiv:2610.34594",
   publisher: { "@type": "Organization", name: "arXiv" },
-  about: { "@type": "SoftwareApplication", name: "NovaFabric", url: "https://novafabric.ai/novafabric/" },
+  about: { "@id": "https://novafabric.ai/#software" },
 };
 
 export default function ResearchPage() {
