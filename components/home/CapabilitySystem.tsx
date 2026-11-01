@@ -143,8 +143,7 @@ export default function CapabilitySystem() {
           One fabric. <em>Six domains</em> of evidence.
         </h2>
         <p className="text-muted text-lg max-w-2xl leading-relaxed mb-14">
-          NovaFabric is not a single tool — it&apos;s a coordinated system of{" "}
-          <span className="text-ink">~425,000 lines</span> across six domains:
+          NovaFabric is not a single tool — it&apos;s a coordinated system across six domains:
           capture, an evidence model, analysis, cryptographic trust, governance,
           and serving. Every piece composes.
         </p>
