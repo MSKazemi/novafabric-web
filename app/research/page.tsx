@@ -36,7 +36,11 @@ const paperSchema = {
   "@context": "https://schema.org",
   "@type": "ScholarlyArticle",
   headline: "NovaFabric: Tamper-Evident, Replayable Evidence for Autonomous AI Agent Runs",
-  author: { "@type": "Person", name: "Mohsen Seyedkazemi Ardebili" },
+  author: {
+    "@type": "Person",
+    "@id": "https://orcid.org/0000-0002-1166-6559",
+    name: "Mohsen Seyedkazemi Ardebili",
+  },
   datePublished: "2026-09-11",
   url: "https://arxiv.org/abs/2609.12582",
   identifier: "arXiv:2609.12582",
