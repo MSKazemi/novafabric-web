@@ -128,8 +128,8 @@ export default function ArchitecturePage() {
           <div className="bg-surface border border-edge-2 rounded-md p-6">
             <p className="font-code text-amber text-[13px] mb-2">Go collector</p>
             <p className="text-muted text-[15px] md:text-sm leading-relaxed">
-              Python-based collection had &gt;5% overhead. Go daemon: 295K events/sec, &lt;1ms
-              local latency, crash-safe WAL spool.
+              Go collector (experimental): crash-safe on-disk spool; its NovaSeal batch signer
+              measured 295K events/sec at p99 4.7 ms in its v0.14.3 test gate.
             </p>
           </div>
 
