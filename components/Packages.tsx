@@ -32,7 +32,7 @@ const PACKAGES = [
     command:
       "git clone https://github.com/MSKazemi/novafabric && cd novafabric/collector && go build ./cmd/novafabric-collector",
     backends: ["Kubernetes", "SLURM / HPC"],
-    status: "alpha",
+    status: "experimental",
     icon: "⬡",
   },
   {
