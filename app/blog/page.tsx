@@ -53,7 +53,6 @@ export default async function BlogPage() {
         section="blog"
         title="Blog"
         subtitle="Technical notes, deep-dives, and release announcements."
-        status="experimental"
       />
 
       <main className="page-max-w py-16">
