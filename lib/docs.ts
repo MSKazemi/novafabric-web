@@ -479,6 +479,12 @@ const SEO_OVERRIDES: Record<string, { title?: string; description?: string }> = 
     description:
       "Where NovaFabric and Langfuse overlap and differ: monitoring how a system performs now versus Run Capsules you can replay, compare and verify later.",
   },
+  // The derived description opened with the page's "~10 minutes · works today" badge.
+  "tutorials/map-evidence-to-your-control-framework": {
+    title: "Map AI agent run evidence to your own control framework",
+    description:
+      "Check recorded AI agent runs against a control catalog you write: IDs from your licensed copy, descriptions in your own words. Runs locally, no server.",
+  },
   "ops/air-gapped-install": {
     description:
       "Install and run NovaFabric with no internet access: offline installation, no telemetry or phone-home, and which opt-in features need a network endpoint.",
