@@ -77,7 +77,6 @@ export default function ChangelogPage() {
         section="changelog"
         title="Changelog"
         subtitle="Every version of novafabric, from first commit to current."
-        status="experimental"
         tag={VERSION_TAG}
       />
 
